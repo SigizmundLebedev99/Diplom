@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TeamEdge</name>
+    </assembly>
+    <members>
+        <member name="M:TeamEdge.Controllers.AccountController.Token(TeamEdge.Models.LoginDTO)">
+            <summary>
+            Returns jwt token for authorization after authentication
+            </summary>
+            <param name="model">email as login and password</param>
+            <returns></returns>
+        </member>
+        <member name="M:TeamEdge.Controllers.AccountController.Register(TeamEdge.Models.RegisterUserDTO)">
+            <summary>
+            main registration of new users; TODO: Email confirmation;
+            </summary>
+            <param name="model">user model</param>
+            <returns></returns>
+        </member>
+        <member name="M:TeamEdge.Controllers.AccountController.GetAuthenticationProviders">
+            <summary>
+            Return OAuth providers
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
