@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TeamEdge.Models;
+namespace TeamEdge.Models
 {
-    public class CreateProjectDTO
+    public struct CreateProjectDTO
     {
+        public int UserId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

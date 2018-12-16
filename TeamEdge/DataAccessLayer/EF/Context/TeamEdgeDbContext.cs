@@ -22,7 +22,7 @@ namespace TeamEdge.DAL.Context
 
         public DbSet<UserStory> UserStories { get; set; }
 
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<_Task> Tasks { get; set; }
 
         public DbSet<BranchLink> CodeLinks { get; set; }
 

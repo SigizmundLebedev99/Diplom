@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamEdge.DAL.Models
 {
@@ -12,6 +14,11 @@ namespace TeamEdge.DAL.Models
         [StringLength(64, MinimumLength =3)]
         public string Name { get; set; }
         public WorkItemDescription Description { get; set; }
+
+        public int LastUpdaterId { get; set; }
+        [ForeignKey("LastUpdaterId")]
+        public User LastUpdater { get; set; }
+        public DateTime LastUpdate { get; set; }
     }
 
     public class BaseWorkItem<TChild> : BaseWorkItem where TChild : BaseWorkItem

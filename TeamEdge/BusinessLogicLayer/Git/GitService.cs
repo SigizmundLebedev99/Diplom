@@ -1,33 +1,18 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Interfaces;
 
 namespace TeamEdge.BusinessLogicLayer.Git
 {
     public class GitService : IGitService
     {
-        private readonly string gitPath;
-        private readonly string gitHomePath;
-        private readonly string repositoriesDirPath;
-        private readonly string repoLocator;
-
-        public GitService(GitServiceExecutorParams parameters, IHostingEnvironment hostingEnvironment)
+        readonly GitServiceParams _params;
+        public GitService(GitServiceParams parameters)
         {
-            this.gitPath = parameters.GitPath;
-            this.gitHomePath = parameters.GitHomePath;
-            this.repositoriesDirPath = parameters.RepositoriesDirPath;
-            this.repoLocator = Path.Combine(hostingEnvironment.ContentRootPath, "AppData", "Repos");
+            _params = parameters;
         }
 
         public void ExecuteServiceByName(
             string userName,
-            string correlationId,
             string repositoryName,
             string serviceName,
             ExecutionOptions options,
@@ -38,24 +23,20 @@ namespace TeamEdge.BusinessLogicLayer.Git
             args += options.ToCommandLineArgs();
             args += " \"" + Path.Combine() + "\"";
 
-            var info = new ProcessStartInfo(gitPath, args)
+            var info = new ProcessStartInfo(_params.GitPath, args)
             {
                 CreateNoWindow = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
-                WorkingDirectory = Path.GetDirectoryName(repositoriesDirPath),
+                WorkingDirectory = Path.Combine(_params.RepositoriesDirPath,repositoryName)
             };
 
             SetHomePath(info);
 
-            var username = userName;
-            var teamsstr = "";
-            var rolesstr = "";
-            var displayname = "";
-            info.EnvironmentVariables.Add("AUTH_USER", username);
-            info.EnvironmentVariables.Add("REMOTE_USER", username);
+            info.EnvironmentVariables.Add("AUTH_USER", userName);
+            info.EnvironmentVariables.Add("REMOTE_USER", userName);
 
             using (var process = Process.Start(info))
             {
@@ -80,7 +61,7 @@ namespace TeamEdge.BusinessLogicLayer.Git
             {
                 info.EnvironmentVariables.Remove("HOME");
             }
-            info.EnvironmentVariables.Add("HOME", gitHomePath);
+            info.EnvironmentVariables.Add("HOME", _params.GitHomePath);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace TeamEdge.DAL.Models
 {
-    public class Task : BaseWorkItem<Task, UserStory>
+    public class _Task : BaseWorkItem<_Task, UserStory>
     {
         public int AssignedToId { get; set; }
         public TaskType Type { get; set; }

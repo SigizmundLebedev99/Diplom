@@ -8,7 +8,8 @@ namespace TeamEdge.Mapper
     {
         public CommonProfile()
         {
-            this.CreateMap<RegisterUserDTO, User>();
+            CreateMap<RegisterUserDTO, User>();
+            CreateMap<CreateInviteVM, CreateInviteDTO>();
         }
     }
 }

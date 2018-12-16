@@ -8,11 +8,10 @@ namespace TeamEdge.BusinessLogicLayer.Git
 {
     public static class GitExtendsions
     {
-        public static void ExecuteGitUploadPack(this IGitService self, string userName, string correlationId, string repositoryName, Stream inStream, Stream outStream)
+        public static void ExecuteGitUploadPack(this IGitService self, string userName, string repositoryName, Stream inStream, Stream outStream)
         {
             self.ExecuteServiceByName(
                 userName,
-                correlationId,
                 repositoryName,
                 "upload-pack",
                 new ExecutionOptions() { AdvertiseRefs = false, endStreamWithClose = true },
@@ -20,11 +19,10 @@ namespace TeamEdge.BusinessLogicLayer.Git
                 outStream);
         }
 
-        public static void ExecuteGitReceivePack(this IGitService self, string userName, string correlationId, string repositoryName, Stream inStream, Stream outStream)
+        public static void ExecuteGitReceivePack(this IGitService self, string userName, string repositoryName, Stream inStream, Stream outStream)
         {
             self.ExecuteServiceByName(
                 userName,
-                correlationId,
                 repositoryName,
                 "receive-pack",
                 new ExecutionOptions() { AdvertiseRefs = false },

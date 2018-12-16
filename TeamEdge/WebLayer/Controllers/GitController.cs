@@ -36,7 +36,7 @@ namespace TeamEdge.WebLayer.Controllers
             }
 
             var requiredLevel = isPush ? RepositoryAccessLevel.Push : RepositoryAccessLevel.Pull;
-            if (_repositoryService.HasPermission(User.Id(), repositoryName, requiredLevel))
+            if (await _repositoryService.HasPermission(User.Id(), repositoryName, requiredLevel))
             {
                 return GetInfoRefs(repositoryName, service);
             }
@@ -47,14 +47,14 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         [HttpPost("{repositoryName}.git/git-upload-pack")]
-        public ActionResult SecureUploadPack(string repositoryName)
+        public async Task<ActionResult> SecureUploadPack(string repositoryName)
         {
             if (!RepositoryIsValid(repositoryName))
             {
                 return NotFound();
             }
 
-            if (_repositoryService.HasPermission(User.Id(), repositoryName, RepositoryAccessLevel.Pull))
+            if (await _repositoryService.HasPermission(User.Id(), repositoryName, RepositoryAccessLevel.Pull))
             {
                 return ExecuteUploadPack(repositoryName);
             }
@@ -65,14 +65,14 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         [HttpPost("{repositoryName}.git/git-receive-pack")]
-        public ActionResult SecureReceivePack(string repositoryName)
+        public async Task<ActionResult> SecureReceivePack(string repositoryName)
         {
             if (!RepositoryIsValid(repositoryName))
             {
                 return NotFound();
             }
 
-            if (_repositoryService.HasPermission(User.Id(), repositoryName, RepositoryAccessLevel.Push))
+            if (await _repositoryService.HasPermission(User.Id(), repositoryName, RepositoryAccessLevel.Push))
             {
                 return ExecuteReceivePack(repositoryName);
             }
@@ -100,9 +100,9 @@ namespace TeamEdge.WebLayer.Controllers
                 (outStream) =>
                 {
                     _gitService.ExecuteGitReceivePack(
-                        Guid.NewGuid().ToString("N"),
+                        User.Name(), 
                         repositoryName,
-                        GetInputStream(disableBuffer: true),
+                        GetInputStream(),
                         outStream);
                 });
         }
@@ -114,7 +114,7 @@ namespace TeamEdge.WebLayer.Controllers
                 (outStream) =>
                 {
                     _gitService.ExecuteGitUploadPack(
-                        Guid.NewGuid().ToString("N"),
+                        User.Name(),
                         repositoryName,
                         GetInputStream(),
                         outStream);
@@ -134,7 +134,8 @@ namespace TeamEdge.WebLayer.Controllers
                 (outStream) =>
                 {
                     _gitService.ExecuteServiceByName(
-                        Guid.NewGuid().ToString("N"),
+                        User.Name(),
+                         
                         repositoryName,
                         serviceName,
                         new ExecutionOptions() { AdvertiseRefs = true },
@@ -170,17 +171,11 @@ namespace TeamEdge.WebLayer.Controllers
             return isValid;
         }
 
-        private Stream GetInputStream(bool disableBuffer = false)
+        private Stream GetInputStream()
         {
-            // For really large uploads we need to get a bufferless input stream and disable the max
-            // request length.
-            Stream requestStream = disableBuffer ?
-                Request.GetBufferlessInputStream(disableMaxRequestLength: true) :
-                Request.GetBufferedInputStream();
-
             return Request.Headers["Content-Encoding"] == "gzip" ?
-                new GZipStream(requestStream, CompressionMode.Decompress) :
-                requestStream;
+                new GZipStream(Request.Body, CompressionMode.Decompress) :
+                Request.Body;
         }
     }
 }

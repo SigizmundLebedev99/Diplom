@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TeamEdge.BusinessLogicLayer.Git;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.JWT;
@@ -56,6 +57,9 @@ namespace TeamEdge
             services.AddIdentity<User, IdentityRole<int>>().AddEntityFrameworkStores<TeamEdgeDbContext>();
 
             services.AddCustomAuthentication(Configuration);
+
+            services.AddSingleton<GitServiceParams>();
+            services.AddTransient<IGitService, GitService>();
 
             services.AddMvc();
 

@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace TeamEdge.BusinessLogicLayer.Infrostructure
+{
+    public class NotFoundException : Exception
+    {
+        public string Alias { get; set; }
+
+        public NotFoundException() : base() { }
+
+        public NotFoundException(string alias) : base()
+        {
+            this.Alias = alias;
+        }
+
+        public NotFoundException(string message, string alias) : base(message)
+        {
+            this.Alias = alias;
+        }
+    }
+}

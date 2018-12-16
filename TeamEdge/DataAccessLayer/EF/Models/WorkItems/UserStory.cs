@@ -2,7 +2,7 @@
 
 namespace TeamEdge.DAL.Models
 {
-    public class UserStory : BaseWorkItem<Task, Feature>
+    public class UserStory : BaseWorkItem<_Task, Feature>
     {
         public string AcceptenceCriteria { get; set; }
         public string AcceptenceCriteriaJson { get; set; }

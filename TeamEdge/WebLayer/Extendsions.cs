@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -25,7 +24,16 @@ namespace TeamEdge.WebLayer
         {
             var idClaim = user.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.UniqueName);
             if (idClaim != null)
-                return Convert.ToInt32(idClaim.Value);
+                return idClaim.Value;
+            else
+                throw new UnauthorizedAccessException();
+        }
+
+        public static string Email(this ClaimsPrincipal user)
+        {
+            var idClaim = user.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email);
+            if (idClaim != null)
+                return idClaim.Value;
             else
                 throw new UnauthorizedAccessException();
         }

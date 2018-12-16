@@ -11,7 +11,7 @@ namespace TeamEdge.DAL.Models
         public ICollection<UserProject> Users { get; set; }
         public ICollection<WorkItemDescription> WorkItemDescriptions { get; set; }
 
-        public int RepositoryId { get; set; }
+        public int? RepositoryId { get; set; }
         [ForeignKey("RepositoryId")]
         public Repository Repository { get; set; }
     }
