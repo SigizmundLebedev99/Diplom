@@ -39,12 +39,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:TeamEdge.WebLayer.Controllers.GitController.GitUrl(System.String)">
-            <summary>
-            This is the action invoked if you browse to a .git URL
-            We just redirect to the repo details page, which is basically what GitHub does
-            </summary>
-        </member>
         <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.SendInvite(TeamEdge.Models.CreateInviteVM)">
             <summary>
             Create invite for new project partisipant

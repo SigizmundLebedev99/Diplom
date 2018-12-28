@@ -8,6 +8,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
     public interface IRepositoryService
     {
         Task<OperationResult> CreateRepository(int creatorId, CreateRepositoryDTO model);
-        Task<bool> HasPermission(int userId, string repositoryName, RepositoryAccessLevel requiredLevel);
+        Task<bool> HasPermission(string username, string repositoryName, RepositoryAccessLevel requiredLevel);
     }
 }

@@ -71,14 +71,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
-        public Task<bool> HasPermission(int userId, string repositoryName, RepositoryAccessLevel requiredLevel)
+        public Task<bool> HasPermission(string username, string repositoryName, RepositoryAccessLevel requiredLevel)
         {
            return _context    
                 .Projects
                 .FirstOrDefault(p=>p.Name == repositoryName)
                 .Users
                 .AsQueryable()
-                .AnyAsync(u => u.RepoRole == requiredLevel && u.UserId == userId);
+                .AnyAsync(u => u.RepoRole == requiredLevel && u.User.UserName == username);
         }
     }
 }

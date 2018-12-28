@@ -64,7 +64,6 @@ namespace TeamEdge
             services.AddTransient<IMembershipService, MembershipService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IRepositoryService, RepositoryService>();
-            services.AddTransient<IGitService, GitService>();
 
             services.AddMvc();
 
