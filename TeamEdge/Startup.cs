@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TeamEdge.BusinessLogicLayer.Git;
+using TeamEdge.BusinessLogicLayer.Interfaces;
+using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.JWT;
@@ -59,6 +61,9 @@ namespace TeamEdge
             services.AddCustomAuthentication(Configuration);
 
             services.AddSingleton<GitServiceParams>();
+            services.AddTransient<IMembershipService, MembershipService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IRepositoryService, RepositoryService>();
             services.AddTransient<IGitService, GitService>();
 
             services.AddMvc();

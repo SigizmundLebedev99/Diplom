@@ -11,6 +11,8 @@ namespace TeamEdge.DAL.Models
         public int? ToUserId { get; set; }
         [ForeignKey("ToUserId")]
         public User User { get; set; }
+        public RepositoryAccessLevel RepoRole { get; set; }
+        public ProjectAccessLevel ProjRole { get; set; }
 
         public bool IsAccepted { get; set; }
     }

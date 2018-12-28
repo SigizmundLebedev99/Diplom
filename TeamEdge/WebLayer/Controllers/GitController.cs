@@ -100,7 +100,7 @@ namespace TeamEdge.WebLayer.Controllers
                 (outStream) =>
                 {
                     _gitService.ExecuteGitReceivePack(
-                        User.Name(), 
+                        User.Username(), 
                         repositoryName,
                         GetInputStream(),
                         outStream);
@@ -114,7 +114,7 @@ namespace TeamEdge.WebLayer.Controllers
                 (outStream) =>
                 {
                     _gitService.ExecuteGitUploadPack(
-                        User.Name(),
+                        User.Username(),
                         repositoryName,
                         GetInputStream(),
                         outStream);
@@ -134,7 +134,7 @@ namespace TeamEdge.WebLayer.Controllers
                 (outStream) =>
                 {
                     _gitService.ExecuteServiceByName(
-                        User.Name(),
+                        User.Username(),
                          
                         repositoryName,
                         serviceName,

@@ -10,7 +10,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
     {
         public OperationResult(bool succeded) : base(succeded) { }
 
-        T Result { get; set; }
+        public T Result { get; set; }
 
         public override IActionResult GetResult()
         {
@@ -37,10 +37,10 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
             ErrorMessages.Add(new ErrorMessage { Alias = alias, Message = message });
         }
 
-        public void AddErrorMessage(string message)
+        public void AddErrorMessage(string alias)
         {
             Succeded = false;
-            ErrorMessages.Add(new ErrorMessage { Message = message });
+            ErrorMessages.Add(new ErrorMessage { Alias = alias });
         }
 
         public virtual IActionResult GetResult()

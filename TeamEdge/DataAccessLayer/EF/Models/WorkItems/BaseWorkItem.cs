@@ -28,6 +28,8 @@ namespace TeamEdge.DAL.Models
 
     public class BaseWorkItem<TChild, TParent> : BaseWorkItem<TChild> where TChild: BaseWorkItem where TParent: BaseWorkItem
     {
+        public int? ParentId { get; set; }
+        [ForeignKey("ParentId")]
         public TParent Parent { get; set; } 
     }
 }

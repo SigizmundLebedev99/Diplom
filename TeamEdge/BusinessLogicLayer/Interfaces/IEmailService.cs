@@ -6,11 +6,13 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Interfaces
 {
-    interface IEmailService
+    public interface IEmailService
     {
-        Task SendConfirmation(User user);
-        Task SendWorkItemNotify(User subscriber, IEnumerable<HistoryRecord> messages);
-        Task SendInvite(string email, InviteDTO model);
-        Task SendProjectNotify(User user, ProjectNotifyDTO model);
+        Task SendConfirmationAsync(User user);
+        void SendWorkItemNotifyAsync(User subscriber, IEnumerable<HistoryRecord> messages);
+        Task SendInviteAsync(UserDTO from, InviteDTO model);
+        void SendProjectNotifyAsync(User user, ProjectNotifyDTO model);
+        void NotifyUserLeaveAsync(UserDTO from, int projectId);
+        void NotifyUserDeletedAsync(UserDTO from, int userId, int projectId);
     }
 }

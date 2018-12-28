@@ -1,32 +1,60 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.Models;
 
 namespace TeamEdge.WebLayer.Controllers
 {
-    [Route("api/account")]
+    [Route("api/project")]
     [Authorize]
     public class ProjectController : Controller
     {
-        public async Task<IActionResult> GetProjectsForUser()
+        readonly IProjectService _projectService;
+        readonly IMapper _mapper;
+        readonly IFileWorkService _fileWorkService;
+
+        public ProjectController(IProjectService projectService, IMapper mapper, IFileWorkService fwservice)
         {
-            var result = new ProjectsForUserDTO();
+            _projectService = projectService;
+            _mapper = mapper;
+            _fileWorkService = fwservice;
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetProjectsForUser(int userId)
+        {
+            var result = await _projectService.GetProjectsForUserAsync(userId);
+            if (result == null)
+                throw new NotFoundException("user_nf");
             return Ok(result);
         }
 
-        public async Task<IActionResult> CreateProject(CreateProjectDTO model)
+        [HttpPost]
+        public async Task<IActionResult> CreateProject([FromForm]CreateProjectVM model)
         {
-            return Ok();
+            var dto = _mapper.Map<CreateProjectDTO>(model);
+            dto.UserId = User.Id();
+            dto.Logo = _fileWorkService.SavePhoto(model.Logo);
+            var result = await _projectService.CreateProject(dto);
+            return Ok(result);
         }
 
-        public async Task<IActionResult> GetProjectInfo()
+        [HttpGet("{projectId}")]
+        public async Task<IActionResult> GetProjectInfo(int projectId)
         {
-            return Ok();
+            var result = await _projectService.GetProjectInfo(projectId, User.Id());
+            return Ok(result);
         }
 
-        public async Task<IActionResult> UpdateProjectInfo()
+        [HttpPut("{projectId}")]
+        public async Task<IActionResult> UpdateProjectInfo(int projectId, [FromForm]CreateProjectVM model)
         {
+            var dto = _mapper.Map<CreateProjectDTO>(model);
+            dto.UserId = User.Id();
+            await _projectService.UpdateProject(projectId, dto);
             return Ok();
         }
     }

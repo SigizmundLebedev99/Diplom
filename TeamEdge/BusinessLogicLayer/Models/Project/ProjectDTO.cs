@@ -1,9 +1,9 @@
-﻿namespace TeamEdge.Models;
+﻿namespace TeamEdge.Models
 {
     public struct ProjectDTO
     {
-        public string ProjectLogo { get; set; }
-        public string ProjectName { get; set; }
-        public int ProgectId { get; set; }
+        public int Id { get; set; }
+        public string Logo { get; set; }
+        public string Name { get; set; } 
     }
 }

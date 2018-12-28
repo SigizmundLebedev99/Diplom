@@ -14,7 +14,16 @@ namespace TeamEdge.DAL.Models
         public string Patrinymic { get; set; }
 
         public ICollection<UserProject> UserProjects { get; set; }
+        public ICollection<Invite> Invites { get; set; }
         public ICollection<Subscribe> Subscribes { get; set; }
         public string Avatar { get; internal set; }
+
+        public string FullName
+        {
+            get
+            {
+                return $"{Lastname} {Firstname}";
+            }
+        }
     }
 }

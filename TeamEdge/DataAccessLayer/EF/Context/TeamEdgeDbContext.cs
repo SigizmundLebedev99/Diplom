@@ -8,41 +8,41 @@ namespace TeamEdge.DAL.Context
 {
     public class TeamEdgeDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
-        public DbSet<Project> Projects { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
 
-        public DbSet<Sprint> Sprints { get; set; }
+        public virtual DbSet<Sprint> Sprints { get; set; }
 
-        public DbSet<Comment> Comments { get; set; }
-        
-        public DbSet<Repository> Repositories { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
 
-        public DbSet<Epick> Epicks { get; set; }
+        public virtual DbSet<Repository> Repositories { get; set; }
 
-        public DbSet<Feature> Features { get; set; }
+        public virtual DbSet<Epick> Epicks { get; set; }
 
-        public DbSet<UserStory> UserStories { get; set; }
+        public virtual DbSet<Feature> Features { get; set; }
 
-        public DbSet<_Task> Tasks { get; set; }
+        public virtual DbSet<UserStory> UserStories { get; set; }
 
-        public DbSet<BranchLink> CodeLinks { get; set; }
+        public virtual DbSet<_Task> Tasks { get; set; }
 
-        public DbSet<WorkItemDescription> WorkItemDescriptions { get; set; }
+        public virtual DbSet<BranchLink> CodeLinks { get; set; }
 
-        public DbSet<UserProject> UserProjects { get; set; }
+        public virtual DbSet<WorkItemDescription> WorkItemDescriptions { get; set; }
 
-        public DbSet<WorkItemTag> WorkItemTags { get; set; }
+        public virtual DbSet<UserProject> UserProjects { get; set; }
 
-        public DbSet<WorkItemFile> WorkItemFiles { get; set; }
+        public virtual DbSet<WorkItemTag> WorkItemTags { get; set; }
 
-        public DbSet<TestCase> TestCases { get; set; }
+        public virtual DbSet<WorkItemFile> WorkItemFiles { get; set; }
 
-        public DbSet<WorkItemHistory> WorkItemHistories { get; set; }
+        public virtual DbSet<TestCase> TestCases { get; set; }
 
-        public DbSet<Subscribe> Subscribes { get; set; }
+        public virtual DbSet<WorkItemHistory> WorkItemHistories { get; set; }
+
+        public virtual DbSet<Subscribe> Subscribes { get; set; }
+
+        public virtual DbSet<Invite> Invites { get; set; }
 
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
-
-        public DbSet<Invite> Invites { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -6,6 +6,8 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
     public interface IProjectService
     {
         Task<ProjectsForUserDTO> GetProjectsForUserAsync(int userId);
-        Task<ProjectDTO> CreateProject(int creatorId, CreateProjectDTO model);
+        Task<ProjectDTO> CreateProject(CreateProjectDTO model);
+        Task<ProjectDTO> UpdateProject(int id, CreateProjectDTO model);
+        Task<ProjectInfoDTO> GetProjectInfo(int id, int userId);
     }
 }

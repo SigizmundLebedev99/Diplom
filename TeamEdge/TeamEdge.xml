@@ -4,6 +4,21 @@
         <name>TeamEdge</name>
     </assembly>
     <members>
+        <member name="F:TeamEdge.DAL.Models.RepositoryAccessLevel.Pull">
+            <summary>
+            User can read or clone a repository
+            </summary>
+        </member>
+        <member name="F:TeamEdge.DAL.Models.RepositoryAccessLevel.Push">
+            <summary>
+            User can push to a repository
+            </summary>
+        </member>
+        <member name="F:TeamEdge.DAL.Models.RepositoryAccessLevel.Administer">
+            <summary>
+            User can change repository settings
+            </summary>
+        </member>
         <member name="M:TeamEdge.Controllers.AccountController.Token(TeamEdge.Models.LoginDTO)">
             <summary>
             Returns jwt token for authorization after authentication
@@ -22,6 +37,41 @@
             <summary>
             Return OAuth providers
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.GitController.GitUrl(System.String)">
+            <summary>
+            This is the action invoked if you browse to a .git URL
+            We just redirect to the repo details page, which is basically what GitHub does
+            </summary>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.SendInvite(TeamEdge.Models.CreateInviteVM)">
+            <summary>
+            Create invite for new project partisipant
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.JoinProject(System.Int32)">
+            <summary>
+            Accept invite and join to project
+            </summary>
+            <param name="inviteId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.LeaveProject(System.Int32,System.Int32)">
+            <summary>
+            Remove participant from project
+            </summary>
+            <param name="projectId"></param>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.ChangePartisipantStatus(TeamEdge.Models.ChangeStatusVM)">
+            <summary>
+            Change partisipant status
+            </summary>
+            <param name="model"></param>
             <returns></returns>
         </member>
     </members>

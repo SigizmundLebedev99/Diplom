@@ -16,7 +16,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
             this.Alias = alias;
         }
 
-        public NotFoundException(string message, string alias) : base(message)
+        public NotFoundException(string alias, string message) : base(message)
         {
             this.Alias = alias;
         }

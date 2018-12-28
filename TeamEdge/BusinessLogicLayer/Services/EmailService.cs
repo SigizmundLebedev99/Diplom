@@ -11,22 +11,32 @@ namespace TeamEdge.BusinessLogicLayer.Services
 {
     public class EmailService : IEmailService
     {
-        public Task SendConfirmation(User user)
+        public void NotifyUserDeletedAsync(UserDTO from, int userId, int projectId)
         {
             throw new NotImplementedException();
         }
 
-        public Task SendInvite(string email, InviteDTO model)
+        public void NotifyUserLeaveAsync(UserDTO from, int projectId)
         {
             throw new NotImplementedException();
         }
 
-        public Task SendProjectNotify(User user, ProjectNotifyDTO model)
+        public Task SendConfirmationAsync(User user)
         {
             throw new NotImplementedException();
         }
 
-        public Task SendWorkItemNotify(User subscriber, IEnumerable<HistoryRecord> messages)
+        public Task SendInviteAsync(UserDTO from, InviteDTO model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendProjectNotifyAsync(User user, ProjectNotifyDTO model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendWorkItemNotifyAsync(User subscriber, IEnumerable<HistoryRecord> messages)
         {
             throw new NotImplementedException();
         }

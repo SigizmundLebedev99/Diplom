@@ -15,11 +15,54 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }
 
+        public bool CanWrite
+        {
+            get
+            {
+                return ProjRole == ProjectAccessLevel.Administer
+                    || ProjRole == ProjectAccessLevel.Write;
+            }
+        }
 
+        public bool IsAdmin
+        {
+            get
+            {
+                return ProjRole == ProjectAccessLevel.Administer;
+            }
+        }
+
+        public bool CanPull
+        {
+            get
+            {
+                return RepoRole == RepositoryAccessLevel.Pull
+                    || RepoRole == RepositoryAccessLevel.Push
+                    || RepoRole == RepositoryAccessLevel.Administer;
+            }
+        }
+
+        public bool CanPush
+        {
+            get
+            {
+                return RepoRole == RepositoryAccessLevel.Push
+                    || RepoRole == RepositoryAccessLevel.Administer;
+            }
+        }
+
+        public bool IsRepoAdmin
+        {
+            get
+            {
+                return RepoRole == RepositoryAccessLevel.Administer;
+            }
+        }
     }
 
     public enum RepositoryAccessLevel
     {
+        None,
         /// <summary>
         /// User can read or clone a repository
         /// </summary>
@@ -38,7 +81,6 @@ namespace TeamEdge.DAL.Models
     {
         Read,
         Write,     
-        Administer,
-        Superadminister
+        Administer
     }
 }
