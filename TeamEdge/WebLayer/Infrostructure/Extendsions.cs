@@ -10,11 +10,16 @@ using Task = System.Threading.Tasks.Task;
 
 namespace TeamEdge.WebLayer
 {
-    public static class Extendsions
+    static public class Extendsions
     {
         public static int Id(this ClaimsPrincipal user)
         {
             return Convert.ToInt32(GetClaim(user, "Id"));
+        }
+
+        public static string Avatar(this ClaimsPrincipal user)
+        {
+            return GetClaim(user, "Avatar");
         }
 
         public static string Username(this ClaimsPrincipal user)
@@ -48,7 +53,8 @@ namespace TeamEdge.WebLayer
                 Id = user.Id(),
                 UserName = user.Username(),
                 Email = user.Email(),
-                FullName = user.FullName()
+                FullName = user.FullName(),
+                Avatar = user.Avatar()
             };
         }
 

@@ -1,9 +1,9 @@
 ﻿namespace TeamEdge.Models
 {
-    public struct TaskDTO
+    public class ItemDTO
     {
-        public int TaskNumber { get; set; }
         public string Code { get; set; }
+        public int Number { get; set; }
         public string Name { get; set; }
     }
 }

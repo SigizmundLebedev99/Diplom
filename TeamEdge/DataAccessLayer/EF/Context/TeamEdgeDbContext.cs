@@ -54,6 +54,8 @@ namespace TeamEdge.DAL.Context
 
             builder.Entity<Subscribe>().HasKey(e => new { e.SubscriberId, e.WorkItemId });
 
+            builder.Entity<Invite>().HasOne(e => e.User).WithMany(u => u.Invites).HasForeignKey(e => e.ToUserId);
+
             foreach (var relationSheep in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationSheep.DeleteBehavior = DeleteBehavior.Restrict;

@@ -2,10 +2,10 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Transactions;
-using TeamEdge.BusinessLogicLayer.Git;
-using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
@@ -24,30 +24,27 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _params = parameters;
         }
 
-        public async Task<OperationResult> CreateRepository(int creatorId, CreateRepositoryDTO model)
+        public async Task<int> CreateRepository(CreateRepositoryDTO model)
         {
-            var operRes = new OperationResult(true);
             var projectName = (await _context.Projects.FirstOrDefaultAsync(p => p.Id == model.ProjectId && p.RepositoryId == null))?.Name;
             if (string.IsNullOrEmpty(projectName))
-                operRes.AddErrorMessage("project-nf", "");
-            if(!await _context
+                throw new NotFoundException("project_nf");
+            if (!await _context
                 .UserProjects
-                .AnyAsync(u=>u.UserId == creatorId && u.ProjectId == model.ProjectId && u.ProjRole == ProjectAccessLevel.Administer))
-                operRes.AddErrorMessage("user-inv", "");
-
-            if (!operRes.Succeded)
-                return operRes;
+                .AnyAsync(u => u.UserId == model.UserId && u.ProjectId == model.ProjectId && u.ProjRole == ProjectAccessLevel.Administer))
+                throw new UnauthorizedException("user_inv");
 
             using (TransactionScope transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 try
                 {
-                    _context.Repositories.Add(new Repository
+                    var newRepo = new Repository
                     {
-                        CreatorId = creatorId,
+                        CreatorId = model.UserId,
                         DateOfCreation = DateTime.Now,
                         ProjectId = model.ProjectId
-                    });
+                    };
+                    _context.Repositories.Add(newRepo);
 
                     string path = Path.Combine(_params.RepositoriesDirPath, projectName);
                     if (!Directory.Exists(path))
@@ -60,6 +57,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     }
 
                     await _context.SaveChangesAsync();
+                    return newRepo.Id;
                 }
                 catch(Exception ex)
                 {
@@ -67,18 +65,17 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     throw;
                 }
             }
-
-            return operRes;
         }
 
-        public Task<bool> HasPermission(string username, string repositoryName, RepositoryAccessLevel requiredLevel)
+        public Task<bool> HasPermission(string username, string repositoryName, Expression<Func<UserProject, bool>> predicate)
         {
-           return _context    
-                .Projects
-                .FirstOrDefault(p=>p.Name == repositoryName)
-                .Users
-                .AsQueryable()
-                .AnyAsync(u => u.RepoRole == requiredLevel && u.User.UserName == username);
+            return _context
+                 .Projects
+                 .FirstOrDefault(p => p.Name == repositoryName)
+                 .Users
+                 .AsQueryable()
+                 .Where(predicate)
+                 .AnyAsync(u => u.User.UserName == username);
         }
     }
 }

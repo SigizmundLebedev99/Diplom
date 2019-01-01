@@ -23,49 +23,62 @@
             <summary>
             Returns jwt token for authorization after authentication
             </summary>
-            <param name="model">email as login and password</param>
-            <returns></returns>
         </member>
         <member name="M:TeamEdge.Controllers.AccountController.Register(TeamEdge.Models.RegisterUserDTO)">
             <summary>
             main registration of new users; TODO: Email confirmation;
             </summary>
-            <param name="model">user model</param>
-            <returns></returns>
         </member>
         <member name="M:TeamEdge.Controllers.AccountController.GetAuthenticationProviders">
             <summary>
             Return OAuth providers
             </summary>
-            <returns></returns>
         </member>
         <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.SendInvite(TeamEdge.Models.CreateInviteVM)">
             <summary>
             Create invite for new project partisipant
             </summary>
-            <param name="model"></param>
-            <returns></returns>
         </member>
         <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.JoinProject(System.Int32)">
             <summary>
             Accept invite and join to project
             </summary>
-            <param name="inviteId"></param>
-            <returns></returns>
         </member>
         <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.LeaveProject(System.Int32,System.Int32)">
             <summary>
             Remove participant from project
             </summary>
-            <param name="projectId"></param>
-            <param name="userId"></param>
-            <returns></returns>
         </member>
         <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.ChangePartisipantStatus(TeamEdge.Models.ChangeStatusVM)">
             <summary>
             Change partisipant status
             </summary>
-            <param name="model"></param>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.ProjectController.GetProjectsForUser(System.Int32)">
+            <summary>
+            Get projects and invites for user
+            </summary>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.ProjectController.CreateProject(TeamEdge.Models.CreateProjectVM)">
+            <summary>
+            Create new project
+            </summary>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.ProjectController.GetProjectInfo(System.Int32)">
+            <summary>
+            Get infomation about current project
+            </summary>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.ProjectController.UpdateProjectInfo(System.Int32,TeamEdge.Models.CreateProjectVM)">
+            <summary>
+            Update info about project
+            </summary>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.RepositoryController.CreateRepository(System.Int32)">
+            <summary>
+            Create repo for current project
+            </summary>
+            <param name="projectId"></param>
             <returns></returns>
         </member>
     </members>

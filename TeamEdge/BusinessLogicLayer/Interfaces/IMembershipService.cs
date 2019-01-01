@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Interfaces

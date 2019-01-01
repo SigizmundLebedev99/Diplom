@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TeamEdge.BusinessLogicLayer.Git;
+using TeamEdge.BusinessLogicLayer;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.DAL.Context;

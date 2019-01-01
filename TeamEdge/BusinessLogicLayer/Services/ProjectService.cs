@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
@@ -44,7 +44,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Id = u.UserId,
                     Email = u.User.Email,
                     FullName = u.User.FullName,
-                    UserName = u.User.UserName
+                    UserName = u.User.UserName,
+                    Avatar = u.User.Avatar
                 }).ToArray(),
                 Id = p.Id,
                 Logo = p.Logo,

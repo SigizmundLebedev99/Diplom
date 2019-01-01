@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace TeamEdge.BusinessLogicLayer.Infrostructure
+namespace TeamEdge.BusinessLogicLayer.Infrastructure
 {
     public class OperationResult<T> : OperationResult
     {
@@ -31,7 +29,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
         protected List<ErrorMessage> ErrorMessages { get; set; }
         public bool Succeded { get; set; }
 
-        public void AddErrorMessage(string alias, string message)
+        public void AddErrorMessage(string alias, object message)
         {
             Succeded = false;
             ErrorMessages.Add(new ErrorMessage { Alias = alias, Message = message });
@@ -49,6 +47,13 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
                 return new OkResult();
             else
                 return new BadRequestObjectResult(ErrorMessages);
+        }
+
+        public void Plus(OperationResult b)
+        {
+            if (!b.Succeded)
+                this.Succeded = false;
+            this.ErrorMessages = this.ErrorMessages.Concat(b.ErrorMessages).ToList();
         }
     }
 }

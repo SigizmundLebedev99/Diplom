@@ -10,6 +10,6 @@ namespace TeamEdge.DAL.Models
 
         public int WorkItemId { get; set; }
         [ForeignKey("WorkItemId")]
-        public WorkItemDescription WorkItemDescription { get; set; }
+        public WorkItemDescription WorkItem { get; set; }
     }
 }

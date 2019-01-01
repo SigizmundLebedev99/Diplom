@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace TeamEdge.BusinessLogicLayer.Infrostructure
+namespace TeamEdge.BusinessLogicLayer.Infrastructure
 {
     public class UnauthorizedException : Exception
     {

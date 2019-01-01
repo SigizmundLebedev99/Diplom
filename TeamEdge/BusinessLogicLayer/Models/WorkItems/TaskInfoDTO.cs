@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace TeamEdge.Models
 {
-    public struct CreateRepositoryDTO
+    public class TaskInfoDTO : WorkItemDTO
     {
-        public int ProjectId { get; set; }
-        public int UserId { get; set; }
+        public UserDTO AssignedTo { get; set; }
     }
 }

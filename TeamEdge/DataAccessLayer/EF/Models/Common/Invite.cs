@@ -8,9 +8,10 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }
         public string Email { get; set; }
+
         public int? ToUserId { get; set; }
-        [ForeignKey("ToUserId")]
         public User User { get; set; }
+
         public RepositoryAccessLevel RepoRole { get; set; }
         public ProjectAccessLevel ProjRole { get; set; }
 

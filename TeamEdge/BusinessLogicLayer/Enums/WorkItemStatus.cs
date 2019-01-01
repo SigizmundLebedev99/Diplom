@@ -1,4 +1,4 @@
-﻿namespace TeamEdge.DAL.Models
+﻿namespace TeamEdge
 {
     public enum WorkItemStatus : byte
     {

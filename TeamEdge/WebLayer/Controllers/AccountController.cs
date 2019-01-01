@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Models;
 using TeamEdge.JWT;
@@ -33,12 +33,12 @@ namespace TeamEdge.Controllers
         /// <summary>
         /// Returns jwt token for authorization after authentication
         /// </summary>
-        /// <param name="model">email as login and password</param>
-        /// <returns></returns>
         [HttpPost("token")]
         public async Task<IActionResult> Token([FromBody]LoginDTO model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Login);
+            if (user == null)
+                await _userManager.FindByNameAsync(model.Login);
             if (user == null)
                 return BadRequest(new ErrorMessage{ Message = "User with current email doesn't exist", Alias = "wrongEmail"});
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
@@ -50,8 +50,6 @@ namespace TeamEdge.Controllers
         /// <summary>
         /// main registration of new users; TODO: Email confirmation;
         /// </summary>
-        /// <param name="model">user model</param>
-        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterUserDTO model)
         {
@@ -71,7 +69,6 @@ namespace TeamEdge.Controllers
         /// <summary>
         /// Return OAuth providers
         /// </summary>
-        /// <returns></returns>
         [HttpGet("providers")]
         public async Task<IActionResult> GetAuthenticationProviders()
         {
@@ -89,6 +86,8 @@ namespace TeamEdge.Controllers
                 claims.Add(new Claim(JwtRegisteredClaimNames.GivenName, user.Firstname + " " + user.Lastname));
             if (!string.IsNullOrEmpty(user.UserName))
                 claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName));
+            if (!string.IsNullOrEmpty(user.Avatar))
+                claims.Add(new Claim("Avatar", user.UserName));
             claims.Add(new Claim("Id", user.Id.ToString()));
 
             ClaimsIdentity claimsIdentity =

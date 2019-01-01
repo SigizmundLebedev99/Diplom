@@ -1,19 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamEdge.DAL.Models
 {
-    public class WorkItemDescription
+    public class WorkItemDescription : BaseEntity
     {
-        public int Id { get; set; }
-        public WorkItemType WorkItemType { get; set; }
-
+        [StringLength(8)]
+        [Required]
+        public string Code;
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }
 
         public string DescriptionText { get; set; }
         public string DescriptionCode { get; set; }
+
+        public int LastUpdaterId { get; set; }
+        [ForeignKey("LastUpdaterId")]
+        public User LastUpdater { get; set; }
+        public DateTime? LastUpdate { get; set; }
 
         public ICollection<BranchLink> CodeLinks { get; set; }
         public ICollection<Comment> Comments { get; set; }

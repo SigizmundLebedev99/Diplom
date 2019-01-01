@@ -5,20 +5,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamEdge.DAL.Models
 {
-    public class BaseWorkItem : BaseEntity
+    public class BaseWorkItem
     {
-        public WorkItemStatus Status { get; set; }
-        public Priority Priority { get; set; }
-        public Priority Risk { get; set; }
-
-        [StringLength(64, MinimumLength =3)]
-        public string Name { get; set; }
+        [Key]
+        public int DescriptionId { get; set; }
+        [ForeignKey("DescriptionId")]
         public WorkItemDescription Description { get; set; }
 
-        public int LastUpdaterId { get; set; }
-        [ForeignKey("LastUpdaterId")]
-        public User LastUpdater { get; set; }
-        public DateTime LastUpdate { get; set; }
+        public WorkItemStatus Status { get; set; }
+        public int Number { get; set; }
+
+        [StringLength(64, MinimumLength =3)]
+        public string Name { get; set; }  
     }
 
     public class BaseWorkItem<TChild> : BaseWorkItem where TChild : BaseWorkItem

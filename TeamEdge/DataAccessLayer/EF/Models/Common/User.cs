@@ -13,9 +13,9 @@ namespace TeamEdge.DAL.Models
         [StringLength(64, MinimumLength =3)]
         public string Patrinymic { get; set; }
 
-        public ICollection<UserProject> UserProjects { get; set; }
-        public ICollection<Invite> Invites { get; set; }
-        public ICollection<Subscribe> Subscribes { get; set; }
+        public virtual ICollection<UserProject> UserProjects { get; set; }
+        public virtual ICollection<Invite> Invites { get; set; }
+        public virtual ICollection<Subscribe> Subscribes { get; set; }
         public string Avatar { get; internal set; }
 
         public string FullName

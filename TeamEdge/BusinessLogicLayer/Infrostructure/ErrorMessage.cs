@@ -1,4 +1,4 @@
-﻿namespace TeamEdge.BusinessLogicLayer.Infrostructure
+﻿namespace TeamEdge.BusinessLogicLayer.Infrastructure
 {
     public struct ErrorMessage
     {

@@ -6,7 +6,7 @@ namespace TeamEdge.DAL.Models
     public class WorkItemFile : BaseEntity
     {
         public int WorkItemId { get; set; }
-        [ForeignKey("WorkItemDescriptionId")]
+        [ForeignKey("WorkItemId")]
         public WorkItemDescription WorkItem { get; set; }
 
         public string Description { get; set; }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.Models;
 
@@ -23,7 +23,11 @@ namespace TeamEdge.WebLayer.Controllers
             _fileWorkService = fwservice;
         }
 
+        /// <summary>
+        /// Get projects and invites for user
+        /// </summary>
         [HttpGet("{userId}")]
+        [ProducesResponseType(200, Type = typeof(ProjectsForUserDTO))]
         public async Task<IActionResult> GetProjectsForUser(int userId)
         {
             var result = await _projectService.GetProjectsForUserAsync(userId);
@@ -32,7 +36,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Create new project
+        /// </summary>
         [HttpPost]
+        [ProducesResponseType(200, Type = typeof(ProjectDTO))]
         public async Task<IActionResult> CreateProject([FromForm]CreateProjectVM model)
         {
             var dto = _mapper.Map<CreateProjectDTO>(model);
@@ -42,20 +50,28 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Get infomation about current project
+        /// </summary>
         [HttpGet("{projectId}")]
+        [ProducesResponseType(200, Type = typeof(ProjectInfoDTO))]
         public async Task<IActionResult> GetProjectInfo(int projectId)
         {
             var result = await _projectService.GetProjectInfo(projectId, User.Id());
             return Ok(result);
         }
 
+        /// <summary>
+        /// Update info about project
+        /// </summary>
         [HttpPut("{projectId}")]
+        [ProducesResponseType(200, Type = typeof(ProjectDTO))]
         public async Task<IActionResult> UpdateProjectInfo(int projectId, [FromForm]CreateProjectVM model)
         {
             var dto = _mapper.Map<CreateProjectDTO>(model);
             dto.UserId = User.Id();
-            await _projectService.UpdateProject(projectId, dto);
-            return Ok();
+            var result = await _projectService.UpdateProject(projectId, dto);
+            return Ok(result);
         }
     }
 }
