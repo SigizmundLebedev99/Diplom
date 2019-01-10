@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
+using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.Models;
 
 namespace TeamEdge.WebLayer.Controllers
@@ -14,19 +15,19 @@ namespace TeamEdge.WebLayer.Controllers
     {
         readonly IProjectService _projectService;
         readonly IMapper _mapper;
-        readonly IFileWorkService _fileWorkService;
+        readonly FileSystemService _fileSystem;
 
-        public ProjectController(IProjectService projectService, IMapper mapper, IFileWorkService fwservice)
+        public ProjectController(IProjectService projectService, IMapper mapper, IFileWorkService fwservice, FileSystemService fileSystemService)
         {
             _projectService = projectService;
             _mapper = mapper;
-            _fileWorkService = fwservice;
+            _fileSystem = fileSystemService;
         }
 
         /// <summary>
         /// Get projects and invites for user
         /// </summary>
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         [ProducesResponseType(200, Type = typeof(ProjectsForUserDTO))]
         public async Task<IActionResult> GetProjectsForUser(int userId)
         {
@@ -45,7 +46,7 @@ namespace TeamEdge.WebLayer.Controllers
         {
             var dto = _mapper.Map<CreateProjectDTO>(model);
             dto.UserId = User.Id();
-            dto.Logo = _fileWorkService.SavePhoto(model.Logo);
+            dto.Logo = await _fileSystem.AvatarSave(model.Logo);
             var result = await _projectService.CreateProject(dto);
             return Ok(result);
         }
@@ -72,6 +73,13 @@ namespace TeamEdge.WebLayer.Controllers
             dto.UserId = User.Id();
             var result = await _projectService.UpdateProject(projectId, dto);
             return Ok(result);
+        }
+
+        [HttpGet("files/{projectId}")]
+        public async Task<IActionResult> GetFilesForProject(int projectId)
+        {
+            var res = await _projectService.GetFilesForProject(projectId, User.Id());
+            return Ok(res);
         }
     }
 }

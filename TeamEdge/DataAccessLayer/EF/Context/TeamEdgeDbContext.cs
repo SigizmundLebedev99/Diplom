@@ -32,7 +32,7 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<WorkItemTag> WorkItemTags { get; set; }
 
-        public virtual DbSet<WorkItemFile> WorkItemFiles { get; set; }
+        public virtual DbSet<File> Files { get; set; }
 
         public virtual DbSet<TestCase> TestCases { get; set; }
 
@@ -42,11 +42,24 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<Invite> Invites { get; set; }
 
+        public virtual DbSet<WorkItemFile> WorkItemFiles { get; set; }
+
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
+
+        public IQueryable<BaseWorkItem> WorkItems
+        {
+            get
+            {
+                return ((IQueryable<BaseWorkItem>)Epicks).Concat(Features).Concat(UserStories).Concat(Tasks);
+            }
+        }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<WorkItemFile>().HasKey(e => new { e.FileId, e.WorkItemId });
 
             builder.Entity<UserProject>().HasKey(e => new { e.UserId, e.ProjectId });
 

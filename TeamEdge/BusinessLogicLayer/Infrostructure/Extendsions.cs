@@ -9,18 +9,18 @@ namespace TeamEdge.BusinessLogicLayer
         public static string Code(this WorkItemType wit)
         {
             Type type = wit.GetType();
-            return GetCode(type);
+            return GetCode(type, wit);
         }
 
         public static string Code(this TaskType tt)
         {
             Type type = tt.GetType();
-            return GetCode(type);
+            return GetCode(type, tt);
         }
 
-        private static string GetCode(Type type)
+        private static string GetCode(Type type, object param)
         {
-            MemberInfo[] members = type.GetMember(type.ToString());
+            MemberInfo[] members = type.GetMember(param.ToString());
             if (members != null && members.Length > 0)
             {
                 var attrs = members[0].GetCustomAttribute(typeof(WorkItemAttribute), false);

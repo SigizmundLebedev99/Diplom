@@ -16,9 +16,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
     public class RepositoryService : IRepositoryService
     {
         readonly TeamEdgeDbContext _context;
-        readonly GitServiceParams _params;
+        readonly PathParams _params;
 
-        public RepositoryService(TeamEdgeDbContext context, GitServiceParams parameters)
+        public RepositoryService(TeamEdgeDbContext context, PathParams parameters)
         {
             _context = context;
             _params = parameters;

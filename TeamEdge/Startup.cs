@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TeamEdge.WebLayer;
 using TeamEdge.BusinessLogicLayer;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.BusinessLogicLayer.Services;
@@ -60,11 +61,16 @@ namespace TeamEdge
 
             services.AddCustomAuthentication(Configuration);
 
-            services.AddSingleton<GitServiceParams>();
+            services.AddSingleton<PathParams>();
             services.AddTransient<IMembershipService, MembershipService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IRepositoryService, RepositoryService>();
-
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IFileWorkService, FileWorkService>();
+            services.AddTransient<IValidationService, ValidationService>();
+            services.AddSingleton<FileSystemService>();
+            services.AddTransient<IWorkItemService, WorkItemService>();
+            
             services.AddMvc();
 
             services.AddSwaggerGen(c =>
@@ -94,9 +100,8 @@ namespace TeamEdge
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseStaticFiles();
-
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -106,6 +111,7 @@ namespace TeamEdge
             });
 
             app.UseAuthentication();
+           
             app.UseMvc();
         }
     }

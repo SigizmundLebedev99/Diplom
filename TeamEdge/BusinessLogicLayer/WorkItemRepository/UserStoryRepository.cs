@@ -21,56 +21,38 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Select(SelectExpression).FirstOrDefaultAsync();
         }
 
-        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(int descriptionId, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<UserStory>(model);
 
-            if (!await _context.Features
-                .AnyAsync(e=>e.Description.ProjectId == model.ProjectId 
-                && e.DescriptionId == model.ParentId))
-                operRes.AddErrorMessage("parent_nf", model.ParentId);
+            var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
+            operRes.Plus(checkResult);
 
-            _Task[] children = null;
-
-            if (model.ChildrenIds != null && model.ChildrenIds.Count() > 0)
-            {
-                children = await _context.Tasks
-                    .Where(t => t.Description.ProjectId == model.ProjectId
-                    && model.ChildrenIds.Contains(t.DescriptionId)).ToArrayAsync();
-
-                if (model.ChildrenIds.Length > children.Count())
-                {
-                    foreach (var i in model.ChildrenIds.Where(i => !children.Select(e => e.DescriptionId).Contains(i)))
-                    {
-                        operRes.AddErrorMessage("children_nf", i);
-                    }
-                }
-            }
-
+            if (model.ParentId != null)
+                operRes.Plus(await CheckParent<Feature>(model.ProjectId, model.ParentId.Value));
+            
             if (!operRes.Succeded)
                 return operRes;
 
+            var children = checkResult.Result;
             entity.Number = await GetNumber<UserStory>(model.ProjectId);
-            entity.DescriptionId = descriptionId;
+            entity.DescriptionId = description.Id;
 
             if (children != null)
             {
                 foreach (var t in children)
                     t.ParentId = entity.DescriptionId;
-                _context.UpdateRange(children);
+                _context.Tasks.UpdateRange(children);
             }
             
             _context.UserStories.Add(entity);
 
             await _context.SaveChangesAsync();
-            operRes.Result = await _context.UserStories.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == descriptionId);
+            operRes.Result = await _context.UserStories.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
             return operRes;
         }
-        private static readonly Expression<Func<UserStory, DescriptionDTO>> SExpression = e => new DescriptionDTO
-        {
-            LastUpdate = DateTime.Now
-        };
+
         private static readonly Expression<Func<UserStory, WorkItemDTO>> SelectExpression = e => new UserStoryInfoDTO
         {
             Code = WorkItemType.UserStory.Code(),
@@ -110,12 +92,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Description = e.Description.DescriptionText,
                 DescriptionCode = e.Description.DescriptionCode,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdater == null ? null : new UserDTO
+                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserDTO
                 {
                     Avatar = e.Description.LastUpdater.Avatar,
                     Email = e.Description.LastUpdater.Email,
                     FullName = e.Description.LastUpdater.FullName,
-                    Id = e.Description.LastUpdaterId,
+                    Id = e.Description.LastUpdaterId.Value,
                     UserName = e.Description.LastUpdater.UserName
                 }
             }

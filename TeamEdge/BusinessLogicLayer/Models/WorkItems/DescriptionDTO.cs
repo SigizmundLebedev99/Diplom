@@ -13,5 +13,6 @@ namespace TeamEdge.Models
         public UserDTO CreatedBy { get; set; }
         public DateTime? LastUpdate { get; set; }
         public UserDTO LastUpdateBy { get; set; }
+        public int FilesCount { get; set; }
     }
 }

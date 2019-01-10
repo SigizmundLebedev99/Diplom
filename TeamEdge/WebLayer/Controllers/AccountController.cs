@@ -23,11 +23,12 @@ namespace TeamEdge.Controllers
         readonly IEmailService _emailService;
         readonly IMapper _mapper;
 
-        public AccountController(UserManager<User> userManager, IMapper mapper, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, IMapper mapper, SignInManager<User> signInManager, IEmailService emailService)
         {
             _userManager = userManager;
             _mapper = mapper;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace TeamEdge.Controllers
         {
             var user = await _userManager.FindByEmailAsync(model.Login);
             if (user == null)
-                await _userManager.FindByNameAsync(model.Login);
+                user = await _userManager.FindByNameAsync(model.Login);
             if (user == null)
                 return BadRequest(new ErrorMessage{ Message = "User with current email doesn't exist", Alias = "wrongEmail"});
             if (!await _userManager.CheckPasswordAsync(user, model.Password))

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TeamEdge.Models
 {
-    public struct CreateProjectVM
+    public class CreateProjectVM
     {
         [Required]
         public string Name { get; set; }

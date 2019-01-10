@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
@@ -14,11 +16,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         readonly TeamEdgeDbContext _context;
         readonly IMapper _mapper;
+        IValidationService _validationService;
 
-        public ProjectService(TeamEdgeDbContext context, IMapper mapper)
+        public ProjectService(TeamEdgeDbContext context, IMapper mapper, IValidationService validationService)
         {
             _context = context;
             _mapper = mapper;
+            _validationService = validationService;
         }
 
         public async Task<ProjectDTO> CreateProject(CreateProjectDTO model)
@@ -27,9 +31,31 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 throw new UnauthorizedException();
 
             var entity = _mapper.Map<Project>(model);
+            entity.DateOfCreation = DateTime.Now;
+            entity.Users = new UserProject[]
+            {
+                new UserProject{UserId = model.UserId, ProjRole = ProjectAccessLevel.Administer, RepoRole = RepositoryAccessLevel.Administer}
+            };
             var result = _context.Projects.Add(entity);
             await _context.SaveChangesAsync();
             return _mapper.Map<ProjectDTO>(result.Entity);
+        }
+
+        public async Task<IEnumerable<FileDTO>> GetFilesForProject(int projectId, int userId)
+        {
+            await _validationService.ValidateProject(projectId, userId);
+            return await _context.Files.Where(e => e.ProjectId == projectId).Select(e => new FileDTO
+            {
+                Id = e.Id,
+                FileName = e.FileName,
+                CreatedBy = new UserLightDTO
+                {
+                    Avatar = e.Creator.Avatar,
+                    Name = e.Creator.FullName,
+                    Id = e.CreatorId
+                },
+                DateOfCreation = e.DateOfCreation
+            }).ToArrayAsync();
         }
 
         public async Task<ProjectInfoDTO> GetProjectInfo(int projectId, int userId)

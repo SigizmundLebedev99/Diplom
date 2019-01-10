@@ -5,14 +5,14 @@ namespace TeamEdge.BusinessLogicLayer.Infrastructure
 {
     public class WorkItemAttribute : Attribute
     {
-        public Type Type { get; set; }
+        public Type FactoryType { get; set; }
+        public Type DeserializationType { get; set; }
         public string Code { get; set; }
 
-        public WorkItemAttribute(string code, Type type)
+        public WorkItemAttribute(string code, Type factoryType, Type deserializationType)
         {
-            if (!type.IsSubclassOf(typeof(WorkItemRepository)))
-                throw new InvalidOperationException();
-            Type = type;
+            FactoryType = factoryType;
+            DeserializationType = deserializationType;
             Code = code;
         }
     }

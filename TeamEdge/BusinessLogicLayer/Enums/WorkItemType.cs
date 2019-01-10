@@ -1,22 +1,18 @@
 ﻿using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.Models;
-using TeamEdge.WebLayer.Infrastructure;
 
 namespace TeamEdge
 {
     public enum WorkItemType : byte
     {
-        [WorkItem("EPICK", typeof(EpickRepository))]
-        [Deserialize("EPICK", typeof(CreateWorkItemDTO))]
+        [WorkItem("EPICK", typeof(EpickRepository), typeof(CreateWorkItemDTO))]
         Epick,
 
-        [WorkItem("FEATURE", typeof(FeatureRepository))]
-        [Deserialize("FEATURE", typeof(CreateWorkItemDTO))]
+        [WorkItem("FEATURE", typeof(FeatureRepository), typeof(CreateWorkItemDTO))]
         Feature,
 
-        [WorkItem("STORY", typeof(UserStoryRepository))]
-        [Deserialize("STORY", typeof(CreateUserStoryDTO))]
+        [WorkItem("STORY", typeof(UserStoryRepository), typeof(CreateUserStoryDTO))]
         UserStory
     }
 }

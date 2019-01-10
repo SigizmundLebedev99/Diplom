@@ -22,14 +22,41 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .FirstOrDefaultAsync();
         }
 
-        public override Task<OperationResult<WorkItemDTO>> CreateWorkItem(int descriptionId, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
         {
-            throw new NotImplementedException();
+            var operRes = new OperationResult<WorkItemDTO>(true);
+            var entity = _mapper.Map<Feature>(model);
+
+            var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
+            operRes.Plus(checkResult);
+
+            if (model.ParentId != null)
+                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
+
+            if (!operRes.Succeded)
+                return operRes;
+
+            var children = checkResult.Result;
+            entity.Number = await GetNumber<Feature>(model.ProjectId);
+            entity.DescriptionId = description.Id;
+
+            if (children != null)
+            {
+                foreach (var t in children)
+                    t.ParentId = entity.DescriptionId;
+                _context.UserStories.UpdateRange(children);
+            }
+
+            _context.Features.Add(entity);
+
+            await _context.SaveChangesAsync();
+            operRes.Result = await _context.Features.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
+            return operRes;
         }
 
-        private static readonly Expression<Func<Feature, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
+        private static Expression<Func<Feature, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
         {
-            Code = WorkItemType.Feature.Code(),          
+            Code = WorkItemType.Feature.Code(),
             Name = e.Name,
             Number = e.Number,
             Status = e.Status,
@@ -60,15 +87,16 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Description = e.Description.DescriptionText,
                 DescriptionCode = e.Description.DescriptionCode,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdater == null ? null : new UserDTO
+                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserDTO
                 {
                     Avatar = e.Description.LastUpdater.Avatar,
                     Email = e.Description.LastUpdater.Email,
                     FullName = e.Description.LastUpdater.FullName,
-                    Id = e.Description.LastUpdaterId,
+                    Id = e.Description.LastUpdaterId.Value,
                     UserName = e.Description.LastUpdater.UserName
-                }
-            }
+                },
+                FilesCount = e.Description.Files.Count()
+            },
         };
     }
 }

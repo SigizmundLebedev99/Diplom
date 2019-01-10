@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
 using Task = System.Threading.Tasks.Task;
@@ -14,36 +15,36 @@ namespace TeamEdge.WebLayer
     {
         public static int Id(this ClaimsPrincipal user)
         {
-            return Convert.ToInt32(GetClaim(user, "Id"));
+            return Convert.ToInt32(GetClaim(user, "Id", true));
         }
 
         public static string Avatar(this ClaimsPrincipal user)
         {
-            return GetClaim(user, "Avatar");
+            return GetClaim(user, "Avatar", false);
         }
 
         public static string Username(this ClaimsPrincipal user)
         {
-            return GetClaim(user, JwtRegisteredClaimNames.UniqueName);
+            return GetClaim(user, JwtRegisteredClaimNames.UniqueName, true);
         }
 
         public static string Email(this ClaimsPrincipal user)
         {
-            return GetClaim(user, JwtRegisteredClaimNames.Email);
+            return GetClaim(user, JwtRegisteredClaimNames.Email, true);
         }
 
         public static string FullName(this ClaimsPrincipal user)
         {
-            return GetClaim(user, JwtRegisteredClaimNames.GivenName);
+            return GetClaim(user, JwtRegisteredClaimNames.GivenName, true);
         }
 
-        private static string GetClaim(ClaimsPrincipal user, string claim)
+        private static string GetClaim(ClaimsPrincipal user, string claim, bool required)
         {
             var Claim = user.Claims.FirstOrDefault(c => c.Type == claim);
-            if (Claim != null)
-                return Claim.Value;
-            else
-                throw new UnauthorizedAccessException();
+            if (required)
+                if (Claim == null)
+                    throw new UnauthorizedException();
+            return Claim?.Value;
         }
 
         public static UserDTO Model(this ClaimsPrincipal user)

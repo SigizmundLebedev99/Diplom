@@ -9,8 +9,8 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
 {
     public interface IValidationService
     {
-        Task<OperationResult> ValidateFiles(FileDTO[] files);
-
         Task<OperationResult> ValidateBranches(string[] branches, string repositoryPath);
+        Task<OperationResult> ValidateFileIds(int[] fileIds, int projectId);
+        Task ValidateProject(int projId, int userId);
     }
 }

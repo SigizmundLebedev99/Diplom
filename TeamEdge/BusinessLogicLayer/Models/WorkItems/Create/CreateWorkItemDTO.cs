@@ -7,7 +7,7 @@
         public string Name { get; set; }
         public string DescriptionText { get; set; }
         public string DescriptionCode { get; set; }
-        public FileDTO[] Files { get; set; }
+        public int[] FileIds { get; set; }
         public string[] Branches { get; set; }
         public int? ParentId { get; set; }
         public int[] ChildrenIds { get; set; }

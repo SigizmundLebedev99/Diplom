@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using TeamEdge.BusinessLogicLayer;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.Models;
 
@@ -18,6 +19,12 @@ namespace TeamEdge.WebLayer.Controllers
             _workItemService = service;
         }
 
+        [HttpGet("project/shit")]
+        public async Task<IActionResult> GetCode()
+        {
+            return Ok(WorkItemType.Epick.Code());
+        }
+
         [HttpGet("project/{projectId}/item")]
         public async Task<IActionResult> GetWorkItem(int projectId, [FromQuery]string code, [FromQuery]int number)
         {
@@ -28,8 +35,9 @@ namespace TeamEdge.WebLayer.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateWorkItem([FromBody][JsonConverter(typeof(WorkItemConverter))]CreateWorkItemDTO model)
         {
-            await _workItemService.CreateWorkItem(model);
-            return Ok();
+            model.CreatorId = User.Id();
+            var res = await _workItemService.CreateWorkItem(model);
+            return res.GetResult();
         }
     }
 }

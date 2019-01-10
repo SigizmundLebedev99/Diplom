@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.DAL.Context;
@@ -28,6 +31,43 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 return 1;
         }
 
+        protected async Task<OperationResult> CheckParent<T>(int projectId, int parentId) where T : BaseWorkItem
+        {
+            var operRes = new OperationResult(true);
+
+            if (!await _context.Set<T>()
+                .AnyAsync(e => e.Description.ProjectId == projectId
+                && e.DescriptionId == parentId))
+                operRes.AddErrorMessage("parent_nf", parentId);
+
+            return operRes;
+        }
+
+        protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem
+        {
+            var operRes = new OperationResult<IEnumerable<T>>(true);
+            T[] children = null;
+            if (childrenIds != null && childrenIds.Length > 0)
+            {
+                children = await _context.Set<T>()
+                    .Where(t => t.Description.ProjectId == projectId
+                    && childrenIds.Contains(t.DescriptionId)).ToArrayAsync();
+
+                if (children.Length < childrenIds.Length)
+                {
+                    foreach (var i in childrenIds.Where(i => !children.Select(e => e.DescriptionId).Contains(i)))
+                    {
+                        operRes.AddErrorMessage("children_nf", i);
+                    }
+                }
+                else
+                {
+                    operRes.Result = children;
+                }
+            }
+            return operRes;
+        }
+
         public WorkItemRepository(TeamEdgeDbContext context, IMapper mapper)
         {
             _context = context;
@@ -35,6 +75,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
         }
 
         public abstract Task<WorkItemDTO> GetWorkItem(int number, int project);
-        public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(int descriptionId, CreateWorkItemDTO model);
+        public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
     }
 }

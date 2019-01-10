@@ -13,12 +13,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         public void NotifyUserDeletedAsync(UserDTO from, int userId, int projectId)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void NotifyUserLeaveAsync(UserDTO from, int projectId)
         {
-            throw new NotImplementedException();
+            
         }
 
         public Task SendConfirmationAsync(User user)

@@ -25,8 +25,14 @@ namespace TeamEdge.BusinessLogicLayer.Infrastructure
         {
             Succeded = succeded;
         }
-
-        protected List<ErrorMessage> ErrorMessages { get; set; }
+        private List<ErrorMessage> errorMessages;
+        protected List<ErrorMessage> ErrorMessages
+        {
+            get
+            {
+                return errorMessages ?? (errorMessages = new List<ErrorMessage>());
+            }
+        }
         public bool Succeded { get; set; }
 
         public void AddErrorMessage(string alias, object message)
@@ -53,7 +59,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrastructure
         {
             if (!b.Succeded)
                 this.Succeded = false;
-            this.ErrorMessages = this.ErrorMessages.Concat(b.ErrorMessages).ToList();
+            this.errorMessages = this.ErrorMessages.Concat(b.ErrorMessages).ToList();
         }
     }
 }

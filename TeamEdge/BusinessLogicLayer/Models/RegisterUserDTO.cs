@@ -18,8 +18,11 @@ namespace TeamEdge.Models
         [Required]
         public string Lastname { get; set; }
 
-        [Phone]
-        public string Phone { get; set; }
+        //[Phone]
+        //public string Phone { get; set; }
+
+        [Required]
+        public string UserName { get; set; }
         public string Patronymic { get; set; }
     }
 }

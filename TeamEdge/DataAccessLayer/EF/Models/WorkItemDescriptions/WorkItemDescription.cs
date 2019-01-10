@@ -17,12 +17,12 @@ namespace TeamEdge.DAL.Models
         public string DescriptionText { get; set; }
         public string DescriptionCode { get; set; }
 
-        public int LastUpdaterId { get; set; }
+        public int? LastUpdaterId { get; set; }
         [ForeignKey("LastUpdaterId")]
         public User LastUpdater { get; set; }
         public DateTime? LastUpdate { get; set; }
 
-        public ICollection<BranchLink> CodeLinks { get; set; }
+        public ICollection<BranchLink> Branches { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<WorkItemFile> Files { get; set; }
         public ICollection<WorkItemHistory> History { get; set; }

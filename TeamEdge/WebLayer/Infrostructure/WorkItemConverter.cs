@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.Models;
-using TeamEdge.WebLayer.Infrastructure;
 
 namespace TeamEdge.WebLayer
 {
@@ -47,20 +46,20 @@ namespace TeamEdge.WebLayer
         {
             EnumElements = typeof(WorkItemType)
                     .GetMembers()
-                    .Select(e => (DeserializeAttribute)e.GetCustomAttribute(typeof(DeserializeAttribute)))
+                    .Select(e => (WorkItemAttribute)e.GetCustomAttribute(typeof(WorkItemAttribute)))
                 .Concat(typeof(TaskType)
                     .GetMembers()
-                    .Select(e => (DeserializeAttribute)e.GetCustomAttribute(typeof(DeserializeAttribute))));
+                    .Select(e => (WorkItemAttribute)e.GetCustomAttribute(typeof(WorkItemAttribute))));
         }
 
-        private static IEnumerable<DeserializeAttribute> EnumElements;
+        private static IEnumerable<WorkItemAttribute> EnumElements;
 
         private static Type GetDeserializationType(string code)
         {
             var attr = EnumElements.FirstOrDefault(e => e.Code == code);
             if (attr == null)
                 throw new NotFoundException("code_inv");
-            return attr.Type;
+            return attr.DeserializationType;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Interfaces
@@ -9,5 +10,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
         Task<ProjectDTO> CreateProject(CreateProjectDTO model);
         Task<ProjectDTO> UpdateProject(int id, CreateProjectDTO model);
         Task<ProjectInfoDTO> GetProjectInfo(int id, int userId);
+        Task<IEnumerable<FileDTO>> GetFilesForProject(int projectId, int userId);
     }
 }

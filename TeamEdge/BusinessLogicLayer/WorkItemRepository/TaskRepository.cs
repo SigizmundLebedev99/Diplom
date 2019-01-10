@@ -23,9 +23,36 @@ namespace TeamEdge.BusinessLogicLayer.Services.WorkItemFactory
                 .FirstOrDefaultAsync();
         }
 
-        public override Task<OperationResult<WorkItemDTO>> CreateWorkItem(int descriptionId, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
         {
-            throw new NotImplementedException();
+            var operRes = new OperationResult<WorkItemDTO>(true);
+            var entity = _mapper.Map<_Task>(model);
+
+            var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
+            operRes.Plus(checkResult);
+
+            if (model.ParentId != null)
+                operRes.Plus(await CheckParent<UserStory>(model.ProjectId, model.ParentId.Value));
+
+            if (!operRes.Succeded)
+                return operRes;
+
+            var children = checkResult.Result;
+            entity.Number = await GetNumber<_Task>(model.ProjectId);
+            entity.DescriptionId = description.Id;
+
+            if (children != null)
+            {
+                foreach (var t in children)
+                    t.ParentId = entity.DescriptionId;
+                _context.Tasks.UpdateRange(children);
+            }
+
+            _context.Tasks.Add(entity);
+
+            await _context.SaveChangesAsync();
+            operRes.Result = await _context.Tasks.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
+            return operRes;
         }
 
         private static readonly Expression<Func<_Task, WorkItemDTO>> SelectExpression = e => new TaskInfoDTO
@@ -69,12 +96,12 @@ namespace TeamEdge.BusinessLogicLayer.Services.WorkItemFactory
                 Description = e.Description.DescriptionText,
                 DescriptionCode = e.Description.DescriptionCode,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdater == null ? null : new UserDTO
+                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserDTO
                 {
                     Avatar = e.Description.LastUpdater.Avatar,
                     Email = e.Description.LastUpdater.Email,
                     FullName = e.Description.LastUpdater.FullName,
-                    Id = e.Description.LastUpdaterId,
+                    Id = e.Description.LastUpdaterId.Value,
                     UserName = e.Description.LastUpdater.UserName
                 }
             }

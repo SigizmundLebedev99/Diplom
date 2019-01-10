@@ -81,5 +81,15 @@
             <param name="projectId"></param>
             <returns></returns>
         </member>
+        <member name="M:TeamEdge.WebLayer.ErrorHandlingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory)">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:TeamEdge.WebLayer.ErrorHandlingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+             <summary>
+            
+             </summary>
+        </member>
     </members>
 </doc>
