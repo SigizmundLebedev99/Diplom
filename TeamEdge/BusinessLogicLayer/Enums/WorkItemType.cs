@@ -1,5 +1,6 @@
 ﻿using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Services;
+using TeamEdge.DAL.Models;
 using TeamEdge.Models;
 
 namespace TeamEdge

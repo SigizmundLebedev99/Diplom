@@ -17,12 +17,17 @@ namespace TeamEdge.BusinessLogicLayer.Services
         protected readonly TeamEdgeDbContext _context;
         protected readonly IMapper _mapper;
 
-        protected async Task<int> GetNumber<T>(int projId) where T : BaseWorkItem
+        protected async Task<int> GetNumber<T>(int projId, Expression<Func<T, bool>> extraFilter = null) where T : BaseWorkItem
         {
-            if (await _context.Set<T>().Where(e => e.Description.ProjectId == projId).AnyAsync())
+            IQueryable<T> set = null;
+            if (extraFilter != null)
+                set = _context.Set<T>().Where(e => e.Description.ProjectId == projId).Where(extraFilter);
+            else
+                set = _context.Set<T>().Where(e => e.Description.ProjectId == projId);
+
+            if (await set.AnyAsync())
             {
-                var number = await _context.Set<T>()
-                    .Where(e => e.Description.ProjectId == projId)
+                var number = await set
                     .Select(e => e.Number)
                     .MaxAsync();
                 return number + 1;
@@ -41,6 +46,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 operRes.AddErrorMessage("parent_nf", parentId);
 
             return operRes;
+        }
+
+        internal IQueryable<ItemDTO> GetItems(GetItemsDTO model)
+        {
+            throw new NotImplementedException();
         }
 
         protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem
@@ -74,7 +84,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _mapper = mapper;
         }
 
-        public abstract Task<WorkItemDTO> GetWorkItem(int number, int project);
+        public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int project);
         public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
     }
 }

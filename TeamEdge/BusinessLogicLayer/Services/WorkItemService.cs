@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
@@ -27,11 +26,38 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _validationService = validationService;
         }
 
+        public async Task<IEnumerable<ItemDTO>> GetListOfItems(GetItemsDTO model)
+        {
+            await _validationService.ValidateProject(model.ProjectId, model.UserId);
+            bool ofType = !string.IsNullOrEmpty(model.Code);
+
+            Expression<Func<BaseWorkItem, ItemDTO>> selector = item => new ItemDTO
+            {
+                Code = item.Code,
+                DescriptionId = item.DescriptionId,
+                Name = item.Name,
+                Number = item.Number
+            };
+
+            Expression<Func<BaseWorkItem, bool>> filter = (i) => i.Description.ProjectId == model.ProjectId; 
+
+            IQueryable<ItemDTO> query = null;
+
+            if (ofType)
+            {
+                query = GetRepository(model.Code).GetItems(model);
+            }
+            else
+                query = _context.GetWorkItems(filter, selector);
+
+            return await query.ToListAsync();
+        }
+
         public async Task<WorkItemDTO> GetWorkItem(int projId, int fromUserId, string code, int number)
         {
             await _validationService.ValidateProject(projId, fromUserId);
 
-            var result = await GetRepository(code).GetWorkItem(number, projId);
+            var result = await GetRepository(code).GetWorkItem(code, number, projId);
             if (result == null)
                 throw new NotFoundException("number_nf");
 
@@ -58,57 +84,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Add(description);
             
             return await GetRepository(model.Code).CreateWorkItem(description, model);
-        }
-
-        //public async Task<IEnumerable<WorkItemDTO>> GetItemsForProject(GetWorkItemsDTO model)
-        //{
-        //    await _validationService.ValidateProject(model.ProjectId, model.UserId);
-
-        //    var attr = EnumElements.FirstOrDefault(e => e.Code == model.Code);
-            
-
-
-
-        //    //_context.Epicks.Select(e => new ItemWithChildrenDTO
-        //    //{
-        //    //    Children = e.Children.Select(a=>new ItemWithChildrenDTO
-        //    //    {
-        //    //        Children = a.Children.Select(b=>new ItemWithChildrenDTO
-        //    //        {
-        //    //            Children = b.Children.Select(c=>new ItemWithChildrenDTO
-        //    //            {
-        //    //                e
-        //    //            })
-        //    //        })
-        //    //    })
-        //    //});
-        //}
-
-        static Expression<Func<BaseWorkItem, bool>> FilterExpr(int projectId)
-        {
-            return (i) => i.Description.ProjectId == projectId;
-        }        
-
-        static WorkItemService()
-        {
-            EnumElements = typeof(WorkItemType)
-                    .GetMembers()
-                    .Select(e => (WorkItemAttribute)e.GetCustomAttribute(typeof(WorkItemAttribute)))
-                .Concat(typeof(TaskType)
-                    .GetMembers()
-                    .Select(e => (WorkItemAttribute)e.GetCustomAttribute(typeof(WorkItemAttribute))))
-                    .Where(e=>e!=null)
-                    .ToArray();
-        }
-
-        private static IEnumerable<WorkItemAttribute> EnumElements;
-
+        }     
+        
         private WorkItemRepository GetRepository(string code)
         {
-            var attr =  EnumElements.FirstOrDefault(e => e.Code == code);
+            var attr = GetAttribute(code);
+            return (WorkItemRepository)Activator.CreateInstance(attr.FactoryType, _context, _mapper);
+        }  
+
+        private WorkItemAttribute GetAttribute(string code)
+        {
+            var attr = WorkItemFactory.GetAttributeInstanse(code);
             if (attr == null)
                 throw new NotFoundException("code_inv");
-            return (WorkItemRepository)Activator.CreateInstance(attr.FactoryType, _context, _mapper);
+            return attr;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -13,16 +14,12 @@ namespace TeamEdge.WebLayer.Controllers
     public class WorkItemController : Controller
     {
         readonly IWorkItemService _workItemService;
+        readonly IMapper _mapper;
 
-        public WorkItemController(IWorkItemService service)
+        public WorkItemController(IWorkItemService service, IMapper mapper)
         {
             _workItemService = service;
-        }
-
-        [HttpGet("project/shit")]
-        public async Task<IActionResult> GetCode()
-        {
-            return Ok(WorkItemType.Epick.Code());
+            _mapper = mapper;
         }
 
         [HttpGet("project/{projectId}/item")]
@@ -33,11 +30,21 @@ namespace TeamEdge.WebLayer.Controllers
         } 
         
         [HttpPost]
-        public async Task<IActionResult> CreateWorkItem([FromBody][JsonConverter(typeof(WorkItemConverter))]CreateWorkItemDTO model)
+        public async Task<IActionResult> CreateWorkItem([FromBody]CreateWorkItemDTO model)
         {
             model.CreatorId = User.Id();
             var res = await _workItemService.CreateWorkItem(model);
             return res.GetResult();
+        }
+
+        [HttpGet("project/{projectId}/items")]
+        public async Task<IActionResult> GetListOfItems(int projectId, GetItemsVM model)
+        {
+            var dto = _mapper.Map<GetItemsDTO>(model);
+            dto.ProjectId = projectId;
+            dto.UserId = User.Id();
+            var result = await _workItemService.GetListOfItems(dto);
+            return Ok(result);
         }
     }
 }

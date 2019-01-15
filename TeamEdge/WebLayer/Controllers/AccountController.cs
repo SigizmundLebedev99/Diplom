@@ -100,7 +100,7 @@ namespace TeamEdge.Controllers
                 issuer: AuthTokenOptions.ISSUER,
                 notBefore: now,
                 claims: claimsIdentity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthTokenOptions.LIFETIME)),
+                expires: now.Add(TimeSpan.FromHours(AuthTokenOptions.LIFETIME)),
                 signingCredentials: new SigningCredentials(AuthTokenOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwt);

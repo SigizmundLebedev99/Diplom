@@ -1,5 +1,9 @@
-﻿namespace TeamEdge.Models
+﻿using Newtonsoft.Json;
+using TeamEdge.WebLayer;
+
+namespace TeamEdge.Models
 {
+    [JsonConverter(typeof(WorkItemConverter))]
     public class CreateWorkItemDTO
     {
         public int ProjectId { get; set; }

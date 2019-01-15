@@ -81,6 +81,21 @@
             <param name="projectId"></param>
             <returns></returns>
         </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.RepositoryController.GetBranches(System.Int32,TeamEdge.Models.GetBranchesVM)">
+            <summary>
+            Get list of branches to repo
+            </summary>
+            <param name="projectId"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.RepositoryController.CreateBranch(TeamEdge.Models.CreateBranchVM)">
+            <summary>
+            Create new branch for repo
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
         <member name="M:TeamEdge.WebLayer.ErrorHandlingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory)">
              <summary>
             

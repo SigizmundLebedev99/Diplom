@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamEdge.DAL.Models
 {
-    public class BaseWorkItem
+    public abstract class BaseWorkItem
     {
         [Key]
         public int DescriptionId { get; set; }
@@ -16,15 +16,17 @@ namespace TeamEdge.DAL.Models
         public int Number { get; set; }
 
         [StringLength(64, MinimumLength =3)]
-        public string Name { get; set; }  
+        public string Name { get; set; }
+        
+        public abstract string Code { get; }
     }
 
-    public class BaseWorkItem<TChild> : BaseWorkItem where TChild : BaseWorkItem
+    public abstract class BaseWorkItem<TChild> : BaseWorkItem where TChild : BaseWorkItem
     {
         public ICollection<TChild> Children { get; set; }
     }
 
-    public class BaseWorkItem<TChild, TParent> : BaseWorkItem<TChild> where TChild: BaseWorkItem where TParent: BaseWorkItem
+    public abstract class BaseWorkItem<TChild, TParent> : BaseWorkItem<TChild> where TChild: BaseWorkItem where TParent: BaseWorkItem
     {
         public int? ParentId { get; set; }
         [ForeignKey("ParentId")]

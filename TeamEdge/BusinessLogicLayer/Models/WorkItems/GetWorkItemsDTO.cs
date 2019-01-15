@@ -1,10 +1,9 @@
 ﻿namespace TeamEdge.Models
 {
-    public class GetWorkItemsDTO
+    public class GetItemsDTO
     {
         public int ProjectId { get; set; }
         public int UserId { get; set; }
         public string Code { get; set; }
-        public int? ParentId { get; set; }
     }
 }

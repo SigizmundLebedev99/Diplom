@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using TeamEdge.DAL.Models;
 
 namespace TeamEdge.DAL.Context
@@ -14,7 +16,7 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<Comment> Comments { get; set; }
 
-        public virtual DbSet<Repository> Repositories { get; set; }
+        public virtual DbSet<_Repository> Repositories { get; set; }
 
         public virtual DbSet<Epick> Epicks { get; set; }
 
@@ -46,12 +48,12 @@ namespace TeamEdge.DAL.Context
 
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
 
-        public IQueryable<BaseWorkItem> WorkItems
+        public IQueryable<T> GetWorkItems<T>(Expression<Func<BaseWorkItem, bool>> filter, Expression<Func<BaseWorkItem, T>> selector)
         {
-            get
-            {
-                return ((IQueryable<BaseWorkItem>)Epicks).Concat(Features).Concat(UserStories).Concat(Tasks);
-            }
+            return Tasks.Where(filter).Select(selector)
+                .Concat(UserStories.Where(filter).Select(selector))
+                .Concat(Epicks.Where(filter).Select(selector))
+                .Concat(Features.Where(filter).Select(selector));
         }
 
 

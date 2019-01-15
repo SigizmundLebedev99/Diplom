@@ -15,7 +15,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         public FeatureRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper) { }
 
-        public override Task<WorkItemDTO> GetWorkItem(int number, int project)
+        public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
         {
             return _context.Features.Where(e => e.Description.ProjectId == project && e.Number == number)
                 .Select(SelectExpression)
@@ -64,13 +64,15 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 Code = WorkItemType.UserStory.Code(),
                 Name = a.Name,
-                Number = a.Number
+                Number = a.Number,
+                DescriptionId = a.DescriptionId
             }),
             Parent = e.Parent == null ? null : new ItemDTO
             {
                 Code = WorkItemType.Epick.Code(),
                 Name = e.Parent.Name,
-                Number = e.Parent.Number
+                Number = e.Parent.Number,
+                DescriptionId = e.Parent.DescriptionId
             },
             DescriptionId = e.DescriptionId,
             Description = new DescriptionDTO

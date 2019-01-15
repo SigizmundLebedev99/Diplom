@@ -9,16 +9,17 @@ using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
 
-namespace TeamEdge.BusinessLogicLayer.Services.WorkItemFactory
+namespace TeamEdge.BusinessLogicLayer.Services
 {
     public class TaskRepository : WorkItemRepository
     {
         public TaskRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper) { }
 
-        public override Task<WorkItemDTO> GetWorkItem(int number, int project)
+        public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
         {
+            TaskType type = Enum.Parse<TaskType>(WorkItemFactory.GetEnumElement(code));
             return _context.Tasks
-                .Where(e => e.Number == number && e.Description.ProjectId == project)
+                .Where(e => e.Type == type && e.Number == number && e.Description.ProjectId == project)
                 .Select(SelectExpression)
                 .FirstOrDefaultAsync();
         }
@@ -36,9 +37,11 @@ namespace TeamEdge.BusinessLogicLayer.Services.WorkItemFactory
 
             if (!operRes.Succeded)
                 return operRes;
-
+            
             var children = checkResult.Result;
-            entity.Number = await GetNumber<_Task>(model.ProjectId);
+
+            entity.Type = Enum.Parse<TaskType>(WorkItemFactory.GetEnumElement(model.Code));
+            entity.Number = await GetNumber<_Task>(model.ProjectId, t=>t.Type == entity.Type);
             entity.DescriptionId = description.Id;
 
             if (children != null)
@@ -57,12 +60,12 @@ namespace TeamEdge.BusinessLogicLayer.Services.WorkItemFactory
 
         private static readonly Expression<Func<_Task, WorkItemDTO>> SelectExpression = e => new TaskInfoDTO
         {
-            AssignedTo = e.AssignedTo == null? null : new UserDTO
+            AssignedTo = e.AssignedToId == null? null : new UserDTO
             {
                 Avatar = e.AssignedTo.Avatar,
                 Email = e.AssignedTo.Email,
                 FullName = e.AssignedTo.FullName,
-                Id = e.AssignedToId,
+                Id = e.AssignedToId.Value,
                 UserName = e.AssignedTo.UserName
             },
             Code = e.Type.Code(),
@@ -74,13 +77,15 @@ namespace TeamEdge.BusinessLogicLayer.Services.WorkItemFactory
             {
                 Code = a.Type.Code(),
                 Name = a.Name,
-                Number = a.Number
+                Number = a.Number,
+                DescriptionId = a.DescriptionId
             }),
             Parent = e.Parent == null ? null : new ItemDTO
             {
                 Code = WorkItemType.UserStory.Code(),
                 Name = e.Parent.Name,
-                Number = e.Parent.Number
+                Number = e.Parent.Number,
+                DescriptionId = e.Parent.DescriptionId
             },
             Description = new DescriptionDTO
             {

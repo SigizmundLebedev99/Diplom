@@ -9,6 +9,10 @@ namespace TeamEdge.Mapper
     {
         public CommonProfile()
         {
+            CreateMap<CreateBranchVM, CreateBranchDTO>();
+            CreateMap<GetBranchesVM, GetBranchesDTO>();
+            CreateMap<GetItemsVM, GetItemsDTO>();
+
             CreateMap<RegisterUserDTO, User>();
             CreateMap<CreateInviteVM, CreateInviteDTO>();
             CreateMap<CreateInviteDTO, Invite>().ForMember(e => e.CreatorId, c => c.MapFrom(e => e.FromUserId));

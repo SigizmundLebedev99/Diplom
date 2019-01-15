@@ -7,6 +7,9 @@ using LibGit2Sharp;
 using System.IO;
 using TeamEdge.DAL.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using System;
+using TeamEdge.DAL.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
@@ -29,12 +32,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 if (branches == null || branches.Length == 0)
                     return operRes;
                 string path = Path.Combine(_parameters.RepositoriesDirPath, repositoryName);
-                if (!Repository.IsValid(path))
+                if (!LibGit2Sharp.Repository.IsValid(path))
                 {
                     operRes.AddErrorMessage("repo_nf");
                     return operRes;
                 }
-                var repository = new Repository(path);
+                var repository = new LibGit2Sharp.Repository(path);
                 var errors = branches.Where(b => !repository.Branches.Select(e => e.FriendlyName).Contains(b));
                 if (errors.Count()>0)
                 {
@@ -70,5 +73,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (!await _context.UserProjects.AnyAsync(p => p.UserId == userId && p.ProjectId == projId))
                 throw new UnauthorizedException();
         }
+
+        public async Task ValidateProject(int projId, int userId, Expression<Func<UserProject, bool>> filter)
+        {
+            if (!await _context.Projects.AnyAsync(p => p.Id == projId))
+                throw new Infrastructure.NotFoundException("project_nf");
+            if (!await _context.UserProjects.Where(filter).AnyAsync(p => p.UserId == userId && p.ProjectId == projId))
+                throw new UnauthorizedException();
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
@@ -12,29 +12,26 @@ namespace TeamEdge.WebLayer
     {
         public override bool CanConvert(Type objectType)
         {
-            if (objectType == typeof(CreateWorkItemDTO) || objectType.IsSubclassOf(typeof(CreateWorkItemDTO)))
-                return true;
-            return false;
+            return true;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            string code = null;
-            while (reader.Read())
-            {
-                if (reader.Value != null && reader.Value.ToString().ToUpper() == "CODE")
-                {
-                    code = reader.ReadAsString();
-                    break;
-                }
-            }
-            if (string.IsNullOrEmpty(code))
+            JObject obj = JObject.Load(reader);
+            var code = obj.Property("code").Value.ToString();
+            if(code == null)
                 throw new NotFoundException("code_nf");
-
             var type = GetDeserializationType(code);
-            var deserialize = serializer.GetType().GetMethod(nameof(serializer.Deserialize));
-            deserialize.MakeGenericMethod(type);
-            return deserialize.Invoke(serializer, new object[] { reader });
+            object instance = Activator.CreateInstance(type);
+            var props = type.GetTypeInfo().GetProperties().ToList();
+            foreach(var prop in obj.Properties())
+            {
+                PropertyInfo info = props.FirstOrDefault(pi => pi.CanWrite && pi.Name.ToUpper() == prop.Name.ToUpper());
+                if(info!=null)
+                    info.SetValue(instance, prop.Value.ToObject(info.PropertyType, serializer));
+            }
+
+            return instance;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -42,21 +39,9 @@ namespace TeamEdge.WebLayer
             throw new NotImplementedException();
         }
 
-        static WorkItemConverter()
-        {
-            EnumElements = typeof(WorkItemType)
-                    .GetMembers()
-                    .Select(e => (WorkItemAttribute)e.GetCustomAttribute(typeof(WorkItemAttribute)))
-                .Concat(typeof(TaskType)
-                    .GetMembers()
-                    .Select(e => (WorkItemAttribute)e.GetCustomAttribute(typeof(WorkItemAttribute))));
-        }
-
-        private static IEnumerable<WorkItemAttribute> EnumElements;
-
         private static Type GetDeserializationType(string code)
         {
-            var attr = EnumElements.FirstOrDefault(e => e.Code == code);
+            var attr = WorkItemFactory.GetAttributeInstanse(code);
             if (attr == null)
                 throw new NotFoundException("code_inv");
             return attr.DeserializationType;

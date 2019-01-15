@@ -15,6 +15,6 @@ namespace TeamEdge.DAL.Models
 
         public int? RepositoryId { get; set; }
         [ForeignKey("RepositoryId")]
-        public Repository Repository { get; set; }
+        public _Repository Repository { get; set; }
     }
 }

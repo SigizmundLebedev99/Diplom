@@ -15,7 +15,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         public UserStoryRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper) { }
 
-        public override Task<WorkItemDTO> GetWorkItem(int number, int project)
+        public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
         {
             return _context.UserStories.Where(e => e.Description.ProjectId == project && e.Number == number)
                 .Select(SelectExpression).FirstOrDefaultAsync();
@@ -68,12 +68,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Status = e.Status,
             Children = e.Children.Select(a=>new ItemDTO
             {
+                DescriptionId = a.DescriptionId,
                 Code = a.Type.Code(),
                 Name = a.Name,
                 Number = a.Number
             }),
             Parent = e.Parent == null? null : new ItemDTO
             {
+                DescriptionId = e.Parent.DescriptionId,
                 Code = WorkItemType.Feature.Code(),
                 Name = e.Parent.Name,
                 Number = e.Parent.Number

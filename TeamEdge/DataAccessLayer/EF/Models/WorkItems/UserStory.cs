@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using TeamEdge.BusinessLogicLayer;
 
 namespace TeamEdge.DAL.Models
 {
@@ -11,5 +12,7 @@ namespace TeamEdge.DAL.Models
         public int? SprintId { get; set; }
         [ForeignKey("SprintId")]
         public Sprint Sprint { get; set; }
+
+        public override string Code => WorkItemType.UserStory.Code();
     }
 }

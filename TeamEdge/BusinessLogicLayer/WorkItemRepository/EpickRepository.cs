@@ -16,7 +16,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         public EpickRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper) { }
 
-        public override Task<WorkItemDTO> GetWorkItem(int number, int project)
+        public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
         {
             return _context.Epicks.Where(e => e.Description.ProjectId == project && e.Number == number)
                 .Select(SelectExpression).FirstOrDefaultAsync();
@@ -62,7 +62,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 Code = WorkItemType.Feature.Code(),
                 Name = a.Name,
-                Number = a.Number
+                Number = a.Number,
+                DescriptionId = a.DescriptionId
             }),
             Description = new DescriptionDTO
             {

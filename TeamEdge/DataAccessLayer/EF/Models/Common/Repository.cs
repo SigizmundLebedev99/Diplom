@@ -2,7 +2,7 @@
 
 namespace TeamEdge.DAL.Models
 {
-    public class Repository : BaseEntity
+    public class _Repository : BaseEntity
     {
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]

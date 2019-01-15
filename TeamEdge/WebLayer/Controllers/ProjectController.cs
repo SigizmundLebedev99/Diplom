@@ -44,6 +44,8 @@ namespace TeamEdge.WebLayer.Controllers
         [ProducesResponseType(200, Type = typeof(ProjectDTO))]
         public async Task<IActionResult> CreateProject([FromForm]CreateProjectVM model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var dto = _mapper.Map<CreateProjectDTO>(model);
             dto.UserId = User.Id();
             dto.Logo = await _fileSystem.AvatarSave(model.Logo);
