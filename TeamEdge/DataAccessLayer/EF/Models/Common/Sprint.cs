@@ -10,12 +10,13 @@ namespace TeamEdge.DAL.Models
         [StringLength(64, MinimumLength = 3)]
         public string Name { get; set; }
 
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
-        public int? FeatureId { get; set; }
-        [ForeignKey("FeatureId")]
-        public Feature Feature { get; set; }
+        public int ProjectId { get; set; }
+        [ForeignKey("ProjectId")]
+        public Project Project { get; set; }
         public ICollection<UserStory> UserStories { get; set; }
+        public ICollection<_Task> Tasks { get; set; }
     }
 }

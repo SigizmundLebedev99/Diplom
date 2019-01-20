@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
-using TeamEdge.Models;
-using LibGit2Sharp;
 using System.IO;
 using TeamEdge.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System;
 using TeamEdge.DAL.Models;
+using System.Collections.Generic;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
@@ -57,9 +56,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             if (files.Length < fileIds.Length)
             {
-                foreach(var f in files.Where(e => !fileIds.Contains(e.Id)))
+                foreach(var fid in fileIds.Where(i => !files.Any(f=>f.Id == i)))
                 {
-                    operRes.AddErrorMessage("file_inv", f.Id);
+                    operRes.AddErrorMessage("file_inv", fid);
                 }
             }
 
@@ -82,5 +81,29 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 throw new UnauthorizedException();
         }
 
+        public async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem
+        {
+            var operRes = new OperationResult<IEnumerable<T>>(true);
+            T[] children = null;
+            if (childrenIds != null && childrenIds.Length > 0)
+            {
+                children = await _context.Set<T>()
+                    .Where(t => t.Description.ProjectId == projectId
+                    && childrenIds.Contains(t.DescriptionId)).ToArrayAsync();
+
+                if (children.Length < childrenIds.Distinct().Count())
+                {
+                    foreach (var i in childrenIds.Where(i => !children.Any(e => e.DescriptionId == i)))
+                    {
+                        operRes.AddErrorMessage("children_nf", i);
+                    }
+                }
+                else
+                {
+                    operRes.Result = children;
+                }
+            }
+            return operRes;
+        }
     }
 }

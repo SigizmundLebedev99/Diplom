@@ -15,5 +15,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
         Task<OperationResult> ValidateFileIds(int[] fileIds, int projectId);
         Task ValidateProject(int projId, int userId);
         Task ValidateProject(int projId, int userId, Expression<Func<UserProject, bool>> filter);
+        Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem;
     }
 }

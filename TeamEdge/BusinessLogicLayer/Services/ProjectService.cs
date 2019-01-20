@@ -119,7 +119,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var previous = userProj.Project;
             var newProject = _mapper.Map<Project>(model);
             newProject.Id = id;
-            newProject.RepositoryId = previous.RepositoryId;
             newProject.DateOfCreation = previous.DateOfCreation;
             _context.Projects.Update(newProject);
             await _context.SaveChangesAsync();

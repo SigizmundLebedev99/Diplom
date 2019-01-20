@@ -51,6 +51,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
+        public override IQueryable<ItemDTO> GetItems(GetItemsDTO model)
+        {
+            model.HasNoParent = false;
+            model.ParentId = null;
+            var filter = WorkItemHelper.GetFilter<Epick>(model);
+            return _context.Epicks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+        }
+
         private static readonly Expression<Func<Epick, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
         {
             Code = WorkItemType.Epick.Code(),

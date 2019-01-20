@@ -1,6 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Interfaces
@@ -8,6 +7,8 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
     public interface IFileWorkService
     {
         Task<(byte[] bytes, string type, string name)> GetFile(int fileId, int userId);
-        Task<int> CreateFile(CreateFileDTO file);
+        Task<FileDTO> CreateFile(CreateFileDTO file);
+        Task<IEnumerable<FileDTO>> GetFilesForProject(int userId, int projectId);
+        Task DeleteFile(int userId, int fileId);
     }
 }

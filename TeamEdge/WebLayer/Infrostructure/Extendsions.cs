@@ -25,17 +25,17 @@ namespace TeamEdge.WebLayer
 
         public static string Username(this ClaimsPrincipal user)
         {
-            return GetClaim(user, JwtRegisteredClaimNames.UniqueName, true);
+            return GetClaim(user, "UserName", true);
         }
 
         public static string Email(this ClaimsPrincipal user)
         {
-            return GetClaim(user, JwtRegisteredClaimNames.Email, true);
+            return GetClaim(user, "Emial", true);
         }
 
         public static string FullName(this ClaimsPrincipal user)
         {
-            return GetClaim(user, JwtRegisteredClaimNames.GivenName, true);
+            return GetClaim(user, "GivenName", true);
         }
 
         private static string GetClaim(ClaimsPrincipal user, string claim, bool required)

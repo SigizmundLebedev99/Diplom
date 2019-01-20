@@ -70,6 +70,7 @@ namespace TeamEdge
             services.AddTransient<IValidationService, ValidationService>();
             services.AddSingleton<FileSystemService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
+            services.AddTransient<ISprintService, SprintService>();
             
             services.AddMvc();
 

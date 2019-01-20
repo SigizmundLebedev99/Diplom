@@ -58,6 +58,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
+        public override IQueryable<ItemDTO> GetItems(GetItemsDTO model)
+        {
+            var filter = WorkItemHelper.GetFilter<_Task>(model);
+            return _context.Tasks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+        }
+
         private static readonly Expression<Func<_Task, WorkItemDTO>> SelectExpression = e => new TaskInfoDTO
         {
             AssignedTo = e.AssignedToId == null? null : new UserDTO

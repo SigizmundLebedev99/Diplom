@@ -11,6 +11,10 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("AssignedToId")]
         public User AssignedTo { get; set; }
 
+        public int? SprintId { get; set; }
+        [ForeignKey("SprintId")]
+        public Sprint Sprint { get; set; }
+
         public override string Code => Type.Code();
     }
 }

@@ -12,7 +12,7 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    abstract public class WorkItemRepository
+    public abstract class WorkItemRepository
     {
         protected readonly TeamEdgeDbContext _context;
         protected readonly IMapper _mapper;
@@ -48,11 +48,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
-        internal IQueryable<ItemDTO> GetItems(GetItemsDTO model)
-        {
-            throw new NotImplementedException();
-        }
-
         protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem
         {
             var operRes = new OperationResult<IEnumerable<T>>(true);
@@ -65,7 +60,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
                 if (children.Length < childrenIds.Length)
                 {
-                    foreach (var i in childrenIds.Where(i => !children.Select(e => e.DescriptionId).Contains(i)))
+                    foreach (var i in childrenIds.Where(i => !children.Any(e=>e.DescriptionId == i)))
                     {
                         operRes.AddErrorMessage("children_nf", i);
                     }
@@ -76,7 +71,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 }
             }
             return operRes;
-        }
+        }  
 
         public WorkItemRepository(TeamEdgeDbContext context, IMapper mapper)
         {
@@ -86,5 +81,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int project);
         public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
+        public abstract IQueryable<ItemDTO> GetItems(GetItemsDTO model);
     }
 }

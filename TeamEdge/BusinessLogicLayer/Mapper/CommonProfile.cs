@@ -21,7 +21,7 @@ namespace TeamEdge.Mapper
             CreateMap<Project, ProjectDTO>();
             CreateMap<CreateProjectDTO, Project>().ForMember(e=>e.CreatorId, c=>c.MapFrom(e=>e.UserId));
             CreateMap<CreateProjectVM, CreateProjectDTO>().ForMember(e => e.Logo, c => c.Ignore());
-            CreateMap<FileDTO, File>().ReverseMap();
+            CreateMap<FileDTO, _File>().ReverseMap();
 
             CreateMap<CreateTaskDTO, _Task>();
             CreateMap<CreateUserStoryDTO, UserStory>();
@@ -29,7 +29,6 @@ namespace TeamEdge.Mapper
             CreateMap<CreateWorkItemDTO, Epick>();
 
             CreateMap<CreateWorkItemDTO, WorkItemDescription>()
-                .ForMember(e=>e.Files, c=>c.Ignore())
                 .ForMember(e=>e.Files, c=>c.MapFrom(e=>e.FileIds.Select(x=>new WorkItemFile
                 {
                     FileId = x
@@ -38,6 +37,12 @@ namespace TeamEdge.Mapper
                 {
                     Branch = r
                 })));
+
+            CreateMap<CreateSprintDTO, Sprint>()
+                .ForMember(e=>e.Tasks,c=>c.Ignore())
+                .ForMember(e=>e.UserStories,c=>c.Ignore());
+
+            CreateMap<CreateSprintVM, CreateSprintDTO>();
             
         }
     }

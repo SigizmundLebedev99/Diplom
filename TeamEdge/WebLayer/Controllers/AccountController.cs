@@ -82,11 +82,11 @@ namespace TeamEdge.Controllers
             var claims = new List<Claim>();
 
             if (!string.IsNullOrEmpty(user.Email))
-                claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+                claims.Add(new Claim("Email", user.Email));
             if (!string.IsNullOrEmpty(user.Lastname) || !string.IsNullOrEmpty(user.Firstname))
-                claims.Add(new Claim(JwtRegisteredClaimNames.GivenName, user.Firstname + " " + user.Lastname));
+                claims.Add(new Claim("GivenName", user.Firstname + " " + user.Lastname));
             if (!string.IsNullOrEmpty(user.UserName))
-                claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName));
+                claims.Add(new Claim("UserName", user.UserName));
             if (!string.IsNullOrEmpty(user.Avatar))
                 claims.Add(new Claim("Avatar", user.UserName));
             claims.Add(new Claim("Id", user.Id.ToString()));

@@ -53,6 +53,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
+        public override IQueryable<ItemDTO> GetItems(GetItemsDTO model)
+        {
+            var filter = WorkItemHelper.GetFilter<UserStory>(model);
+            return _context.UserStories.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+        }
+
         private static readonly Expression<Func<UserStory, WorkItemDTO>> SelectExpression = e => new UserStoryInfoDTO
         {
             Code = WorkItemType.UserStory.Code(),

@@ -13,9 +13,10 @@ using TeamEdge.DAL.Models;
 namespace TeamEdge.Migrations
 {
     [DbContext(typeof(TeamEdgeDbContext))]
-    partial class TeamEdgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190119142308_wiFiles")]
+    partial class wiFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,8 +167,6 @@ namespace TeamEdge.Migrations
 
                     b.Property<int?>("ParentId");
 
-                    b.Property<int?>("SprintId");
-
                     b.Property<byte>("Status");
 
                     b.Property<byte>("Type");
@@ -179,8 +178,6 @@ namespace TeamEdge.Migrations
                     b.HasIndex("AssignedToId");
 
                     b.HasIndex("ParentId");
-
-                    b.HasIndex("SprintId");
 
                     b.HasIndex("_TaskDescriptionId");
 
@@ -327,20 +324,20 @@ namespace TeamEdge.Migrations
 
                     b.Property<DateTime>("DateOfCreation");
 
-                    b.Property<DateTime?>("EndDate");
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<int?>("FeatureId");
 
                     b.Property<string>("Name")
                         .HasMaxLength(64);
 
-                    b.Property<int>("ProjectId");
-
-                    b.Property<DateTime?>("StartDate");
+                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("FeatureId");
 
                     b.ToTable("Sprints");
                 });
@@ -647,11 +644,6 @@ namespace TeamEdge.Migrations
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TeamEdge.DAL.Models.Sprint", "Sprint")
-                        .WithMany("Tasks")
-                        .HasForeignKey("SprintId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("TeamEdge.DAL.Models._Task")
                         .WithMany("Children")
                         .HasForeignKey("_TaskDescriptionId")
@@ -733,9 +725,9 @@ namespace TeamEdge.Migrations
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TeamEdge.DAL.Models.Project", "Project")
+                    b.HasOne("TeamEdge.DAL.Models.Feature", "Feature")
                         .WithMany()
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("FeatureId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

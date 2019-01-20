@@ -29,21 +29,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<int> CreateRepository(CreateRepositoryDTO model)
         {
-            var projectName = (await _context.Projects.FirstOrDefaultAsync(p => p.Id == model.ProjectId && p.RepositoryId == null))?.Name;
+            var projectName = (await _context.Projects.FirstOrDefaultAsync(p => p.Id == model.ProjectId))?.Name;
             if (string.IsNullOrEmpty(projectName))
                 throw new Infrastructure.NotFoundException("project_nf");
             if (!await _context
                 .UserProjects
                 .AnyAsync(u => u.UserId == model.UserId && u.ProjectId == model.ProjectId && u.ProjRole == ProjectAccessLevel.Administer))
                 throw new UnauthorizedException("user_inv");
-
-            var newRepo = new _Repository
-            {
-                CreatorId = model.UserId,
-                DateOfCreation = DateTime.Now,
-                ProjectId = model.ProjectId
-            };
-            _context.Repositories.Add(newRepo);      
 
             string path = Path.Combine(_params.RepositoriesDirPath, projectName);
             if (!Directory.Exists(path))
@@ -57,13 +49,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             await _context.SaveChangesAsync();
 
-            return newRepo.Id;
+            return 0;
         }
 
         public async Task CreateBranch(CreateBranchDTO model)
         {
             var repo = await ValidateInput(model.ProjectId, model.UserId, e=>e.CanPush);
-
             if (!string.IsNullOrEmpty(model.FromSha))
             {
                 var commit = repo.Commits.FirstOrDefault(e => e.Sha == model.FromSha);
@@ -99,7 +90,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 branches = branches.Where(e => e.RemoteName.ToUpper().Contains(model.Search.ToUpper()));
             }
 
-            return branches.Select(e => e.RemoteName);
+            return branches.Select(e => e.FriendlyName);
         }
 
         public Task<bool> HasPermission(string username, string repositoryName, Expression<Func<UserProject, bool>> predicate)
@@ -137,6 +128,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (!Repository.IsValid(path))
                 throw new Infrastructure.NotFoundException("repo_nf");
             return new Repository(path);
+
         }
     }
 }

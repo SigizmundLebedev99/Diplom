@@ -8,7 +8,7 @@ namespace TeamEdge.DAL.Models
         public int WorkItemId { get; set; }
 
         [ForeignKey("FileId")]
-        public File File { get; set; }
+        public _File File { get; set; }
         [ForeignKey("WorkItemId")]
         public WorkItemDescription WorkItem { get; set; }
     }

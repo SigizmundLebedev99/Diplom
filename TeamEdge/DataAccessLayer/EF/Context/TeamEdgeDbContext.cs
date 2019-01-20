@@ -16,8 +16,6 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<Comment> Comments { get; set; }
 
-        public virtual DbSet<_Repository> Repositories { get; set; }
-
         public virtual DbSet<Epick> Epicks { get; set; }
 
         public virtual DbSet<Feature> Features { get; set; }
@@ -34,7 +32,7 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<WorkItemTag> WorkItemTags { get; set; }
 
-        public virtual DbSet<File> Files { get; set; }
+        public virtual DbSet<_File> Files { get; set; }
 
         public virtual DbSet<TestCase> TestCases { get; set; }
 
@@ -61,8 +59,6 @@ namespace TeamEdge.DAL.Context
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<WorkItemFile>().HasKey(e => new { e.FileId, e.WorkItemId });
-
             builder.Entity<UserProject>().HasKey(e => new { e.UserId, e.ProjectId });
 
             builder.Entity<WorkItemTag>().HasKey(e => new { e.Tag, e.WorkItemDescId });
@@ -75,6 +71,12 @@ namespace TeamEdge.DAL.Context
             {
                 relationSheep.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            builder.Entity<WorkItemFile>(ent =>
+            {
+                ent.HasKey(e => new { e.FileId, e.WorkItemId });
+                ent.HasOne(e => e.File).WithMany(e => e.WorkItemFiles).OnDelete(DeleteBehavior.Cascade);
+            });
         }
     }
 }

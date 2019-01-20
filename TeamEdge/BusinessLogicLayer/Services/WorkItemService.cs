@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
@@ -31,16 +30,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             await _validationService.ValidateProject(model.ProjectId, model.UserId);
             bool ofType = !string.IsNullOrEmpty(model.Code);
 
-            Expression<Func<BaseWorkItem, ItemDTO>> selector = item => new ItemDTO
-            {
-                Code = item.Code,
-                DescriptionId = item.DescriptionId,
-                Name = item.Name,
-                Number = item.Number
-            };
-
-            Expression<Func<BaseWorkItem, bool>> filter = (i) => i.Description.ProjectId == model.ProjectId; 
-
             IQueryable<ItemDTO> query = null;
 
             if (ofType)
@@ -48,7 +37,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 query = GetRepository(model.Code).GetItems(model);
             }
             else
-                query = _context.GetWorkItems(filter, selector);
+                query = _context.GetWorkItems(WorkItemHelper.GetFilter<BaseWorkItem>(model), WorkItemHelper.ItemDTOSelector);
 
             return await query.ToListAsync();
         }
@@ -84,8 +73,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Add(description);
             
             return await GetRepository(model.Code).CreateWorkItem(description, model);
-        }     
-        
+        }
+
+        //public async Task<WorkItemDTO> GetDescription(int descriptionId, int userId)
+        //{
+        //}
+
+        #region Privates
         private WorkItemRepository GetRepository(string code)
         {
             var attr = GetAttribute(code);
@@ -99,5 +93,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 throw new NotFoundException("code_inv");
             return attr;
         }
+        #endregion
     }
 }

@@ -13,9 +13,10 @@ using TeamEdge.DAL.Models;
 namespace TeamEdge.Migrations
 {
     [DbContext(typeof(TeamEdgeDbContext))]
-    partial class TeamEdgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190118131647_fk_ProjectId")]
+    partial class fk_ProjectId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,32 +128,6 @@ namespace TeamEdge.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("TeamEdge.DAL.Models._File", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CreatorId");
-
-                    b.Property<DateTime>("DateOfCreation");
-
-                    b.Property<string>("FileName")
-                        .HasMaxLength(128);
-
-                    b.Property<string>("FilePath")
-                        .HasMaxLength(512);
-
-                    b.Property<int>("ProjectId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("Files");
-                });
-
             modelBuilder.Entity("TeamEdge.DAL.Models._Task", b =>
                 {
                     b.Property<int>("DescriptionId");
@@ -166,8 +141,6 @@ namespace TeamEdge.Migrations
 
                     b.Property<int?>("ParentId");
 
-                    b.Property<int?>("SprintId");
-
                     b.Property<byte>("Status");
 
                     b.Property<byte>("Type");
@@ -179,8 +152,6 @@ namespace TeamEdge.Migrations
                     b.HasIndex("AssignedToId");
 
                     b.HasIndex("ParentId");
-
-                    b.HasIndex("SprintId");
 
                     b.HasIndex("_TaskDescriptionId");
 
@@ -264,6 +235,32 @@ namespace TeamEdge.Migrations
                     b.ToTable("Features");
                 });
 
+            modelBuilder.Entity("TeamEdge.DAL.Models.File", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CreatorId");
+
+                    b.Property<DateTime>("DateOfCreation");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(128);
+
+                    b.Property<string>("FilePath")
+                        .HasMaxLength(512);
+
+                    b.Property<int>("ProjectId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("TeamEdge.DAL.Models.Invite", b =>
                 {
                     b.Property<int>("Id")
@@ -327,20 +324,20 @@ namespace TeamEdge.Migrations
 
                     b.Property<DateTime>("DateOfCreation");
 
-                    b.Property<DateTime?>("EndDate");
+                    b.Property<DateTime>("EndDate");
+
+                    b.Property<int?>("FeatureId");
 
                     b.Property<string>("Name")
                         .HasMaxLength(64);
 
-                    b.Property<int>("ProjectId");
-
-                    b.Property<DateTime?>("StartDate");
+                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("FeatureId");
 
                     b.ToTable("Sprints");
                 });
@@ -617,19 +614,6 @@ namespace TeamEdge.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("TeamEdge.DAL.Models._File", b =>
-                {
-                    b.HasOne("TeamEdge.DAL.Models.User", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("TeamEdge.DAL.Models.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("TeamEdge.DAL.Models._Task", b =>
                 {
                     b.HasOne("TeamEdge.DAL.Models.User", "AssignedTo")
@@ -645,11 +629,6 @@ namespace TeamEdge.Migrations
                     b.HasOne("TeamEdge.DAL.Models.UserStory", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("TeamEdge.DAL.Models.Sprint", "Sprint")
-                        .WithMany("Tasks")
-                        .HasForeignKey("SprintId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("TeamEdge.DAL.Models._Task")
@@ -700,6 +679,19 @@ namespace TeamEdge.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("TeamEdge.DAL.Models.File", b =>
+                {
+                    b.HasOne("TeamEdge.DAL.Models.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("TeamEdge.DAL.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("TeamEdge.DAL.Models.Invite", b =>
                 {
                     b.HasOne("TeamEdge.DAL.Models.User", "Creator")
@@ -733,9 +725,9 @@ namespace TeamEdge.Migrations
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TeamEdge.DAL.Models.Project", "Project")
+                    b.HasOne("TeamEdge.DAL.Models.Feature", "Feature")
                         .WithMany()
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("FeatureId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -816,10 +808,10 @@ namespace TeamEdge.Migrations
 
             modelBuilder.Entity("TeamEdge.DAL.Models.WorkItemFile", b =>
                 {
-                    b.HasOne("TeamEdge.DAL.Models._File", "File")
+                    b.HasOne("TeamEdge.DAL.Models.File", "File")
                         .WithMany("WorkItemFiles")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("TeamEdge.DAL.Models.WorkItemDescription", "WorkItem")
                         .WithMany("Files")
