@@ -44,6 +44,8 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<WorkItemFile> WorkItemFiles { get; set; }
 
+        public virtual DbSet<SubTask> SubTasks { get; set; }
+
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
 
         public IQueryable<T> GetWorkItems<T>(Expression<Func<BaseWorkItem, bool>> filter, Expression<Func<BaseWorkItem, T>> selector)

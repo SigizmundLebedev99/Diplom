@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.Models;
@@ -42,6 +39,13 @@ namespace TeamEdge.WebLayer.Controllers
         {
             var res = await _sprintService.GetSprintsForProject(User.Id(), projectId);
             return Ok(res);
+        }
+
+        [HttpPost("{sprintId}/item/{itemId}")]
+        public async Task<IActionResult> AddItemToSprintSprints(int sprintId, int itemId)
+        {
+            await _sprintService.AddItemToSprint(User.Id(), itemId, sprintId);
+            return Ok();
         }
     }
 }

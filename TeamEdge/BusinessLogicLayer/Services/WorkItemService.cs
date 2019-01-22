@@ -17,8 +17,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
         readonly TeamEdgeDbContext _context;
         readonly IMapper _mapper;
         readonly IValidationService _validationService;
+        readonly IServiceProvider _provider;
 
-        public WorkItemService(TeamEdgeDbContext context, IMapper mapper, IValidationService validationService)
+        public WorkItemService(TeamEdgeDbContext context, IMapper mapper, IValidationService validationService, IServiceProvider provider)
         {
             _context = context;
             _mapper = mapper;
@@ -55,17 +56,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<OperationResult<WorkItemDTO>> CreateWorkItem(CreateWorkItemDTO model)
         {
-            var operRes = new OperationResult<WorkItemDTO>(true);
-            string project = await _context.Projects.Where(p => p.Id == model.ProjectId).Select(e => e.Name).FirstOrDefaultAsync();
-            if (string.IsNullOrEmpty(project))
-                throw new NotFoundException("project_nf");
-            if (!await _context.UserProjects.AnyAsync(p => p.UserId == model.CreatorId && p.ProjectId == model.ProjectId))
-                throw new UnauthorizedException();
-
-            
-            operRes.Plus(await _validationService.ValidateBranches(model.Branches, project));
-            operRes.Plus(await _validationService.ValidateFileIds(model.FileIds, model.ProjectId));
-
+            var operRes = await ValidateItemDTO(model);
             if (!operRes.Succeded)
                 return operRes;
             var description = _mapper.Map<WorkItemDescription>(model);
@@ -75,15 +66,27 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return await GetRepository(model.Code).CreateWorkItem(description, model);
         }
 
-        //public async Task<WorkItemDTO> GetDescription(int descriptionId, int userId)
-        //{
-        //}
+        public async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int descriptionId, CreateWorkItemDTO model)
+        {
+            var operRes = await ValidateItemDTO(model);
+            var previous = await _context.WorkItemDescriptions.FirstOrDefaultAsync(e => e.Id == descriptionId);
+            if (previous == null)
+                throw new NotFoundException("item_nf");
+            var description = _mapper.Map<WorkItemDescription>(model);
+            description.DateOfCreation = previous.DateOfCreation;
+            description.CreatorId = previous.CreatorId;
+            description.Id = descriptionId;
+            description.LastUpdaterId = model.CreatorId;
+            description.LastUpdate = DateTime.Now;
+            _context.WorkItemDescriptions.Update(description);
+            return await GetRepository(model.Code).UpdateWorkItem(description, model);
+        }
 
         #region Privates
         private WorkItemRepository GetRepository(string code)
         {
             var attr = GetAttribute(code);
-            return (WorkItemRepository)Activator.CreateInstance(attr.FactoryType, _context, _mapper);
+            return (WorkItemRepository)Activator.CreateInstance(attr.FactoryType, _provider);
         }  
 
         private WorkItemAttribute GetAttribute(string code)
@@ -92,6 +95,22 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (attr == null)
                 throw new NotFoundException("code_inv");
             return attr;
+        }
+
+        private async Task<OperationResult<WorkItemDTO>> ValidateItemDTO(CreateWorkItemDTO model)
+        {
+            var operRes = new OperationResult<WorkItemDTO>(true);
+            string project = await _context.Projects.Where(p => p.Id == model.ProjectId).Select(e => e.Name).FirstOrDefaultAsync();
+            if (string.IsNullOrEmpty(project))
+                throw new NotFoundException("project_nf");
+            if (!await _context.UserProjects.AnyAsync(p => p.UserId == model.CreatorId && p.ProjectId == model.ProjectId))
+                throw new UnauthorizedException();
+
+
+            operRes.Plus(await _validationService.ValidateBranches(model.Branches, project));
+            operRes.Plus(await _validationService.ValidateFileIds(model.FileIds, model.ProjectId));
+
+            return operRes;
         }
         #endregion
     }

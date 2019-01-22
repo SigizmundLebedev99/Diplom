@@ -1,6 +1,6 @@
 ﻿namespace TeamEdge.DAL.Mongo.Models
 {
-    public enum HistoryRecordType : byte
+    public enum PropertyType : byte
     {
         StatusChanged,
         PriorityChanged,

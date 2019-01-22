@@ -23,13 +23,13 @@ namespace TeamEdge.BusinessLogicLayer
             if (model.ParentId != null)
                 filter = AndAlso(filter, Equal(
                      Property(
-                        Property(par, nameof(BaseWorkItem<_Task, _Task>.ParentId))
+                        Property(par, nameof(IBaseWorkItemWithParent<_Task>.ParentId))
                         , nameof(Nullable<int>.Value)
                     ),
                     Constant(model.ParentId.Value)));
             else if (model.HasNoParent)
                 filter = AndAlso(filter, Equal(
-                    Property(par, nameof(BaseWorkItem<_Task, _Task>.ParentId)),
+                    Property(par, nameof(IBaseWorkItemWithParent<_Task>.ParentId)),
                     Constant(null)));
 
             return Lambda<Func<T, bool>>(filter, par);

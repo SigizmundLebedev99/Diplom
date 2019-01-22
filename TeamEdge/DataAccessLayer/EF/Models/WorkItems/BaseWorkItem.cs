@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.DAL.Mongo.Models;
 
 namespace TeamEdge.DAL.Models
 {
@@ -11,6 +13,7 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("DescriptionId")]
         public WorkItemDescription Description { get; set; }
 
+        [PropertyChanges(typeof(EnumChangedFactory), Type = PropertyType.StatusChanged)]
         public WorkItemStatus Status { get; set; }
         public int Number { get; set; }
 
@@ -20,15 +23,14 @@ namespace TeamEdge.DAL.Models
         public abstract string Code { get; }
     }
 
-    public abstract class BaseWorkItem<TChild> : BaseWorkItem where TChild : BaseWorkItem
+    public interface IBaseWorkItemWithChild<TChild> where TChild : BaseWorkItem
     {
-        public ICollection<TChild> Children { get; set; }
+        ICollection<TChild> Children { get; set; }
     }
 
-    public abstract class BaseWorkItem<TChild, TParent> : BaseWorkItem<TChild> where TChild: BaseWorkItem where TParent: BaseWorkItem
+    public interface IBaseWorkItemWithParent<TParent> where TParent : BaseWorkItem
     {
-        public int? ParentId { get; set; }
-        [ForeignKey("ParentId")]
-        public TParent Parent { get; set; } 
+        int? ParentId { get; set; }
+        TParent Parent { get; set; } 
     }
 }

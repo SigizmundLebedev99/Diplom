@@ -62,6 +62,44 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
+        public async Task AddItemToSprint(int userId, int descId, int sprintId)
+        {
+            var project = await _context.Sprints.Where(e => e.Id == sprintId).Select(e => new { e.ProjectId }).FirstOrDefaultAsync();
+            if (project == null)
+                throw new NotFoundException("sprint_nf");
+            await _validationService.ValidateProject(project.ProjectId, userId);
+
+            var entity = await
+                ((IQueryable<BaseWorkItem>)_context.UserStories
+                    .Where(e => e.Description.ProjectId == project.ProjectId))
+                .Concat(_context.Tasks
+                    .Where(e => e.Description.ProjectId == project.ProjectId)).FirstOrDefaultAsync(e=>e.DescriptionId == descId);
+            if (entity == null)
+                throw new NotFoundException("item_nf");
+
+            switch (entity)
+            {
+                case _Task task:
+                    {
+                        task.SprintId = sprintId;
+                        _context.Tasks.Update(task);
+                        break;
+                    }
+                case UserStory story:
+                    {
+                        story.SprintId = sprintId;
+                        _context.UserStories.Update(story);
+                        break;
+                    }
+                default:
+                    {
+                        throw new InvalidOperationException();
+                    }
+            }
+
+            await _context.SaveChangesAsync();
+        } 
+
         public async Task<IEnumerable<SprintDTO>> GetSprintsForProject(int userId, int projectId)
         {
             await _validationService.ValidateProject(projectId, userId);
@@ -70,7 +108,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 Id = e.Id,
                 Stories = e.UserStories.Count(),
-                Tasks = e.Tasks.Count,
+                Tasks = e.Tasks.Count + e.UserStories.Sum(u=>u.Children.Count()),
                 Name = e.Name
             })
             .ToListAsync();

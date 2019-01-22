@@ -10,5 +10,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
         Task<WorkItemDTO> GetWorkItem(int projId, int fromUserId, string code, int number);
         Task<OperationResult<WorkItemDTO>> CreateWorkItem(CreateWorkItemDTO model);
         Task<IEnumerable<ItemDTO>> GetListOfItems(GetItemsDTO getItemsDTO);
+        Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int descriptionId, CreateWorkItemDTO model);
     }
 }

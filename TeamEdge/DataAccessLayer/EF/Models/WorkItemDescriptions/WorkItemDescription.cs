@@ -7,9 +7,6 @@ namespace TeamEdge.DAL.Models
 {
     public class WorkItemDescription : BaseEntity
     {
-        [StringLength(8)]
-        [Required]
-        public string Code;
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }

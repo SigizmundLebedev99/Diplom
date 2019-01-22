@@ -60,8 +60,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public override IQueryable<ItemDTO> GetItems(GetItemsDTO model)
         {
+            var type = Enum.Parse<TaskType>(WorkItemFactory.GetEnumElement(model.Code));
             var filter = WorkItemHelper.GetFilter<_Task>(model);
-            return _context.Tasks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+            return _context.Tasks.Where(e=>e.Type == type).Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+        }
+
+        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        {
+            throw new NotImplementedException();
         }
 
         private static readonly Expression<Func<_Task, WorkItemDTO>> SelectExpression = e => new TaskInfoDTO
@@ -81,7 +87,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Status = e.Status,
             Children = e.Children.Select(a => new ItemDTO
             {
-                Code = a.Type.Code(),
+                Code = WorkItemType.SubTask.Code(),
                 Name = a.Name,
                 Number = a.Number,
                 DescriptionId = a.DescriptionId

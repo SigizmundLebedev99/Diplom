@@ -9,8 +9,5 @@ namespace TeamEdge.DAL.Mongo.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public DateTime DateOfCreation { get; set; }
-        public uint WorkItemDescriptionId { get; set; }
-        public abstract HistoryRecordType HistoryRecordType { get; }
     }
-
 }

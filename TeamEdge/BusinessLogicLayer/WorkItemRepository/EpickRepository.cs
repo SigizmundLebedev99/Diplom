@@ -59,6 +59,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return _context.Epicks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
+        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        {
+            throw new NotImplementedException();
+        }
+
         private static readonly Expression<Func<Epick, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
         {
             Code = WorkItemType.Epick.Code(),

@@ -9,5 +9,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
     {
         Task<OperationResult<SprintDTO>> CreateSprint(CreateSprintDTO model);
         Task<IEnumerable<SprintDTO>> GetSprintsForProject(int userId, int projectId);
+        Task AddItemToSprint(int userId, int descId, int sprintId);
     }
 }

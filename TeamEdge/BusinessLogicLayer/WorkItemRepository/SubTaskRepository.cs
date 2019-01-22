@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TeamEdge.BusinessLogicLayer.Infrastructure;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
@@ -11,53 +11,41 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    public class FeatureRepository : WorkItemRepository
+    public class SubTaskRepository : WorkItemRepository
     {
-        public FeatureRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper) { }
-
-        public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
+        public SubTaskRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper)
         {
-            return _context.Features.Where(e => e.Description.ProjectId == project && e.Number == number)
-                .Select(SelectExpression)
-                .FirstOrDefaultAsync();
         }
 
         public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
-            var entity = _mapper.Map<Feature>(model);
-
-            var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
-            operRes.Plus(checkResult);
+            var entity = _mapper.Map<SubTask>(model);
 
             if (model.ParentId != null)
-                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
+                operRes.Plus(await CheckParent<_Task>(model.ProjectId, model.ParentId.Value));
 
             if (!operRes.Succeded)
                 return operRes;
-
-            var children = checkResult.Result;
-            entity.Number = await GetNumber<Feature>(model.ProjectId);
+            entity.Number = await GetNumber<SubTask>(model.ProjectId);
             entity.DescriptionId = description.Id;
-
-            if (children != null)
-            {
-                foreach (var t in children)
-                    t.ParentId = entity.DescriptionId;
-                _context.UserStories.UpdateRange(children);
-            }
-
-            _context.Features.Add(entity);
+            _context.SubTasks.Add(entity);
 
             await _context.SaveChangesAsync();
-            operRes.Result = await _context.Features.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
+            operRes.Result = await _context.SubTasks.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
             return operRes;
+        }
+
+        public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
+        {
+            return _context.SubTasks.Where(e => e.Description.ProjectId == project && e.Number == number)
+               .Select(SelectExpression).FirstOrDefaultAsync();
         }
 
         public override IQueryable<ItemDTO> GetItems(GetItemsDTO model)
         {
-            var filter = WorkItemHelper.GetFilter<Feature>(model);
-            return _context.Features.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+            var filter = WorkItemHelper.GetFilter<SubTask>(model);
+            return _context.SubTasks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
         public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
@@ -65,27 +53,28 @@ namespace TeamEdge.BusinessLogicLayer.Services
             throw new NotImplementedException();
         }
 
-        private static Expression<Func<Feature, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
+        private static readonly Expression<Func<SubTask, WorkItemDTO>> SelectExpression = e => new TaskInfoDTO
         {
-            Code = WorkItemType.Feature.Code(),
+            AssignedTo = e.AssignedToId == null ? null : new UserDTO
+            {
+                Avatar = e.AssignedTo.Avatar,
+                Email = e.AssignedTo.Email,
+                FullName = e.AssignedTo.FullName,
+                Id = e.AssignedToId.Value,
+                UserName = e.AssignedTo.UserName
+            },
+            Code = WorkItemType.SubTask.Code(),
+            DescriptionId = e.DescriptionId,
             Name = e.Name,
             Number = e.Number,
             Status = e.Status,
-            Children = e.Children.Select(a => new ItemDTO
-            {
-                Code = WorkItemType.UserStory.Code(),
-                Name = a.Name,
-                Number = a.Number,
-                DescriptionId = a.DescriptionId
-            }),
             Parent = e.Parent == null ? null : new ItemDTO
             {
-                Code = WorkItemType.Epick.Code(),
+                Code = e.Parent.Type.Code(),
                 Name = e.Parent.Name,
                 Number = e.Parent.Number,
                 DescriptionId = e.Parent.DescriptionId
             },
-            DescriptionId = e.DescriptionId,
             Description = new DescriptionDTO
             {
                 CreatedBy = new UserDTO
@@ -107,9 +96,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     FullName = e.Description.LastUpdater.FullName,
                     Id = e.Description.LastUpdaterId.Value,
                     UserName = e.Description.LastUpdater.UserName
-                },
-                FilesCount = e.Description.Files.Count()
-            },
+                }
+            }
         };
     }
 }

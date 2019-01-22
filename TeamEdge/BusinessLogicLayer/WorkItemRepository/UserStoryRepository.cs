@@ -59,6 +59,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return _context.UserStories.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
+        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        {
+            throw new NotImplementedException();
+        }
+
         private static readonly Expression<Func<UserStory, WorkItemDTO>> SelectExpression = e => new UserStoryInfoDTO
         {
             Code = WorkItemType.UserStory.Code(),

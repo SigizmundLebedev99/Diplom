@@ -82,5 +82,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int project);
         public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
         public abstract IQueryable<ItemDTO> GetItems(GetItemsDTO model);
+        public abstract Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
     }
 }
