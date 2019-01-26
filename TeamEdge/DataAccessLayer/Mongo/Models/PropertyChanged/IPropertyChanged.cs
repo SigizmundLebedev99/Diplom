@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace TeamEdge.DAL.Mongo.Models
 {
-    public class PropertyChanged
+    public interface IPropertyChanged
     {
+        string Type { get; set; }
     }
 }

@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
-using TeamEdge.DAL.Context;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
 
@@ -13,7 +11,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 {
     public class FeatureRepository : WorkItemRepository
     {
-        public FeatureRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper) { }
+        public FeatureRepository(IServiceProvider provider) : base(provider) { }
 
         public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
         {
@@ -40,12 +38,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             entity.Number = await GetNumber<Feature>(model.ProjectId);
             entity.DescriptionId = description.Id;
 
-            if (children != null)
-            {
-                foreach (var t in children)
-                    t.ParentId = entity.DescriptionId;
-                _context.UserStories.UpdateRange(children);
-            }
+            AddChildren<UserStory, Feature>(checkResult.Result, description.Id);
 
             _context.Features.Add(entity);
 
@@ -60,9 +53,46 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return _context.Features.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
-        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
-            throw new NotImplementedException();
+            var operRes = new OperationResult<WorkItemDTO>(true);
+
+            var nextentity = _mapper.Map<Feature>(model);
+            var nextdesc = _mapper.Map<WorkItemDescription>(model);
+            var query = _context.Features
+                .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
+                .Include(e => e.Description).ThenInclude(e => e.Branches)
+                .Include(e => e.Children);
+            var entity = await query
+                .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number);
+
+            nextentity.DescriptionId = entity.DescriptionId;
+            nextdesc.Id = entity.DescriptionId;
+            nextdesc.DateOfCreation = entity.Description.DateOfCreation;
+            nextdesc.LastUpdaterId = model.CreatorId;
+            nextdesc.LastUpdate = DateTime.Now;
+
+            var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
+            operRes.Plus(checkResult);
+
+            if (model.ParentId != null)
+                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
+
+            if (!operRes.Succeded)
+                return operRes;
+
+            UpdateChildren<UserStory, Feature>(entity.Children, checkResult.Result, entity.DescriptionId);
+
+            _context.WorkItemDescriptions.Update(nextdesc);
+            _context.Features.Update(nextentity);
+            _context.WorkItemFiles.RemoveRange(entity.Description.Files);
+
+            await _context.SaveChangesAsync();
+
+            var result = await query.Where(e => e.DescriptionId == entity.DescriptionId).ToListAsync();
+            operRes.Result = result.Select(SelectExpression.Compile()).First();
+            _historyService.CompareForChanges(entity, result.First());
+            return null;
         }
 
         private static Expression<Func<Feature, WorkItemDTO>> SelectExpression = e => new WorkItemDTO

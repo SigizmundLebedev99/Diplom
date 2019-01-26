@@ -6,12 +6,12 @@ using TeamEdge.DAL.Models;
 
 namespace TeamEdge.DAL.Mongo.Models
 {
-    public class EnumValueChanged : PropertyChanged
+    public class SimpleValueChanged : IPropertyChanged
     {
         public object Previous { get; set; }
 
         public object New { get; set; }
 
-        public PropertyType Type { get; set; }
+        public string Type { get; set; }
     }
 }

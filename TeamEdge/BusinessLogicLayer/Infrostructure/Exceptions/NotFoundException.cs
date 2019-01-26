@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TeamEdge.BusinessLogicLayer.Infrastructure
+namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
     public class NotFoundException : Exception
     {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using System.IO;
 using TeamEdge.DAL.Context;
@@ -68,7 +68,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task ValidateProject(int projId, int userId)
         {
             if (!await _context.Projects.AnyAsync(p => p.Id == projId))
-                throw new Infrastructure.NotFoundException("project_nf");
+                throw new Infrostructure.NotFoundException("project_nf");
             if (!await _context.UserProjects.AnyAsync(p => p.UserId == userId && p.ProjectId == projId))
                 throw new UnauthorizedException();
         }
@@ -76,7 +76,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task ValidateProject(int projId, int userId, Expression<Func<UserProject, bool>> filter)
         {
             if (!await _context.Projects.AnyAsync(p => p.Id == projId))
-                throw new Infrastructure.NotFoundException("project_nf");
+                throw new Infrostructure.NotFoundException("project_nf");
             if (!await _context.UserProjects.Where(filter).AnyAsync(p => p.UserId == userId && p.ProjectId == projId))
                 throw new UnauthorizedException();
         }

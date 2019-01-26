@@ -24,6 +24,7 @@ namespace TeamEdge.Mapper
             CreateMap<FileDTO, _File>().ReverseMap();
 
             CreateMap<CreateTaskDTO, _Task>();
+            CreateMap<CreateTaskDTO, SubTask>();
             CreateMap<CreateUserStoryDTO, UserStory>();
             CreateMap<CreateWorkItemDTO, Feature>();
             CreateMap<CreateWorkItemDTO, Epick>();

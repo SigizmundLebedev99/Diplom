@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.Models;

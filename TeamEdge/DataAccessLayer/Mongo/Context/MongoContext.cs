@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using TeamEdge.DAL.Mongo.Models;
 
 namespace TeamEdge.DAL.Mongo
@@ -10,10 +11,10 @@ namespace TeamEdge.DAL.Mongo
         private IMongoCollection<HistoryRecord> historyRecords;
         private IMongoCollection<TestCase> testCases;
 
-        public MongoContext(string connStr, string databaseName)
+        public MongoContext(IConfiguration config)
         {
-            var client = new MongoClient(connStr);
-            Database = client.GetDatabase(databaseName);
+            var client = new MongoClient(config.GetValue<string>("Mongo:ConnStr"));
+            Database = client.GetDatabase(config.GetValue<string>("Mongo:Database"));
         }
 
         public IMongoCollection<HistoryRecord> HistoryRecords { get => historyRecords ?? (historyRecords = Database.GetCollection<HistoryRecord>("historyRecords")); } 

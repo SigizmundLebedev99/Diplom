@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge
 {

@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Reflection;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.Models;
 
 namespace TeamEdge.WebLayer

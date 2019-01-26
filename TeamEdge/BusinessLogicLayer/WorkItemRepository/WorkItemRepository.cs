@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
@@ -16,6 +17,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         protected readonly TeamEdgeDbContext _context;
         protected readonly IMapper _mapper;
+        protected readonly IHistoryService _historyService;
 
         protected async Task<int> GetNumber<T>(int projId, Expression<Func<T, bool>> extraFilter = null) where T : BaseWorkItem
         {
@@ -34,6 +36,56 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }
             else
                 return 1;
+        }
+
+        protected void AddChildren<TChild, TPar>(IEnumerable<TChild> children, int parentId)
+            where TChild : BaseWorkItem, IBaseWorkItemWithParent<TPar>
+            where TPar : BaseWorkItem
+        {
+            if (children != null)
+            {
+                foreach (var t in children)
+                    t.ParentId = parentId;
+                _context.Set<TChild>().UpdateRange(children);
+            }
+        }
+
+        protected void UpdateChildren<TChild, TPar>(IEnumerable<TChild> previous, IEnumerable<TChild> next, int parentId) 
+            where TChild : BaseWorkItem, IBaseWorkItemWithParent<TPar> 
+            where TPar: BaseWorkItem
+        {
+            IEnumerable<TChild> resultSeq;
+            if ((next == null || next.Count() == 0) && (previous == null || previous.Count() == 0))
+                return;
+
+            else if (previous == null || previous.Count() == 0)
+            {
+                foreach (var ch in next)
+                    ch.ParentId = parentId;
+                resultSeq = next;
+            }
+
+            else if (next == null || next.Count() == 0)
+            {
+                foreach (var ch in previous)
+                    ch.ParentId = null;
+                resultSeq = previous;
+            }
+
+            else
+            {
+                var deleted = previous.Except(next, new WorkItemComparer<TChild>());
+                foreach (var ch in deleted)
+                    ch.ParentId = null;
+
+                var added = next.Except(previous, new WorkItemComparer<TChild>());
+                foreach (var ch in added)
+                    ch.ParentId = parentId;
+
+                resultSeq = added.Concat(deleted);
+            } 
+            
+            _context.Set<TChild>().UpdateRange(resultSeq);
         }
 
         protected async Task<OperationResult> CheckParent<T>(int projectId, int parentId) where T : BaseWorkItem
@@ -73,15 +125,29 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }  
 
-        public WorkItemRepository(TeamEdgeDbContext context, IMapper mapper)
+        public WorkItemRepository(IServiceProvider provider)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = (TeamEdgeDbContext)provider.GetService(typeof(TeamEdgeDbContext));
+            _mapper = (IMapper)provider.GetService(typeof(IMapper));
+            _historyService = (IHistoryService)provider.GetService(typeof(IHistoryService));
         }
 
         public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int project);
         public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
         public abstract IQueryable<ItemDTO> GetItems(GetItemsDTO model);
-        public abstract Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
+        public abstract Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model);
+    }
+
+    class WorkItemComparer<T> : IEqualityComparer<T> where T : BaseWorkItem
+    {
+        public bool Equals(T x, T y)
+        {
+            return x.DescriptionId == y.DescriptionId;
+        }
+
+        public int GetHashCode(T obj)
+        {
+            return obj.DescriptionId.GetHashCode();
+        }
     }
 }

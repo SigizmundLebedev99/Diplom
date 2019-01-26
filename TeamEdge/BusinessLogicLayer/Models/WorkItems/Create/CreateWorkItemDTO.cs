@@ -16,5 +16,6 @@ namespace TeamEdge.Models
         public int? ParentId { get; set; }
         public int[] ChildrenIds { get; set; }
         public int CreatorId { get; set; }
+        public WorkItemStatus Status { get; set; }
     }
 }

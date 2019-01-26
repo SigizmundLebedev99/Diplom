@@ -47,11 +47,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
-        [HttpPut("item/{itemId}")]
-        public async Task<IActionResult> UpdateWorkItem(int itemId, [FromBody]CreateWorkItemDTO model)
+        [HttpPut("number/{number}")]
+        public async Task<IActionResult> UpdateWorkItem(int number, [FromBody]CreateWorkItemDTO model)
         {
             model.CreatorId = User.Id();
-            var res = await _workItemService.UpdateWorkItem(itemId, model);
+            var res = await _workItemService.UpdateWorkItem(number, model);
             return res.GetResult();
         }
     }

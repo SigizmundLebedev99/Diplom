@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
@@ -14,7 +14,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 {
     public class EpickRepository : WorkItemRepository
     {
-        public EpickRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper) { }
+        public EpickRepository(IServiceProvider provider) : base(provider) { }
 
         public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
         {
@@ -59,7 +59,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return _context.Epicks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
-        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
             throw new NotImplementedException();
         }

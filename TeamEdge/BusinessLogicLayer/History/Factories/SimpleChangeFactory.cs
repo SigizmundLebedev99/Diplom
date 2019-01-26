@@ -4,18 +4,18 @@ using TeamEdge.DAL.Mongo.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
-    public class EnumChangedFactory : IHistoryRecordProduser
+    public class SimpleChangeFactory : IHistoryRecordProduser
     {
-        public EnumChangedFactory(PropertyType type)
+        public SimpleChangeFactory(string type)
         {
             _type = type;
         }
 
-        private PropertyType _type;
+        private string _type;
 
-        public PropertyChanged CreateHistoryRecord(object previous, object next)
+        public IPropertyChanged CreateHistoryRecord(object previous, object next)
         {
-            return new EnumValueChanged
+            return new SimpleValueChanged
             {
                 Previous = previous,
                 New = next,

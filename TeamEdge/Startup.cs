@@ -18,6 +18,7 @@ using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.JWT;
 using TeamEdge.Mapper;
+using TeamEdge.BusinessLogicLayer.History;
 
 namespace TeamEdge
 {
@@ -71,7 +72,8 @@ namespace TeamEdge
             services.AddSingleton<FileSystemService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
             services.AddTransient<ISprintService, SprintService>();
-            
+            services.AddTransient<IHistoryService, HistoryService>();
+
             services.AddMvc();
 
             services.AddSwaggerGen(c =>
@@ -102,6 +104,7 @@ namespace TeamEdge
                 app.UseDeveloperExceptionPage();
             }
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -110,8 +113,6 @@ namespace TeamEdge
 
                 c.DocExpansion(DocExpansion.None);
             });
-
-            app.UseAuthentication();
            
             app.UseMvc();
         }

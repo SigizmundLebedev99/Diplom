@@ -34,10 +34,6 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<_File> Files { get; set; }
 
-        public virtual DbSet<TestCase> TestCases { get; set; }
-
-        public virtual DbSet<WorkItemHistory> WorkItemHistories { get; set; }
-
         public virtual DbSet<Subscribe> Subscribes { get; set; }
 
         public virtual DbSet<Invite> Invites { get; set; }

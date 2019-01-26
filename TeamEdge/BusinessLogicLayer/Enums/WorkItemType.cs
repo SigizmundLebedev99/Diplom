@@ -1,4 +1,4 @@
-﻿using TeamEdge.BusinessLogicLayer.Infrastructure;
+﻿using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;

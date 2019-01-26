@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
@@ -24,6 +24,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context = context;
             _mapper = mapper;
             _validationService = validationService;
+            _provider = provider;
         }
 
         public async Task<IEnumerable<ItemDTO>> GetListOfItems(GetItemsDTO model)
@@ -66,20 +67,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return await GetRepository(model.Code).CreateWorkItem(description, model);
         }
 
-        public async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int descriptionId, CreateWorkItemDTO model)
+        public async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
             var operRes = await ValidateItemDTO(model);
-            var previous = await _context.WorkItemDescriptions.FirstOrDefaultAsync(e => e.Id == descriptionId);
-            if (previous == null)
-                throw new NotFoundException("item_nf");
-            var description = _mapper.Map<WorkItemDescription>(model);
-            description.DateOfCreation = previous.DateOfCreation;
-            description.CreatorId = previous.CreatorId;
-            description.Id = descriptionId;
-            description.LastUpdaterId = model.CreatorId;
-            description.LastUpdate = DateTime.Now;
-            _context.WorkItemDescriptions.Update(description);
-            return await GetRepository(model.Code).UpdateWorkItem(description, model);
+
+            return await GetRepository(model.Code).UpdateWorkItem(number, model);
         }
 
         #region Privates

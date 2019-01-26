@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
@@ -13,9 +13,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 {
     public class SubTaskRepository : WorkItemRepository
     {
-        public SubTaskRepository(TeamEdgeDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
+        public SubTaskRepository(IServiceProvider provider) : base(provider) { }
 
         public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
         {
@@ -48,7 +46,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return _context.SubTasks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
-        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.BusinessLogicLayer
 {

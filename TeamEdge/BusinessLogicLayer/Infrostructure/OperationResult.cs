@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TeamEdge.BusinessLogicLayer.Infrastructure
+namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
     public class OperationResult<T> : OperationResult
     {

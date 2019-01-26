@@ -22,7 +22,6 @@ namespace TeamEdge.DAL.Models
         public ICollection<BranchLink> Branches { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<WorkItemFile> Files { get; set; }
-        public ICollection<WorkItemHistory> History { get; set; }
         public ICollection<Subscribe> Subscribers { get; set; }
     }
 }

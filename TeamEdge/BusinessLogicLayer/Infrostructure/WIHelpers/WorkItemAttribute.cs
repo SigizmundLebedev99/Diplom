@@ -1,7 +1,7 @@
 ﻿using System;
 using TeamEdge.BusinessLogicLayer.Services;
 
-namespace TeamEdge.BusinessLogicLayer.Infrastructure
+namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
     public class WorkItemAttribute : Attribute
     {

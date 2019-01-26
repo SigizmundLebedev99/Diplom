@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using TeamEdge.BusinessLogicLayer.Infrastructure;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
@@ -31,7 +31,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             var projectName = (await _context.Projects.FirstOrDefaultAsync(p => p.Id == model.ProjectId))?.Name;
             if (string.IsNullOrEmpty(projectName))
-                throw new Infrastructure.NotFoundException("project_nf");
+                throw new Infrostructure.NotFoundException("project_nf");
             if (!await _context
                 .UserProjects
                 .AnyAsync(u => u.UserId == model.UserId && u.ProjectId == model.ProjectId && u.ProjRole == ProjectAccessLevel.Administer))
@@ -111,7 +111,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Select(e => e.Name).FirstOrDefaultAsync();
 
             if (string.IsNullOrEmpty(project))
-                throw new Infrastructure.NotFoundException("project_nf");
+                throw new Infrostructure.NotFoundException("project_nf");
 
             if (filter != null)
             {
@@ -126,7 +126,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             string path = Path.Combine(_params.RepositoriesDirPath, project);
             if (!Repository.IsValid(path))
-                throw new Infrastructure.NotFoundException("repo_nf");
+                throw new Infrostructure.NotFoundException("repo_nf");
             return new Repository(path);
 
         }

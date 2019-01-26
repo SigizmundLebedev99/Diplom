@@ -13,7 +13,7 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("DescriptionId")]
         public WorkItemDescription Description { get; set; }
 
-        [PropertyChanges(typeof(EnumChangedFactory), Type = PropertyType.StatusChanged)]
+        [PropertyChanges(typeof(SimpleChangeFactory))]
         public WorkItemStatus Status { get; set; }
         public int Number { get; set; }
 

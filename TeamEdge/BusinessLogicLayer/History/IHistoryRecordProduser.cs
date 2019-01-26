@@ -8,6 +8,6 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
     public interface IHistoryRecordProduser
     {
-        PropertyChanged CreateHistoryRecord(object previous, object next);
+        IPropertyChanged CreateHistoryRecord(object previous, object next);
     }
 }
