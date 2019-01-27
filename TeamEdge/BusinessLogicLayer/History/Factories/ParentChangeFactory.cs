@@ -22,6 +22,9 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
         {
             var p = previous as BaseWorkItem;
             var n = next as BaseWorkItem;
+            if ((p == null && n == null) || p.DescriptionId == n.DescriptionId)
+                return null;
+
             return new SimpleValueChanged
             {
                 New = new ItemDTO

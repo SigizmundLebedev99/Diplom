@@ -14,5 +14,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
         void SendProjectNotifyAsync(User user, ProjectNotifyDTO model);
         void NotifyUserLeaveAsync(UserDTO from, int projectId);
         void NotifyUserDeletedAsync(UserDTO from, int userId, int projectId);
+        Task SendItemNotifyAsync(IEnumerable<string> emails, HistoryRecord changes);
     }
 }

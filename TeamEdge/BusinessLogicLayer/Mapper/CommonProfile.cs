@@ -44,7 +44,10 @@ namespace TeamEdge.Mapper
                 .ForMember(e=>e.UserStories,c=>c.Ignore());
 
             CreateMap<CreateSprintVM, CreateSprintDTO>();
-            
+
+            CreateMap<User, UserDTO>();
+            CreateMap<WorkItemDescription, DescriptionDTO>();
+            CreateMap<Feature, WorkItemDTO>();
         }
     }
 }

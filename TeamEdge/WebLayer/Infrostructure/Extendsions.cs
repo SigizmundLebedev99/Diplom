@@ -30,12 +30,12 @@ namespace TeamEdge.WebLayer
 
         public static string Email(this ClaimsPrincipal user)
         {
-            return GetClaim(user, "Emial", true);
+            return GetClaim(user, "Email", true);
         }
 
         public static string FullName(this ClaimsPrincipal user)
         {
-            return GetClaim(user, "GivenName", true);
+            return GetClaim(user, "GivenName", false);
         }
 
         private static string GetClaim(ClaimsPrincipal user, string claim, bool required)

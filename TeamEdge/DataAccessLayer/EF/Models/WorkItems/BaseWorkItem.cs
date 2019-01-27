@@ -16,7 +16,7 @@ namespace TeamEdge.DAL.Models
         [PropertyChanges(typeof(SimpleChangeFactory))]
         public WorkItemStatus Status { get; set; }
         public int Number { get; set; }
-
+        [PropertyChanges(typeof(SimpleChangeFactory))]
         [StringLength(64, MinimumLength =3)]
         public string Name { get; set; }
         

@@ -15,12 +15,18 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
 
         public IPropertyChanged CreateHistoryRecord(object previous, object next)
         {
-            return new SimpleValueChanged
-            {
-                Previous = previous,
-                New = next,
-                Type = _type
-            };
+            var p = previous.ToString();
+            var n = next.ToString();
+
+            if(p != n)
+                return new SimpleValueChanged
+                {
+                    Previous = previous,
+                    New = next,
+                    Type = _type
+                };
+
+            return null;
         }
     }
 }

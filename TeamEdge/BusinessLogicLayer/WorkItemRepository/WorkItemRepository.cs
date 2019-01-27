@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         protected readonly TeamEdgeDbContext _context;
         protected readonly IMapper _mapper;
         protected readonly IHistoryService _historyService;
+        protected readonly HttpContext _httpContext;
 
         protected async Task<int> GetNumber<T>(int projId, Expression<Func<T, bool>> extraFilter = null) where T : BaseWorkItem
         {
@@ -38,6 +40,38 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 return 1;
         }
 
+        protected void DetachAllEntities(object entity)
+        {
+            var t = entity.GetType();
+            _context.Entry(entity).State = EntityState.Detached;
+            foreach(var prop in t.GetProperties())
+            {
+                var value = prop.GetValue(entity);
+                if (value == null)
+                    continue;
+                switch (value)
+                {
+                    case BaseEntity ent:
+                        {
+                            _context.Entry(ent).State = EntityState.Detached;
+                            DetachAllEntities(ent);
+                            break;
+                        }
+                    case IEnumerable<object> en:
+                        {
+                            foreach(var obj in en)
+                            {
+                                _context.Entry(obj).State = EntityState.Detached;
+                            }
+                            break;
+                        }
+                    case ValueType val:
+                    case string srt:
+                        { break; }
+                }
+            }
+        }
+
         protected void AddChildren<TChild, TPar>(IEnumerable<TChild> children, int parentId)
             where TChild : BaseWorkItem, IBaseWorkItemWithParent<TPar>
             where TPar : BaseWorkItem
@@ -55,9 +89,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
             where TPar: BaseWorkItem
         {
             IEnumerable<TChild> resultSeq;
+
             if ((next == null || next.Count() == 0) && (previous == null || previous.Count() == 0))
                 return;
-
             else if (previous == null || previous.Count() == 0)
             {
                 foreach (var ch in next)
@@ -86,6 +120,33 @@ namespace TeamEdge.BusinessLogicLayer.Services
             } 
             
             _context.Set<TChild>().UpdateRange(resultSeq);
+        }
+
+        protected void UpdateFiles(IEnumerable<WorkItemFile> previous, IEnumerable<WorkItemFile> next, int itemId)
+        {
+            previous = previous?.Select(e => new WorkItemFile { FileId = e.FileId, WorkItemId = e.WorkItemId });
+            next = next?.Select(e => new WorkItemFile { FileId = e.FileId, WorkItemId = itemId });
+
+            if ((next == null || next.Count() == 0) && (previous == null || previous.Count() == 0))
+                return;
+
+            else if (previous == null || previous.Count() == 0)
+            {
+                _context.WorkItemFiles.AddRange(next);
+            }
+
+            else if (next == null || next.Count() == 0)
+            {
+                _context.WorkItemFiles.RemoveRange(previous);
+            }
+
+            else
+            {
+                var deleted = previous.Except(next, new FileComparer());
+                _context.WorkItemFiles.RemoveRange(deleted);
+                var added = next.Except(previous, new FileComparer());
+                _context.WorkItemFiles.AddRange(added);
+            }
         }
 
         protected async Task<OperationResult> CheckParent<T>(int projectId, int parentId) where T : BaseWorkItem
@@ -130,6 +191,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context = (TeamEdgeDbContext)provider.GetService(typeof(TeamEdgeDbContext));
             _mapper = (IMapper)provider.GetService(typeof(IMapper));
             _historyService = (IHistoryService)provider.GetService(typeof(IHistoryService));
+            _httpContext = ((IHttpContextAccessor)provider.GetService(typeof(IHttpContextAccessor))).HttpContext;
         }
 
         public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int project);
@@ -148,6 +210,19 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public int GetHashCode(T obj)
         {
             return obj.DescriptionId.GetHashCode();
+        }
+    }
+
+    class FileComparer<T> : IEqualityComparer<T> where T : WorkItemFile
+    {
+        public bool Equals(T x, T y)
+        {
+            return x.FileId == y.FileId;
+        }
+
+        public int GetHashCode(T obj)
+        {
+            return (obj.FileId + obj.WorkItemId).GetHashCode();
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
@@ -11,38 +12,44 @@ using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.DAL.Mongo;
 using TeamEdge.DAL.Mongo.Models;
-using TeamEdge.Models;
 using TeamEdge.WebLayer;
 
 namespace TeamEdge.BusinessLogicLayer.History
 {
     public class HistoryService : IHistoryService
     {
-        readonly TeamEdgeDbContext _context;
         readonly IMongoContext _mongo;
-        readonly HttpContext _httpContext;
 
-        public HistoryService(TeamEdgeDbContext context, IMongoContext mongo, HttpContext httpContext)
+        public HistoryService(IMongoContext mongo)
         {
-            _context = context;
             _mongo = mongo;
-            _httpContext = httpContext;
         }
 
-        public async void CompareForChanges<T>(T previous, T next) where T: BaseWorkItem
+        public Task CompareForChanges<T>(T previous, T next, ClaimsPrincipal user) where T : BaseWorkItem
         {
-            var changes = GetChanges(previous, next);
-
-            var record = new WorkItemChanged
+            return Task.Run(() => 
             {
-                Changes = changes,
-                Code = previous.Code,
-                DateOfCreation = next.Description.LastUpdate.Value,
-                Number = previous.Number,
-                ProjectId = previous.Description.ProjectId,
-                Initiator = _httpContext.User.Model()
-            };
-            _mongo.HistoryRecords.InsertOne(record);
+                try
+                {
+                    var changes = GetChanges(previous, next);
+                    if (changes.Count == 0)
+                        return;
+                    var record = new WorkItemChanged
+                    {
+                        Changes = changes,
+                        Code = previous.Code,
+                        DateOfCreation = next.Description.LastUpdate.Value,
+                        Number = previous.Number,
+                        ProjectId = previous.Description.ProjectId,
+                        Initiator = user.Model()
+                    };
+                    _mongo.HistoryRecords.InsertOne(record);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
         }
 
         private List<IPropertyChanged> GetChanges(object obj1, object obj2)
@@ -58,6 +65,10 @@ namespace TeamEdge.BusinessLogicLayer.History
                 {
                     if(!prop.PropertyType.IsPrimitive && prop.PropertyType.Assembly == Assembly.GetCallingAssembly())
                     {
+                        var par1 = prop.GetValue(obj1);
+                        var par2 = prop.GetValue(obj2);
+                        if (par1 == null || par2 == null)
+                            continue;
                         historyRecords.AddRange(GetChanges(prop.GetValue(obj1), prop.GetValue(obj2)));
                     }
                     continue;

@@ -59,14 +59,21 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var nextentity = _mapper.Map<Feature>(model);
             var nextdesc = _mapper.Map<WorkItemDescription>(model);
+
             var query = _context.Features
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
                 .Include(e => e.Description).ThenInclude(e => e.Branches)
-                .Include(e => e.Children);
+                .Include(e => e.Children)
+                .Include(e => e.Parent);
+
             var entity = await query
                 .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number);
 
+            if (entity == null)
+                throw new NotFoundException("item_nf");
+
             nextentity.DescriptionId = entity.DescriptionId;
+            nextentity.Number = entity.Number;
             nextdesc.Id = entity.DescriptionId;
             nextdesc.DateOfCreation = entity.Description.DateOfCreation;
             nextdesc.LastUpdaterId = model.CreatorId;
@@ -81,18 +88,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (!operRes.Succeded)
                 return operRes;
 
-            UpdateChildren<UserStory, Feature>(entity.Children, checkResult.Result, entity.DescriptionId);
-
+            var files = nextdesc.Files;
+            nextdesc.Files = null;
+            DetachAllEntities(entity);
             _context.WorkItemDescriptions.Update(nextdesc);
+            UpdateFiles(entity.Description.Files, files, nextdesc.Id);
+            UpdateChildren<UserStory, Feature>(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.Features.Update(nextentity);
-            _context.WorkItemFiles.RemoveRange(entity.Description.Files);
-
+            
             await _context.SaveChangesAsync();
 
             var result = await query.Where(e => e.DescriptionId == entity.DescriptionId).ToListAsync();
             operRes.Result = result.Select(SelectExpression.Compile()).First();
-            _historyService.CompareForChanges(entity, result.First());
-            return null;
+            _historyService.CompareForChanges(entity, result.First(), _httpContext.User);
+            return operRes;
         }
 
         private static Expression<Func<Feature, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
@@ -118,7 +127,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             DescriptionId = e.DescriptionId,
             Description = new DescriptionDTO
             {
-                CreatedBy = new UserDTO
+                CreatedBy = e.Description.Creator == null?null: new UserDTO
                 {
                     Avatar = e.Description.Creator.Avatar,
                     Email = e.Description.Creator.Email,
@@ -128,9 +137,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 },
                 DateOfCreation = e.Description.DateOfCreation,
                 Description = e.Description.DescriptionText,
-                DescriptionCode = e.Description.DescriptionCode,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserDTO
+                LastUpdateBy = e.Description.LastUpdater == null ? null : new UserDTO
                 {
                     Avatar = e.Description.LastUpdater.Avatar,
                     Email = e.Description.LastUpdater.Email,

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.DAL.Models
 {
@@ -11,8 +12,8 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }
 
+        [PropertyChanges(typeof(SimpleChangeFactory))]
         public string DescriptionText { get; set; }
-        public string DescriptionCode { get; set; }
 
         public int? LastUpdaterId { get; set; }
         [ForeignKey("LastUpdaterId")]
@@ -21,6 +22,7 @@ namespace TeamEdge.DAL.Models
 
         public ICollection<BranchLink> Branches { get; set; }
         public ICollection<Comment> Comments { get; set; }
+        [PropertyChanges(typeof(FileChangeFactory))]
         public ICollection<WorkItemFile> Files { get; set; }
         public ICollection<Subscribe> Subscribers { get; set; }
     }

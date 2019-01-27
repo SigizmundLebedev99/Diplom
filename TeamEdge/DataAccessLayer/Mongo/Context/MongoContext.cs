@@ -17,8 +17,8 @@ namespace TeamEdge.DAL.Mongo
             Database = client.GetDatabase(config.GetValue<string>("Mongo:Database"));
         }
 
-        public IMongoCollection<HistoryRecord> HistoryRecords { get => historyRecords ?? (historyRecords = Database.GetCollection<HistoryRecord>("historyRecords")); } 
-        public IMongoCollection<TestCase> TestCases { get => testCases ?? (testCases = Database.GetCollection<TestCase>("testCases")); }
+        public IMongoCollection<HistoryRecord> HistoryRecords { get => historyRecords ?? (historyRecords = Database.GetCollection<HistoryRecord>("historyrecords")); } 
+        public IMongoCollection<TestCase> TestCases { get => testCases ?? (testCases = Database.GetCollection<TestCase>("testcases")); }
 
         
     }

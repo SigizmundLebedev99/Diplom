@@ -59,9 +59,53 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return _context.UserStories.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
-        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
-            throw new NotImplementedException();
+            var operRes = new OperationResult<WorkItemDTO>(true);
+
+            var nextentity = _mapper.Map<UserStory>(model);
+            var nextdesc = _mapper.Map<WorkItemDescription>(model);
+
+            var query = _context.UserStories
+                .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
+                .Include(e => e.Description).ThenInclude(e => e.Branches)
+                .Include(e => e.Children);
+
+            var entity = await query
+                .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number);
+
+            if (entity == null)
+                throw new NotFoundException("item_nf");
+
+            nextentity.DescriptionId = entity.DescriptionId;
+            nextentity.Number = entity.Number;
+            nextdesc.Id = entity.DescriptionId;
+            nextdesc.DateOfCreation = entity.Description.DateOfCreation;
+            nextdesc.LastUpdaterId = model.CreatorId;
+            nextdesc.LastUpdate = DateTime.Now;
+
+            var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
+            if (model.ParentId != null)
+                operRes.Plus(await CheckParent<Feature>(model.ProjectId, model.ParentId.Value));
+
+            operRes.Plus(checkResult);
+            if (!operRes.Succeded)
+                return operRes;
+
+            var files = nextdesc.Files;
+            nextdesc.Files = null;
+            DetachAllEntities(entity);
+            _context.WorkItemDescriptions.Update(nextdesc);
+            UpdateFiles(entity.Description.Files, files, nextdesc.Id);
+            UpdateChildren<_Task, UserStory>(entity.Children, checkResult.Result, entity.DescriptionId);
+            _context.UserStories.Update(nextentity);
+
+            await _context.SaveChangesAsync();
+
+            var result = await query.Where(e => e.DescriptionId == entity.DescriptionId).ToListAsync();
+            operRes.Result = result.Select(SelectExpression.Compile()).First();
+            _historyService.CompareForChanges(entity, result.First(), _httpContext.User);
+            return operRes;
         }
 
         private static readonly Expression<Func<UserStory, WorkItemDTO>> SelectExpression = e => new UserStoryInfoDTO
@@ -103,7 +147,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 },
                 DateOfCreation = e.Description.DateOfCreation,
                 Description = e.Description.DescriptionText,
-                DescriptionCode = e.Description.DescriptionCode,
                 LastUpdate = e.Description.LastUpdate,
                 LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserDTO
                 {

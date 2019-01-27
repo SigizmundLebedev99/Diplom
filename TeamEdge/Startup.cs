@@ -19,6 +19,7 @@ using TeamEdge.DAL.Models;
 using TeamEdge.JWT;
 using TeamEdge.Mapper;
 using TeamEdge.BusinessLogicLayer.History;
+using TeamEdge.DAL.Mongo;
 
 namespace TeamEdge
 {
@@ -73,6 +74,7 @@ namespace TeamEdge
             services.AddTransient<IWorkItemService, WorkItemService>();
             services.AddTransient<ISprintService, SprintService>();
             services.AddTransient<IHistoryService, HistoryService>();
+            services.AddScoped<IMongoContext, MongoContext>();
 
             services.AddMvc();
 

@@ -31,6 +31,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
             throw new NotImplementedException();
         }
 
+        public Task SendItemNotifyAsync(IEnumerable<string> emails, HistoryRecord changes)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SendProjectNotifyAsync(User user, ProjectNotifyDTO model)
         {
             throw new NotImplementedException();
