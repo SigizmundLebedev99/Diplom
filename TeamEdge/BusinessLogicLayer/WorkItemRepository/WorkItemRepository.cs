@@ -124,28 +124,69 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         protected void UpdateFiles(IEnumerable<WorkItemFile> previous, IEnumerable<WorkItemFile> next, int itemId)
         {
-            previous = previous?.Select(e => new WorkItemFile { FileId = e.FileId, WorkItemId = e.WorkItemId });
-            next = next?.Select(e => new WorkItemFile { FileId = e.FileId, WorkItemId = itemId });
-
             if ((next == null || next.Count() == 0) && (previous == null || previous.Count() == 0))
                 return;
 
             else if (previous == null || previous.Count() == 0)
             {
+                foreach(var n in next)
+                {
+                    n.WorkItem = null;
+                }
                 _context.WorkItemFiles.AddRange(next);
             }
 
             else if (next == null || next.Count() == 0)
             {
+                foreach(var p in previous)
+                {
+                    p.WorkItem = null;
+                }
                 _context.WorkItemFiles.RemoveRange(previous);
             }
 
             else
             {
+                previous = previous.Select(e => { e.WorkItem = null; return e; });
+                next = next.Select(e => { e.WorkItem = null; return e; });
                 var deleted = previous.Except(next, new FileComparer());
                 _context.WorkItemFiles.RemoveRange(deleted);
                 var added = next.Except(previous, new FileComparer());
                 _context.WorkItemFiles.AddRange(added);
+            }
+        }
+
+        protected void UpdateTags(IEnumerable<WorkItemTag> previous, IEnumerable<WorkItemTag> next)
+        {
+            if ((next == null || next.Count() == 0) && (previous == null || previous.Count() == 0))
+                return;
+
+            else if (previous == null || previous.Count() == 0)
+            {
+                foreach (var n in next)
+                {
+                    n.WorkItem = null;
+                }
+                _context.WorkItemTags.AddRange(next);
+            }
+
+            else if (next == null || next.Count() == 0)
+            {
+                foreach (var p in previous)
+                {
+                    p.WorkItem = null;
+                }
+                _context.WorkItemTags.RemoveRange(previous);
+            }
+
+            else
+            {
+                previous = previous.Select(e => { e.WorkItem = null; return e; });
+                next = next.Select(e => { e.WorkItem = null; return e; });
+                var deleted = previous.Except(next, new TagComparer());
+                _context.WorkItemTags.RemoveRange(deleted);
+                var added = next.Except(previous, new TagComparer());
+                _context.WorkItemTags.AddRange(added);
             }
         }
 
@@ -200,29 +241,29 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public abstract Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model);
     }
 
-    class WorkItemComparer<T> : IEqualityComparer<T> where T : BaseWorkItem
+    class FileComparer : IEqualityComparer<WorkItemFile>
     {
-        public bool Equals(T x, T y)
-        {
-            return x.DescriptionId == y.DescriptionId;
-        }
-
-        public int GetHashCode(T obj)
-        {
-            return obj.DescriptionId.GetHashCode();
-        }
-    }
-
-    class FileComparer<T> : IEqualityComparer<T> where T : WorkItemFile
-    {
-        public bool Equals(T x, T y)
+        public bool Equals(WorkItemFile x, WorkItemFile y)
         {
             return x.FileId == y.FileId;
         }
 
-        public int GetHashCode(T obj)
+        public int GetHashCode(WorkItemFile obj)
         {
             return (obj.FileId + obj.WorkItemId).GetHashCode();
+        }
+    }
+
+    class TagComparer : IEqualityComparer<WorkItemTag>
+    {
+        public bool Equals(WorkItemTag x, WorkItemTag y)
+        {
+            return x.Tag == y.Tag;
+        }
+
+        public int GetHashCode(WorkItemTag obj)
+        {
+            return obj.Tag.GetHashCode();
         }
     }
 }

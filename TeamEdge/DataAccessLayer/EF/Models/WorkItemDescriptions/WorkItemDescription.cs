@@ -24,6 +24,7 @@ namespace TeamEdge.DAL.Models
         public ICollection<Comment> Comments { get; set; }
         [PropertyChanges(typeof(FileChangeFactory))]
         public ICollection<WorkItemFile> Files { get; set; }
+        public ICollection<WorkItemTag> Tags { get; set; }
         public ICollection<Subscribe> Subscribers { get; set; }
     }
 }

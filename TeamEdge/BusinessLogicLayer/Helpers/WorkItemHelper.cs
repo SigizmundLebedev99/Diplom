@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
@@ -6,7 +7,7 @@ using static System.Linq.Expressions.Expression;
 
 namespace TeamEdge.BusinessLogicLayer
 {
-    public static class WorkItemHelper
+    static class WorkItemHelper
     {
         public static Expression<Func<T, bool>> GetFilter<T>(GetItemsDTO model) where T : BaseWorkItem
         {
@@ -42,5 +43,27 @@ namespace TeamEdge.BusinessLogicLayer
             Name = item.Name,
             Number = item.Number
         };
+
+        public static void RestoreDescriptionData(WorkItemDescription previous, WorkItemDescription nextdesc)
+        {
+            nextdesc.Id = previous.Id;
+            nextdesc.DateOfCreation = previous.DateOfCreation;
+            nextdesc.LastUpdaterId = nextdesc.CreatorId;
+            nextdesc.LastUpdate = DateTime.Now;
+            nextdesc.CreatorId = previous.CreatorId;
+        }
+    }
+
+    class WorkItemComparer<T> : IEqualityComparer<T> where T : BaseWorkItem
+    {
+        public bool Equals(T x, T y)
+        {
+            return x.DescriptionId == y.DescriptionId;
+        }
+
+        public int GetHashCode(T obj)
+        {
+            return obj.DescriptionId.GetHashCode();
+        }
     }
 }

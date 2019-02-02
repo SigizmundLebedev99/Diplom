@@ -8,7 +8,7 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
-    public class ParentChangeFactory : IHistoryRecordProduser
+    class ParentChangeFactory : IHistoryRecordProduser
     {
 
         public ParentChangeFactory(string type)

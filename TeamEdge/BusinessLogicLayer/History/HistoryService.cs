@@ -41,7 +41,8 @@ namespace TeamEdge.BusinessLogicLayer.History
                         DateOfCreation = next.Description.LastUpdate.Value,
                         Number = previous.Number,
                         ProjectId = previous.Description.ProjectId,
-                        Initiator = user.Model()
+                        Initiator = user.Model(),
+                        Name = next.Name
                     };
                     _mongo.HistoryRecords.InsertOne(record);
                 }

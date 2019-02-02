@@ -11,7 +11,6 @@ namespace TeamEdge.DAL.Models
     {
         [Required]
         public string Text { get; set; }
-        public string Json { get; set; }
         public int WorkItemId { get; set; }
         [ForeignKey("WorkItemId")]
         public WorkItemDescription WorkItem { get; set; }

@@ -4,7 +4,7 @@ using TeamEdge.DAL.Mongo.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
-    public class SimpleChangeFactory : IHistoryRecordProduser
+    class SimpleChangeFactory : IHistoryRecordProduser
     {
         public SimpleChangeFactory(string type)
         {

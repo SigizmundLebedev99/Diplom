@@ -65,10 +65,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Number = entity.Number;
-            nextdesc.Id = entity.DescriptionId;
-            nextdesc.DateOfCreation = entity.Description.DateOfCreation;
-            nextdesc.LastUpdaterId = model.CreatorId;
-            nextdesc.LastUpdate = DateTime.Now;
+            WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
             if (model.ParentId != null)
                 operRes.Plus(await CheckParent<_Task>(model.ProjectId, model.ParentId.Value));
@@ -78,9 +75,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var files = nextdesc.Files;
             nextdesc.Files = null;
+            var tags = nextdesc.Tags;
+            nextdesc.Tags = null;
             DetachAllEntities(entity);
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
+            UpdateTags(entity.Description.Tags, tags);
             _context.SubTasks.Update(nextentity);
 
             await _context.SaveChangesAsync();

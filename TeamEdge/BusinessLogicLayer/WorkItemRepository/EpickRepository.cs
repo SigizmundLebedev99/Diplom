@@ -79,10 +79,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Number = entity.Number;
-            nextdesc.Id = entity.DescriptionId;
-            nextdesc.DateOfCreation = entity.Description.DateOfCreation;
-            nextdesc.LastUpdaterId = model.CreatorId;
-            nextdesc.LastUpdate = DateTime.Now;
+            WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
             var checkResult = await CheckChildren<Feature>(model.ChildrenIds, model.ProjectId);
 
@@ -92,9 +89,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var files = nextdesc.Files;
             nextdesc.Files = null;
+            var tags = nextdesc.Tags;
+            nextdesc.Tags = null;
             DetachAllEntities(entity);
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
+            UpdateTags(entity.Description.Tags, tags);
             UpdateChildren<Feature, Epick>(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.Epicks.Update(nextentity);
 

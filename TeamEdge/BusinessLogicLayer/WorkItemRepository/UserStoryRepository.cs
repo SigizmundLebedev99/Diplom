@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
-using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
 
@@ -79,10 +77,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Number = entity.Number;
-            nextdesc.Id = entity.DescriptionId;
-            nextdesc.DateOfCreation = entity.Description.DateOfCreation;
-            nextdesc.LastUpdaterId = model.CreatorId;
-            nextdesc.LastUpdate = DateTime.Now;
+            WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
             var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
             if (model.ParentId != null)
@@ -94,9 +89,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var files = nextdesc.Files;
             nextdesc.Files = null;
+            var tags = nextdesc.Tags;
+            nextdesc.Tags = null;
             DetachAllEntities(entity);
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
+            UpdateTags(entity.Description.Tags, tags);
             UpdateChildren<_Task, UserStory>(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.UserStories.Update(nextentity);
 

@@ -23,7 +23,7 @@ bld/
 [Oo]bj/
 bin/
 obj/
-[Aa]pp[Dd]ata/
+[Aa]pp[Dd]ata/Files/
 
 # Visual Studio 2015 cache/options directory
 .vs/

@@ -1,31 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.DAL.Models;
 using TeamEdge.DAL.Mongo.Models;
 using TeamEdge.Models;
 
-namespace TeamEdge.BusinessLogicLayer.Infrostructure
+namespace TeamEdge.BusinessLogicLayer.History.Factories
 {
-    class FileChangeFactory : IHistoryRecordProduser
+    class ChildrenChangeFactory : IHistoryRecordProduser
     {
-        string _type;
+        readonly string _type;
 
-        public FileChangeFactory(string type)
+        private static Func<BaseWorkItem, ItemDTO> selector = e => new ItemDTO
+        {
+            DescriptionId = e.DescriptionId,
+            Code = e.Code,
+            Name = e.Name,
+            Number = e.Number
+        };
+
+        public ChildrenChangeFactory(string type)
         {
             _type = type;
         }
 
-        private static Func<WorkItemFile, FileLightDTO> selector = f => new FileLightDTO
-        {
-            Id = f.FileId,
-            Name = f.File.FileName
-        };
-
         public IPropertyChanged CreateHistoryRecord(object previous, object next)
         {
-            var prev = previous as IEnumerable<WorkItemFile>;
-            var nex = next as IEnumerable<WorkItemFile>;
+            var prev = previous as IEnumerable<BaseWorkItem>;
+            var nex = next as IEnumerable<BaseWorkItem>;
 
             if ((next == null || nex.Count() == 0) && (previous == null || prev.Count() == 0))
                 return null;
@@ -50,8 +55,8 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
 
             else
             {
-                var added = nex.Except(prev, new FileComparer()).Select(selector);
-                var deleted = prev.Except(nex, new FileComparer()).Select(selector);
+                var added = nex.Except(prev, new WorkItemComparer<BaseWorkItem>()).Select(selector);
+                var deleted = prev.Except(nex, new WorkItemComparer<BaseWorkItem>()).Select(selector);
                 if (added.Count() == 0 && deleted.Count() == 0)
                     return null;
                 return new CollectionChanged
@@ -61,20 +66,6 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
                     Deleted = deleted
                 };
             }
-           
-        }
-    }
-
-    class FileComparer : IEqualityComparer<WorkItemFile>
-    {
-        public bool Equals(WorkItemFile x, WorkItemFile y)
-        {
-            return x.FileId == y.FileId;
-        }
-
-        public int GetHashCode(WorkItemFile obj)
-        {
-            return obj.FileId.GetHashCode();
         }
     }
 }

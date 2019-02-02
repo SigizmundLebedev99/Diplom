@@ -30,9 +30,13 @@ namespace TeamEdge.Mapper
             CreateMap<CreateWorkItemDTO, Epick>();
 
             CreateMap<CreateWorkItemDTO, WorkItemDescription>()
-                .ForMember(e=>e.Files, c=>c.MapFrom(e=>e.FileIds.Select(x=>new WorkItemFile
+                .ForMember(e => e.Files, c => c.MapFrom(e => e.FileIds.Select(x => new WorkItemFile
                 {
                     FileId = x
+                })))
+                .ForMember(e => e.Tags, c => c.MapFrom(e => e.Tags.Select(r => new WorkItemTag
+                {
+                    Tag = r
                 })))
                 .ForMember(e=>e.Branches, c=>c.MapFrom(e=>e.Branches.Select(r=>new BranchLink
                 {

@@ -1,0 +1,36 @@
+﻿<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<body>
+		<p>
+			<img src="{{project.Logo}}" />
+			<h1>{{project.Name}}</h1>
+		</p>
+		
+		<h4>{{record.DateOfCreation}}</h4>
+		<div>
+			<p>
+				<img src="{{record.Initiator.Avatar}}">
+				<span>{{record.Initiator.FullName}}</span>
+			</p>
+			<p>Изменил <span>{{record.Code}}</span>-<span>{{record.Number}}</span> (<span>{{record.Name}})</span></p>
+			<h4>Список изменений</h4>
+			<div collection="changes">
+				<div slot="SympleValueChanged">
+					<h5>{{description}} изменено с</h5>
+					<p>{{previous}}</p>
+					<h5>на</h5>
+					<p>{{next}}</p>
+				</div>
+
+				<div slot="CollectionChanged">
+					<h5>Изменен список {{description}}</h5>
+					<h5>Добавлено</h5>
+					<p subslot="added"></p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
