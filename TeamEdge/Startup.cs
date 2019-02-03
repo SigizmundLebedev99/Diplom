@@ -77,7 +77,7 @@ namespace TeamEdge
             services.AddScoped<IMongoContext, MongoContext>();
 
             services.AddMvc();
-
+            services.AddMemoryCache();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "TeamEdgeAPI", Version = "v0.1" });

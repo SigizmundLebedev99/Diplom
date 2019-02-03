@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Interfaces;
+using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.Models;
 
 namespace TeamEdge.WebLayer.Controllers
@@ -12,10 +13,11 @@ namespace TeamEdge.WebLayer.Controllers
     public class FileWorkController : Controller
     {
         readonly IFileWorkService _fileWorkService;
-
-        public FileWorkController(IFileWorkService service)
+        readonly FileSystemService _systemService;
+        public FileWorkController(IFileWorkService service, FileSystemService systemService)
         {
             _fileWorkService = service;
+            _systemService = systemService;
         }
 
         [HttpGet("file/{fileId}")]
@@ -45,6 +47,15 @@ namespace TeamEdge.WebLayer.Controllers
                     Name = User.FullName()
                 };
 
+            return Ok(result);
+        }
+
+        [HttpPost("file/image")]
+        public async Task<IActionResult> SaveImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest();
+            var result = await _systemService.AvatarSave(file, User.Id());
             return Ok(result);
         }
 

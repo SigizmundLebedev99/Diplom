@@ -41,9 +41,11 @@ namespace TeamEdge.Controllers
             if (user == null)
                 user = await _userManager.FindByNameAsync(model.Login);
             if (user == null)
-                return BadRequest(new ErrorMessage{ Message = "User with current email doesn't exist", Alias = "wrongEmail"});
+                return BadRequest(new ErrorMessage{ Message = "User with current login doesn't exist", Alias = "wrong_login"});
             if (!await _userManager.CheckPasswordAsync(user, model.Password))
-                return BadRequest(new ErrorMessage{ Message = "You entered the wrong password", Alias = "wrongPass" });
+                return BadRequest(new ErrorMessage{ Message = "You entered the wrong password", Alias = "wrong_pass" });
+            if (!user.EmailConfirmed)
+                return BadRequest(new ErrorMessage { Message = "Email not confirmed", Alias = "not_confirmed" });
             var token = CreateToken(user);
             return Ok(token);
         }
@@ -63,8 +65,32 @@ namespace TeamEdge.Controllers
             result = await _userManager.AddPasswordAsync(user, model.Password);
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
-            await _emailService.SendConfirmationAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action(
+                "ConfirmEmail",
+                "Account",
+                new { userId = user.Id, code },
+                protocol: HttpContext.Request.Scheme);
+            await _emailService.SendConfirmationAsync(_mapper.Map<UserDTO>(user), callbackUrl);
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("ConfirmationError");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("ConfirmationError");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return View("ConfirmEmail", user);
+            return View("Error");
         }
 
         /// <summary>

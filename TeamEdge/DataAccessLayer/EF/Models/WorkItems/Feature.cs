@@ -13,6 +13,9 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("ParentId")]
         public Epick Parent { get; set; }
 
+        [PropertyChanges(typeof(SimpleChangeFactory))]
+        public Priority Risk { get; set; }
+        public string AcceptenceCriteria { get; set; }
         public override string Code => WorkItemType.Feature.Code();
     }
 }

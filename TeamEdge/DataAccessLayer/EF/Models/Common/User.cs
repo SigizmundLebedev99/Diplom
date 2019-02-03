@@ -16,7 +16,7 @@ namespace TeamEdge.DAL.Models
         public virtual ICollection<UserProject> UserProjects { get; set; }
         public virtual ICollection<Invite> Invites { get; set; }
         public virtual ICollection<Subscribe> Subscribes { get; set; }
-        public string Avatar { get; internal set; }
+        public string Avatar { get; set; }
 
         public string FullName
         {

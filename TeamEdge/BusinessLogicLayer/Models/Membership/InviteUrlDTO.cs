@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace TeamEdge.Models
 {
-    public struct InviteDTO
+    public struct InviteCodeDTO
     {
         public int InviteId { get; set; }
         public int FromId { get; set; }
@@ -14,5 +17,6 @@ namespace TeamEdge.Models
         public string Logo { get; set; }
         public int ProjectId { get; set; }
         public DateTime DateOfCreation { get; set; }
+        public string Code { get; set; }
     }
 }

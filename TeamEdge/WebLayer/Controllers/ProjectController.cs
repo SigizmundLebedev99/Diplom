@@ -15,13 +15,13 @@ namespace TeamEdge.WebLayer.Controllers
     {
         readonly IProjectService _projectService;
         readonly IMapper _mapper;
-        readonly FileSystemService _fileSystem;
+        readonly FileSystemService _fsService;
 
-        public ProjectController(IProjectService projectService, IMapper mapper, IFileWorkService fwservice, FileSystemService fileSystemService)
+        public ProjectController(IProjectService projectService, IMapper mapper, FileSystemService fsService)
         {
             _projectService = projectService;
             _mapper = mapper;
-            _fileSystem = fileSystemService;
+            _fsService = fsService;
         }
 
         /// <summary>
@@ -42,14 +42,14 @@ namespace TeamEdge.WebLayer.Controllers
         /// </summary>
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(ProjectDTO))]
-        public async Task<IActionResult> CreateProject([FromForm]CreateProjectVM model)
+        public async Task<IActionResult> CreateProject([FromBody]CreateProjectVM model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             var dto = _mapper.Map<CreateProjectDTO>(model);
             dto.UserId = User.Id();
-            dto.Logo = await _fileSystem.AvatarSave(model.Logo);
             var result = await _projectService.CreateProject(dto);
+            _fsService.Commit(dto.UserId, model.Logo);
             return Ok(result);
         }
 
@@ -74,6 +74,7 @@ namespace TeamEdge.WebLayer.Controllers
             var dto = _mapper.Map<CreateProjectDTO>(model);
             dto.UserId = User.Id();
             var result = await _projectService.UpdateProject(projectId, dto);
+            _fsService.Commit(dto.UserId, model.Logo);
             return Ok(result);
         }
 

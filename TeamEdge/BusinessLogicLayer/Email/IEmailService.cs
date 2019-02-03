@@ -8,12 +8,12 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
 {
     public interface IEmailService
     {
-        Task SendConfirmationAsync(User user);
+        Task SendConfirmationAsync(UserDTO to, string url);
         void SendWorkItemNotifyAsync(User subscriber, IEnumerable<HistoryRecord> messages);
-        Task SendInviteAsync(UserDTO from, InviteDTO model);
+        Task SendInviteAsync(InviteCodeDTO model);
         void SendProjectNotifyAsync(User user, ProjectNotifyDTO model);
         void NotifyUserLeaveAsync(UserDTO from, int projectId);
         void NotifyUserDeletedAsync(UserDTO from, int userId, int projectId);
-        Task SendItemNotifyAsync(IEnumerable<string> emails, ProjectDTO project, WorkItemChanged changes);
+        void SendItemNotify(IEnumerable<string> emails, ProjectDTO project, WorkItemChanged changes);
     }
 }

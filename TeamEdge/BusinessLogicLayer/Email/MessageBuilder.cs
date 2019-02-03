@@ -59,7 +59,10 @@ namespace TeamEdge.BusinessLogicLayer.Email
                 var secondMust = m.Value.IndexOf("}}");
                 var binding = m.Value.Substring(firstMust + 2).Remove(secondMust - 2);
                 object value = GetBindingValue(binding, dataContext);
-                m.Value = value == null ? m.Value : Regex.Replace(m.Value, "{{.*?}}", value.ToString());
+                if (value == null)
+                    m.Remove();
+                else
+                    m.Value = Regex.Replace(m.Value, "{{.*?}}", value.ToString());
             }
 
             foreach (var m in attributes)
@@ -68,7 +71,10 @@ namespace TeamEdge.BusinessLogicLayer.Email
                 var secondMust = m.Value.IndexOf("}}");
                 var binding = m.Value.Substring(firstMust + 2).Remove(secondMust - 2);
                 object value = GetBindingValue(binding, dataContext);
-                m.Value = value == null ? m.Value : Regex.Replace(m.Value, "{{.*?}}", value.ToString());
+                if (value == null)
+                    m.Remove();
+                else
+                    m.Value = Regex.Replace(m.Value, "{{.*?}}", value.ToString());
             }
         }
 
@@ -77,6 +83,11 @@ namespace TeamEdge.BusinessLogicLayer.Email
             var binding = coll.Attribute("collection").Value;
             object value = GetBindingValue(binding, dataContext);
             var collection = value as IEnumerable<object>;
+            if (collection == null)
+            {
+                coll.Remove();
+                return;
+            }
             var slots = coll.Elements().Where(e => e.Attribute("slot") != null).ToLookup(e => e.Attribute("slot").Value);
             foreach(var obj in collection)
             {

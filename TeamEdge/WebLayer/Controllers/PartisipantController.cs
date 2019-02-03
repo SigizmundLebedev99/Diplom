@@ -34,7 +34,11 @@ namespace TeamEdge.WebLayer.Controllers
             var dto = _mapper.Map<CreateInviteDTO>(model);
             dto.FromUserId = User.Id();
             var result = await _membershipService.CreateInvite(dto);
-            await _emailService.SendInviteAsync(User.Model(), result);
+            result.FromAvatar = User.Avatar();
+            result.FromEmail = User.Email();
+            result.FromFullName = User.FullName();
+            result.FromId = User.Id();
+            await _emailService.SendInviteAsync(result);
             return Ok(result);
         }
 

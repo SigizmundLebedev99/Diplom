@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace TeamEdge.Models
 {
@@ -17,9 +18,6 @@ namespace TeamEdge.Models
 
         [Required]
         public string Lastname { get; set; }
-
-        //[Phone]
-        //public string Phone { get; set; }
 
         [Required]
         public string UserName { get; set; }

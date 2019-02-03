@@ -62,7 +62,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             if (entity == null)
                 throw new NotFoundException("item_nf");
-
+            if (nextentity.AssignedToId != null && nextentity.AssignedToId.Value != model.CreatorId)
+                if (!await _context.UserProjects.AnyAsync(e => e.UserId == model.CreatorId && e.ProjectId == model.ProjectId))
+                    throw new UnauthorizedException("Назначать участников на задачу может только администратор");
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Number = entity.Number;
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);

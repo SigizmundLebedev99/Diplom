@@ -81,6 +81,10 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var entity = await query
                 .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number && e.Type == type);
 
+            if (nextentity.AssignedToId != null && nextentity.AssignedToId.Value != model.CreatorId)
+                if (!await _context.UserProjects.AnyAsync(e => e.UserId == model.CreatorId && e.ProjectId == model.ProjectId))
+                    throw new UnauthorizedException("Назначать участников на задачу может только администратор");
+
             if (entity == null)
                 throw new NotFoundException("item_nf");
 

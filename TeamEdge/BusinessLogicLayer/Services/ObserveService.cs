@@ -30,7 +30,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Name = e.Project.Name
                 }).FirstOrDefault();
                 var emails = context.Subscribes.Where(e => e.WorkItemId == workItemId).Select(e => e.Subscriber.Email).ToList();
-                _emailService.SendItemNotifyAsync(emails, project, changes);
+                _emailService.SendItemNotify(emails, project, changes);
             }
         }
     }

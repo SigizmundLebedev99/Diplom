@@ -18,35 +18,23 @@ namespace TeamEdge.BusinessLogicLayer.Services
         readonly TeamEdgeDbContext _context;
         readonly UserManager<User> _userManager;
         readonly IMapper _mapper;
+        readonly IValidationService _validationService;
 
-        public MembershipService(TeamEdgeDbContext context, IMapper mapper, UserManager<User> userManager)
+        public MembershipService(TeamEdgeDbContext context, IMapper mapper, UserManager<User> userManager, IValidationService validationService)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
+            _validationService = validationService;
         }
 
         public async Task DeletePartisipant(DeletePartisipantDTO model)
         {
             var operRes = new OperationResult(true);
 
-            var fromUserPrj = await _context
-                .UserProjects
-                .AnyAsync(e => e.ProjectId == model.ProjectId 
-                && e.UserId == model.FromId 
-                && e.ProjRole == ProjectAccessLevel.Administer);
+            await _validationService.ValidateProject(model.ProjectId, model.UserId, e=>e.IsAdmin);
 
-            var toUserPrj = await _context
-                .UserProjects
-                .Include(e=>e.User.Email)
-                .FirstOrDefaultAsync(e => e.ProjectId == model.ProjectId && e.UserId == model.UserId);
-
-            if (!fromUserPrj)
-                throw new UnauthorizedException();
-            if (toUserPrj == null)
-                throw new NotFoundException();
-
-            _context.UserProjects.Remove(toUserPrj);
+            _context.UserProjects.Remove(new UserProject { ProjectId = model.ProjectId, UserId = model.UserId });
 
             await _context.SaveChangesAsync();
         }
@@ -116,11 +104,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task UpdatePartisipantStatus(ChangeStatusDTO model)
         {
             var operRes = new OperationResult(true);
-            var fromUserProj = await _context
-                .UserProjects
-                .AnyAsync(u => u.UserId == model.FromId && u.ProjectId == model.ProjectId && u.IsAdmin);
-            if (!fromUserProj)
-                throw new UnauthorizedException();
+            await _validationService.ValidateProject(model.ProjectId, model.UserId, e=>e.IsAdmin);
             var userProj = await _context
                 .UserProjects
                 .AnyAsync(u => u.UserId == model.UserId && u.ProjectId == model.ProjectId);
@@ -132,24 +116,28 @@ namespace TeamEdge.BusinessLogicLayer.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<InviteDTO> CreateInvite(CreateInviteDTO model)
+        public async Task<InviteCodeDTO> CreateInvite(CreateInviteDTO model)
         {
-            if (!await _context.Projects.AnyAsync(e => e.Id == model.ProjectId))
-                throw new NotFoundException();
-            bool isFromAdmin = await _context
-                .UserProjects
-                .AnyAsync(u => u.ProjectId == model.ProjectId && u.UserId == model.FromUserId && u.IsAdmin);
-            if (!isFromAdmin)
-                throw new UnauthorizedException();
-
+            await _validationService.ValidateProject(model.ProjectId, model.FromUserId, e => e.IsAdmin);
+            string code = null;
             var invite = _mapper.Map<Invite>(model);
-            var user = _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null)
                 invite.ToUserId = user.Id;
+            else
+            {
+                string userName = model.Email.Remove(model.Email.IndexOf('@'));
+                user = new User { Email = model.Email, UserName = userName };
+                await _userManager.CreateAsync(user);
+                invite.ToUserId = user.Id;
+                code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            }
             invite.DateOfCreation = DateTime.Now;
-            var result = _context.Invites.Add(invite).Entity;
+            _context.Invites.Add(invite);
             await _context.SaveChangesAsync();
-            return _mapper.Map<InviteDTO>(result);
+            var result = _mapper.Map<InviteCodeDTO>(invite);
+            result.Code = code;
+            return result;
         }
     }
 }

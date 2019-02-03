@@ -9,6 +9,6 @@ namespace TeamEdge.Models
         [RegularExpression("^[a-zA-Z_1-9]{3,20}$")]
         public string Name { get; set; }
         public string Description { get; set; }
-        public IFormFile Logo { get; set; }
+        public string Logo { get; set; }
     }
 }

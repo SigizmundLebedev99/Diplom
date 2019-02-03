@@ -59,8 +59,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             var operRes = await ValidateItemDTO(model);
             if (!operRes.Succeded)
-                return operRes;
+                return operRes; 
             var description = _mapper.Map<WorkItemDescription>(model);
+            _context.Subscribes.Add(new Subscribe { WorkItemId = description.Id, SubscriberId = model.CreatorId });
             description.DateOfCreation = DateTime.Now;
             _context.WorkItemDescriptions.Add(description);
             
@@ -70,7 +71,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
             var operRes = await ValidateItemDTO(model);
-
+            if (!operRes.Succeded)
+                return operRes;
             return await GetRepository(model.Code).UpdateWorkItem(number, model);
         }
 

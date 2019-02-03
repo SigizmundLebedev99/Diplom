@@ -35,7 +35,7 @@ namespace TeamEdge.WebLayer
 
         public static string FullName(this ClaimsPrincipal user)
         {
-            return GetClaim(user, "GivenName", false);
+            return GetClaim(user, "GivenName", true);
         }
 
         private static string GetClaim(ClaimsPrincipal user, string claim, bool required)

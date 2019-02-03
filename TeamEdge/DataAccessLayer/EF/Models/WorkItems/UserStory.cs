@@ -18,12 +18,7 @@ namespace TeamEdge.DAL.Models
         [PropertyChanges(typeof(SimpleChangeFactory))]
         public Priority Priority { get; set; }
 
-        [PropertyChanges(typeof(SimpleChangeFactory))]
-        public Priority Risk { get; set; }
-
         public string AcceptenceCriteria { get; set; }
-
-        public string AcceptenceCriteriaCode { get; set; }
 
         [PropertyChanges(typeof(SimpleChangeFactory))]
         public int? SprintId { get; set; }
