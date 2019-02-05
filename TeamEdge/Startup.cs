@@ -20,6 +20,7 @@ using TeamEdge.JWT;
 using TeamEdge.Mapper;
 using TeamEdge.BusinessLogicLayer.History;
 using TeamEdge.DAL.Mongo;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace TeamEdge
 {
@@ -96,6 +97,8 @@ namespace TeamEdge
                 { "Bearer", Enumerable.Empty<string>() },
             });
             });
+
+            services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,5 +10,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
         Task<FileDTO> CreateFile(CreateFileDTO file);
         Task<IEnumerable<FileDTO>> GetFilesForProject(int userId, int projectId);
         Task DeleteFile(int userId, int fileId);
+        Task<FileDTO> CreateImage(CreateFileDTO model);
     }
 }

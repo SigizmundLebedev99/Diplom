@@ -13,7 +13,6 @@ namespace TeamEdge.DAL.Models
         public bool IsPicture { get; set; }
         [StringLength(128, MinimumLength = 3)]
         public string FileName { get; set; }
-        [StringLength(512, MinimumLength = 3)]
-        public string FilePath { get; set; }
+        public string Path { get; set; }
     }
 }

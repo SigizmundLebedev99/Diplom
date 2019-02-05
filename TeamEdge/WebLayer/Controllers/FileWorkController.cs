@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.BusinessLogicLayer.Services;
@@ -14,17 +19,21 @@ namespace TeamEdge.WebLayer.Controllers
     {
         readonly IFileWorkService _fileWorkService;
         readonly FileSystemService _systemService;
-        public FileWorkController(IFileWorkService service, FileSystemService systemService)
+        readonly IContentTypeProvider _provider;
+        public FileWorkController(IFileWorkService service, FileSystemService systemService, IContentTypeProvider provider)
         {
             _fileWorkService = service;
             _systemService = systemService;
+            _provider = provider;
         }
 
         [HttpGet("file/{fileId}")]
         public async Task<IActionResult> GetFile(int fileId)
         {
             var file = await _fileWorkService.GetFile(fileId, User.Id());
-            return File(file.bytes, file.type, file.name);
+            if (_provider.TryGetContentType(file.name, out var contentType))
+                return File(file.bytes, contentType, file.name);
+            return BadRequest("Can't define content type");
         }
 
         [HttpPost("file/project/{projectId}")]
@@ -32,20 +41,31 @@ namespace TeamEdge.WebLayer.Controllers
         {
             if (file == null || file.Length == 0)
                 return BadRequest();
-            var result = await _fileWorkService.CreateFile(new CreateFileDTO
+            var imageTypes = new string[]{"image/jpg",
+            "image/jpeg",
+            "image/pjpeg",
+            "image/gif",
+            "image/x-png",
+            "image/png" };
+            FileDTO result = null;
+            var dto = new CreateFileDTO
             {
                 File = file,
                 UserId = User.Id(),
                 ProjectId = projectId
-            });
+            };
+            if (imageTypes.Contains(file.ContentType.ToLower()))
+                result = await _fileWorkService.CreateImage(dto);
+            else
+                result = await _fileWorkService.CreateFile(dto); 
+            
 
-            if (result.CreatedBy == null)
-                result.CreatedBy = new UserLightDTO
-                {
-                    Avatar = User.Avatar(),
-                    Id = User.Id(),
-                    Name = User.FullName()
-                };
+            result.CreatedBy = new UserLightDTO
+            {
+                Avatar = User.Avatar(),
+                Id = User.Id(),
+                Name = User.FullName()
+            };
 
             return Ok(result);
         }
@@ -72,5 +92,5 @@ namespace TeamEdge.WebLayer.Controllers
             await _fileWorkService.DeleteFile(User.Id(), fileId);
             return Ok();
         }
-    }
+    } 
 }

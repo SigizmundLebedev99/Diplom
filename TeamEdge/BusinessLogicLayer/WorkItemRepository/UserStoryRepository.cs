@@ -113,8 +113,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Name = e.Name,
             Number = e.Number,
             AcceptenceCriteria = e.AcceptenceCriteria,
-            AcceptenceCriteriaCode = e.AcceptenceCriteriaCode,
-            Risk = e.Risk,
             Priority = e.Priority,
             SprintId = e.SprintId,
             SprintName = e.SprintId == null? null : e.Sprint.Name,

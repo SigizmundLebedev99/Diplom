@@ -8,6 +8,6 @@ namespace TeamEdge.Models
 {
     public class PictureDTO : FileDTO
     {
-        public string Path { get; set; }
+        public string ImageBase64 { get; set; }
     }
 }

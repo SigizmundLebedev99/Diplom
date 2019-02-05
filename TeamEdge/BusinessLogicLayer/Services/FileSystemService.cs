@@ -9,7 +9,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace TeamEdge.BusinessLogicLayer.Services
@@ -65,11 +64,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             //_logger.LogDebug("End of DocsSave action.");
             return result.Replace(_environment.ContentRootPath, "");
-        }
-
-        internal Task<string> ImageSave(IFormFile file)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<string> AvatarSave(IFormFile file, int userId)
@@ -143,6 +137,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             string value = _cache.Get(userId).ToString();
             if (path == null && !string.IsNullOrEmpty(value))
+                RemoveFile(value, true);
+            if(value!=path)
                 RemoveFile(value, true);
             _cache.Remove(userId);
         }
