@@ -23,7 +23,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
                 {
                     Previous = previous,
                     New = next,
-                    Type = _type
+                    PropertyName = _type
                 };
 
             return null;

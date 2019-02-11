@@ -65,19 +65,19 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
-        public async Task ValidateProject(int projId, int userId)
+        public async Task ValidateProjectAccess(int projId, int userId)
         {
             if (!await _context.Projects.AnyAsync(p => p.Id == projId))
-                throw new Infrostructure.NotFoundException("project_nf");
-            if (!await _context.UserProjects.AnyAsync(p => p.UserId == userId && p.ProjectId == projId))
+                throw new NotFoundException("project_nf");
+            if (!await _context.UserProjects.AnyAsync(p => p.UserId == userId && p.ProjectId == projId && !p.IsDeleted))
                 throw new UnauthorizedException();
         }
 
-        public async Task ValidateProject(int projId, int userId, Expression<Func<UserProject, bool>> filter)
+        public async Task ValidateProjectAccess(int projId, int userId, Expression<Func<UserProject, bool>> filter)
         {
             if (!await _context.Projects.AnyAsync(p => p.Id == projId))
                 throw new Infrostructure.NotFoundException("project_nf");
-            if (!await _context.UserProjects.Where(filter).AnyAsync(p => p.UserId == userId && p.ProjectId == projId))
+            if (!await _context.UserProjects.Where(filter).AnyAsync(p => p.UserId == userId && p.ProjectId == projId && !p.IsDeleted))
                 throw new UnauthorizedException();
         }
 

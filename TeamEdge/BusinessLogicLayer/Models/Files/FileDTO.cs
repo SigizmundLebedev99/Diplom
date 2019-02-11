@@ -9,5 +9,7 @@ namespace TeamEdge.Models
         public string FileName { get; set; }
         public UserLightDTO CreatedBy { get; set; }
         public DateTime DateOfCreation { get; set; }
+        public bool IsPicture { get; set; }
+        public string ImageBase64 { get; set; }
     }
 }

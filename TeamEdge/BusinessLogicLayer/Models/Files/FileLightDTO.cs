@@ -9,5 +9,7 @@ namespace TeamEdge.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool isPicture { get; set; }
+        public string ImageBase64 { get; set; }
     }
 }

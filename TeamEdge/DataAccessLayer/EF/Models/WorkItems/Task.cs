@@ -7,6 +7,7 @@ namespace TeamEdge.DAL.Models
 {
     public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithChild<SubTask>
     {
+        [PropertyChanges(typeof(ChildrenChangeFactory))]
         public ICollection<SubTask> Children { get; set; }
         public int? ParentId { get; set; }
         [ForeignKey("ParentId")]
@@ -24,7 +25,5 @@ namespace TeamEdge.DAL.Models
         public Sprint Sprint { get; set; }
 
         public override string Code => Type.Code();
-
-        
     }
 }

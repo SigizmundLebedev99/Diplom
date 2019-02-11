@@ -30,11 +30,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task DeletePartisipant(DeletePartisipantDTO model)
         {
-            var operRes = new OperationResult(true);
-
-            await _validationService.ValidateProject(model.ProjectId, model.UserId, e=>e.IsAdmin);
-
-            _context.UserProjects.Remove(new UserProject { ProjectId = model.ProjectId, UserId = model.UserId });
+            var userProject = await _context.UserProjects.FirstOrDefaultAsync(e => e.ProjectId == model.ProjectId && model.UserId == model.UserId);
+            if (userProject == null)
+                throw new NotFoundException("project_nf");
+            userProject.IsDeleted = true;
+            _context.UserProjects.Update(userProject);
 
             await _context.SaveChangesAsync();
         }
@@ -42,7 +42,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task<OperationResult> LeaveProject(int userId, int projectId)
         {
             var operRes = new OperationResult(true);
-            var userProj = await _context.UserProjects.FirstOrDefaultAsync(i => i.UserId == userId && i.ProjectId == projectId);
+            var userProj = await _context.UserProjects.FirstOrDefaultAsync(i => i.UserId == userId && i.ProjectId == projectId && !i.IsDeleted);
 
             if (userProj == null)
                 throw new NotFoundException();
@@ -57,8 +57,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 operRes.AddErrorMessage("leave_single_admin", "Перед тем как покидать проект, назначьте нового администратора");
                 return operRes;
             }
-
-            _context.UserProjects.Remove(userProj);
+            userProj.IsDeleted = true;
+            _context.UserProjects.Update(userProj);
             await _context.SaveChangesAsync();
             return operRes;
         }
@@ -77,37 +77,26 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (invite == null)
                 throw new NotFoundException("invite_nf", $"Не удалось найти инвайт с id = {model.InviteId}");
             
-            if (invite?.ToUserId != model.UserId || invite.Email != user?.Email || invite.ProjectId == model.ProjectId)
+            if (invite.ToUserId != model.UserId || invite.Email != user.Email || invite.ProjectId == model.ProjectId)
                 operRes.AddErrorMessage("user_inv", $"Ошибка доступа");
             if (!operRes.Succeded)
                 return operRes;
 
-            using(var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-            {
-                try
-                {
-                    _context.UserProjects.Add(_mapper.Map<UserProject>(invite));
-                    invite.IsAccepted = true;
-                    _context.Invites.Update(invite);
-                    await _context.SaveChangesAsync();
-                    transaction.Complete();
-                }
-                catch(Exception ex)
-                {
-                    transaction.Dispose();
-                    throw;
-                }
-            }
+            _context.UserProjects.Add(_mapper.Map<UserProject>(invite));
+            invite.IsAccepted = true;
+            _context.Invites.Update(invite);
+            await _context.SaveChangesAsync();
+            
             return operRes;
         }
 
         public async Task UpdatePartisipantStatus(ChangeStatusDTO model)
         {
             var operRes = new OperationResult(true);
-            await _validationService.ValidateProject(model.ProjectId, model.UserId, e=>e.IsAdmin);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId, e=>e.IsAdmin);
             var userProj = await _context
                 .UserProjects
-                .AnyAsync(u => u.UserId == model.UserId && u.ProjectId == model.ProjectId);
+                .AnyAsync(u => u.UserId == model.UserId && u.ProjectId == model.ProjectId && !u.IsDeleted);
             if(!userProj)
                 throw new NotFoundException("user_nf",
                     $"Не удалось найти пользователя c id = {model.UserId} для проекта c id={model.ProjectId}");
@@ -118,7 +107,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<InviteCodeDTO> CreateInvite(CreateInviteDTO model)
         {
-            await _validationService.ValidateProject(model.ProjectId, model.FromUserId, e => e.IsAdmin);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.FromUserId, e => e.IsAdmin);
             string code = null;
             var invite = _mapper.Map<Invite>(model);
             var user = await _userManager.FindByEmailAsync(model.Email);

@@ -7,6 +7,6 @@ namespace TeamEdge.DAL.Mongo.Models
 {
     public interface IPropertyChanged
     {
-        string Type { get; set; }
+        string PropertyName { get; set; }
     }
 }

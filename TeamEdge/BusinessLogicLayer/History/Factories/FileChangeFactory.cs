@@ -34,7 +34,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
             {
                 return new CollectionChanged
                 {
-                    Type = _type,
+                    PropertyName = _type,
                     Added = nex.Select(selector)
                 };
             }
@@ -43,7 +43,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
             {
                 return new CollectionChanged
                 {
-                    Type = _type,
+                    PropertyName = _type,
                     Deleted = prev.Select(selector)
                 };
             }
@@ -56,7 +56,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
                     return null;
                 return new CollectionChanged
                 {
-                    Type = _type,
+                    PropertyName = _type,
                     Added = added,
                     Deleted = deleted
                 };

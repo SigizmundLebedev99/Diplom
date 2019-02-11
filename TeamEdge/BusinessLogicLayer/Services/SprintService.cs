@@ -27,7 +27,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<OperationResult<SprintDTO>> CreateSprint(CreateSprintDTO model)
         {
-            await _validationService.ValidateProject(model.ProjectId, model.CreatorId, e => e.CanWrite);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.CreatorId, e => e.CanWrite);
 
             var entity = _mapper.Map<Sprint>(model);
             entity.DateOfCreation = DateTime.Now;
@@ -67,7 +67,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var project = await _context.Sprints.Where(e => e.Id == sprintId).Select(e => new { e.ProjectId }).FirstOrDefaultAsync();
             if (project == null)
                 throw new NotFoundException("sprint_nf");
-            await _validationService.ValidateProject(project.ProjectId, userId);
+            await _validationService.ValidateProjectAccess(project.ProjectId, userId);
 
             var entity = await
                 ((IQueryable<BaseWorkItem>)_context.UserStories
@@ -102,7 +102,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<IEnumerable<SprintDTO>> GetSprintsForProject(int userId, int projectId)
         {
-            await _validationService.ValidateProject(projectId, userId);
+            await _validationService.ValidateProjectAccess(projectId, userId);
 
             return await _context.Sprints.Where(e => e.ProjectId == projectId).Select(e=>new SprintDTO
             {

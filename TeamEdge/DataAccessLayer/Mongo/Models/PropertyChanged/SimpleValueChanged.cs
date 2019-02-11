@@ -12,6 +12,6 @@ namespace TeamEdge.DAL.Mongo.Models
 
         public object New { get; set; }
 
-        public string Type { get; set; }
+        public string PropertyName { get; set; }
     }
 }

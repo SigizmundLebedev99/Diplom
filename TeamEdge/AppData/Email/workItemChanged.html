@@ -11,25 +11,60 @@
 		
 		<h4>{{record.DateOfCreation}}</h4>
 		<div>
-			<p>
+			<p style="padding:5px">
 				<img src="{{record.Initiator.Avatar}}">
 				<span>{{record.Initiator.FullName}}</span>
 			</p>
 			<p>Изменил <span>{{record.Code}}</span>-<span>{{record.Number}}</span> (<span>{{record.Name}})</span></p>
 			<h4>Список изменений</h4>
-			<div collection="changes">
-				<div slot="SympleValueChanged">
-					<h5>{{description}} изменено с</h5>
-					<p>{{previous}}</p>
-					<h5>на</h5>
-					<p>{{next}}</p>
+			<div for="c in record.Changes">
+
+				<div slot-scope="c" style="margin:10px">
+					<div slot="SimpleValueChanged" slot-scope="c.Previous">
+						<div slot="ItemDTO">
+							<h5>{{c.Type}} изменено с</h5>
+							<p><strong>{{c.Previous.Code}}</strong>-<span>{{c.Previous.Number}}</span>. <span>{{c.Previous.Name}}</span></p>
+							<h5>на</h5>
+							<p><strong>{{c.Next.Code}}</strong>-<span>{{c.Next.Number}}</span>. <span>{{c.Next.Name}}</span></p>
+						</div>
+						<div slot="~">
+							<h5>{{c.Type}} изменено с</h5>
+							<p>{{c.Previous}}</p>
+							на
+							<p>{{c.Next}}</p>
+						</div>
+					</div>
+
+					<div slot="CollectionChanged">
+						<h5>Изменен список {{c.Type}}</h5>
+						<p>Добавленные элементы:</p>
+						<ul>
+							<li for="a in c.Added">
+								<div slot-scope="a">
+									<p slot="FileLightDTO"><strong>{{a.Name}}</strong></p>
+
+									<p slot="ItemDTO"><strong>{{a.Code}}</strong>-<span>{{a.Number}}</span>. <span>{{a.Name}}</span></p>
+
+									<p slot="~">{{a}}</p>
+								</div>
+							</li>
+						</ul>
+						<p>Удаленные элементы:</p>
+						<ul>
+							<li for="d in c.Deleted">
+								<div slot-scope="a">
+									<p slot="FileLightDTO"><strong>{{d.Name}}</strong></p>
+
+									<p slot="ItemDTO"><strong>{{d.Code}}</strong>-<span>{{d.Number}}</span>. <span>{{d.Name}}</span></p>
+
+									<p slot="~">{{d}}</p>
+								</div>
+							</li>
+						</ul>
+					</div>
 				</div>
 
-				<div slot="CollectionChanged">
-					<h5>Изменен список {{description}}</h5>
-					<h5>Добавлено</h5>
-					<p subslot="added"></p>
-				</div>
+				
 			</div>
 		</div>
 	</body>

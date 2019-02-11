@@ -6,6 +6,7 @@ namespace TeamEdge.DAL.Models
     {
         public int UserId { get; set; }
         public int ProjectId { get; set; }
+        public bool IsDeleted { get; set; }
 
         public RepositoryAccessLevel RepoRole { get; set; }
         public ProjectAccessLevel ProjRole { get; set; }

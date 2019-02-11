@@ -52,6 +52,11 @@ namespace TeamEdge.Mapper
             CreateMap<User, UserDTO>();
             CreateMap<WorkItemDescription, DescriptionDTO>();
             CreateMap<Feature, WorkItemDTO>();
+
+            CreateMap<CreateCommentDTO, Comment>()
+                .ForMember(e => e.CreatorId, c => c.MapFrom(e => e.From.Id))
+                .ForMember(e=>e.Files,c=>c.Ignore());
+            CreateMap<CreateCommentVM, CommentDTO>();
         }
     }
 }

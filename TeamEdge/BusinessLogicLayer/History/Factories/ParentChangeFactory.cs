@@ -41,7 +41,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
                     Number = p.Number,
                     Name = p.Name
                 },
-                Type = _type
+                PropertyName = _type
             };
         }
     }

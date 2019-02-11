@@ -29,7 +29,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<IEnumerable<ItemDTO>> GetListOfItems(GetItemsDTO model)
         {
-            await _validationService.ValidateProject(model.ProjectId, model.UserId);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId);
             bool ofType = !string.IsNullOrEmpty(model.Code);
 
             IQueryable<ItemDTO> query = null;
@@ -46,7 +46,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<WorkItemDTO> GetWorkItem(int projId, int fromUserId, string code, int number)
         {
-            await _validationService.ValidateProject(projId, fromUserId);
+            await _validationService.ValidateProjectAccess(projId, fromUserId);
 
             var result = await GetRepository(code).GetWorkItem(code, number, projId);
             if (result == null)

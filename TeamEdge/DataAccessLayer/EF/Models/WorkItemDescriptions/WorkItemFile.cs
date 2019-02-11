@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamEdge.DAL.Models
 {
@@ -11,5 +12,7 @@ namespace TeamEdge.DAL.Models
         public _File File { get; set; }
         [ForeignKey("WorkItemId")]
         public WorkItemDescription WorkItem { get; set; }
+
+        public virtual ICollection<CommentFile> CommentFiles{ get; set; }
     }
 }

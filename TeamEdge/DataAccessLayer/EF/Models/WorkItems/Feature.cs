@@ -7,6 +7,7 @@ namespace TeamEdge.DAL.Models
 {
     public class Feature : BaseWorkItem, IBaseWorkItemWithParent<Epick>, IBaseWorkItemWithChild<UserStory>
     {
+        [PropertyChanges(typeof(ChildrenChangeFactory))]
         public ICollection<UserStory> Children { get; set; }
         public int? ParentId { get; set; }
         [PropertyChanges(typeof(ParentChangeFactory))]

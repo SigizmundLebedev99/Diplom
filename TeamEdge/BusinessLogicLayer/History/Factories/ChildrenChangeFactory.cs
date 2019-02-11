@@ -8,7 +8,7 @@ using TeamEdge.DAL.Models;
 using TeamEdge.DAL.Mongo.Models;
 using TeamEdge.Models;
 
-namespace TeamEdge.BusinessLogicLayer.History.Factories
+namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
     class ChildrenChangeFactory : IHistoryRecordProduser
     {
@@ -39,7 +39,7 @@ namespace TeamEdge.BusinessLogicLayer.History.Factories
             {
                 return new CollectionChanged
                 {
-                    Type = _type,
+                    PropertyName = _type,
                     Added = nex.Select(selector)
                 };
             }
@@ -48,7 +48,7 @@ namespace TeamEdge.BusinessLogicLayer.History.Factories
             {
                 return new CollectionChanged
                 {
-                    Type = _type,
+                    PropertyName = _type,
                     Deleted = prev.Select(selector)
                 };
             }
@@ -61,7 +61,7 @@ namespace TeamEdge.BusinessLogicLayer.History.Factories
                     return null;
                 return new CollectionChanged
                 {
-                    Type = _type,
+                    PropertyName = _type,
                     Added = added,
                     Deleted = deleted
                 };

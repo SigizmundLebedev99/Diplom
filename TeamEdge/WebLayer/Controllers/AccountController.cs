@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Models;
-using TeamEdge.JWT;
 using TeamEdge.Models;
 
 namespace TeamEdge.Controllers
@@ -19,16 +18,16 @@ namespace TeamEdge.Controllers
     public class AccountController : Controller
     {
         readonly UserManager<User> _userManager;
-        readonly SignInManager<User> _signInManager;
         readonly IEmailService _emailService;
         readonly IMapper _mapper;
+        readonly AccountService _accountService;
 
-        public AccountController(UserManager<User> userManager, IMapper mapper, SignInManager<User> signInManager, IEmailService emailService)
+        public AccountController(UserManager<User> userManager, IMapper mapper, IEmailService emailService, AccountService accountservice)
         {
             _userManager = userManager;
             _mapper = mapper;
-            _signInManager = signInManager;
             _emailService = emailService;
+            _accountService = accountservice;
         }
 
         /// <summary>
@@ -37,16 +36,9 @@ namespace TeamEdge.Controllers
         [HttpPost("token")]
         public async Task<IActionResult> Token([FromBody]LoginDTO model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Login);
-            if (user == null)
-                user = await _userManager.FindByNameAsync(model.Login);
-            if (user == null)
-                return BadRequest(new ErrorMessage{ Message = "User with current login doesn't exist", Alias = "wrong_login"});
-            if (!await _userManager.CheckPasswordAsync(user, model.Password))
-                return BadRequest(new ErrorMessage{ Message = "You entered the wrong password", Alias = "wrong_pass" });
-            if (!user.EmailConfirmed)
-                return BadRequest(new ErrorMessage { Message = "Email not confirmed", Alias = "not_confirmed" });
-            var token = CreateToken(user);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var token = _accountService.Token(model);
             return Ok(token);
         }
 
@@ -93,54 +85,15 @@ namespace TeamEdge.Controllers
             return View("Error");
         }
 
-        /// <summary>
-        /// Return OAuth providers
-        /// </summary>
-        [HttpGet("providers")]
-        public async Task<IActionResult> GetAuthenticationProviders()
+        [HttpPost("register/code")]
+        public async Task<IActionResult> RegisterWithInvite([FromBody]RegisterWithInviteVM model, string code)
         {
-            var result = await _signInManager.GetExternalAuthenticationSchemesAsync();
-            return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            return View("Error");
         }
 
-        private TokenResultDTO CreateToken(User user)
-        {
-            var claims = new List<Claim>();
-
-            if (!string.IsNullOrEmpty(user.Email))
-                claims.Add(new Claim("Email", user.Email));
-            if (!string.IsNullOrEmpty(user.Lastname) || !string.IsNullOrEmpty(user.Firstname))
-                claims.Add(new Claim("GivenName", user.Firstname + " " + user.Lastname));
-            if (!string.IsNullOrEmpty(user.UserName))
-                claims.Add(new Claim("UserName", user.UserName));
-            if (!string.IsNullOrEmpty(user.Avatar))
-                claims.Add(new Claim("Avatar", user.UserName));
-            claims.Add(new Claim("Id", user.Id.ToString()));
-
-            ClaimsIdentity claimsIdentity =
-                            new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                                ClaimsIdentity.DefaultRoleClaimType);
-            var now = DateTime.UtcNow;
-
-            var jwt = new JwtSecurityToken(
-                issuer: AuthTokenOptions.ISSUER,
-                notBefore: now,
-                claims: claimsIdentity.Claims,
-                expires: now.Add(TimeSpan.FromHours(AuthTokenOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthTokenOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-            var token = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return new TokenResultDTO
-            {
-                UserId = user.Id,
-                Access_token = token,
-                Avatar = user.Avatar,
-                Email = user.Email,
-                FullName = user.Firstname + " " + user.Lastname,
-                Start = now,
-                Finish = now.Add(TimeSpan.FromMinutes(AuthTokenOptions.LIFETIME))
-            };
-        }
+       
     }
 }

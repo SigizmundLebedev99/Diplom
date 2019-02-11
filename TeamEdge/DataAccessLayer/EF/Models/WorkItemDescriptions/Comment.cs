@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TeamEdge.DAL.Models
 {
@@ -14,5 +11,7 @@ namespace TeamEdge.DAL.Models
         public int WorkItemId { get; set; }
         [ForeignKey("WorkItemId")]
         public WorkItemDescription WorkItem { get; set; }
+
+        public virtual ICollection<CommentFile> Files { get; set; }
     }
 }

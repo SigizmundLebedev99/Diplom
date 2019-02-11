@@ -9,6 +9,6 @@ namespace TeamEdge.DAL.Mongo.Models
     {
         public IEnumerable<object> Added { get; set; }
         public IEnumerable<object> Deleted { get; set; }
-        public string Type { get; set; }
+        public string PropertyName { get; set; }
     }
 }

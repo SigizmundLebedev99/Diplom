@@ -15,20 +15,30 @@ namespace TeamEdge.BusinessLogicLayer.Email
         public static string BuildMessageHtml(string path, object dataContext)
         {
             var document = XDocument.Load(path);
-            BuildElement(document.Root,dataContext);
+            BuildElement(document.Root,dataContext, new Dictionary<string, object>());
             return document.ToString();
         }
 
-        private static void BuildElement(XElement element, object dataContext)
+        private static void BuildElement(XElement element, object dataContext, Dictionary<string, object> variables)
         {
-            var allElements = GetAllElements(element);
-            Bind(allElements, dataContext);
-            var collections = allElements.Where(e => e.Attribute("collection") != null);
-            if(collections.Count()>0)
+            var allElements = GetAllElements(element).ToList();
+            allElements.Add(element);
+            Bind(allElements, dataContext, variables);
+            var collections = allElements.Where(e => e.Attribute("for") != null);
+            var scopes = allElements.Where(e => e.Attribute("slot-scope") != null);
+            if (collections.Count() > 0)
             {
-                foreach(var c in collections)
+                foreach (var c in collections)
                 {
-                    BuildCollection(c, dataContext);
+                    BuildCollection(c, dataContext, variables);
+                }
+            }
+
+            if (scopes.Count() > 0)
+            {
+                foreach (var t in scopes)
+                {
+                    BuildSlotScope(t, dataContext, variables);
                 }
             }
         }
@@ -41,7 +51,7 @@ namespace TeamEdge.BusinessLogicLayer.Email
             var addedElements = new List<XElement>();
             foreach (var el in elements)
             {
-                if (el.Attribute("collection") != null)
+                if (el.Attribute("for") != null || el.Attribute("slot-scope") != null)
                     continue;
                 var grantchilds = GetAllElements(el);
                 addedElements.AddRange(grantchilds);
@@ -49,62 +59,99 @@ namespace TeamEdge.BusinessLogicLayer.Email
             return elements.Concat(addedElements);
         }
 
-        private static void Bind(IEnumerable<XElement> elements, object dataContext)
+        private static void Bind(IEnumerable<XElement> elements, object dataContext, Dictionary<string, object> variables)
         {
             var mustashes = elements.Where(e => Regex.IsMatch(e.Value, "{{.*?}}") && !e.HasElements);
             var attributes = elements.SelectMany(e => e.Attributes().Where(a => Regex.IsMatch(a.Value, "{{.*?}}")));
             foreach (var m in mustashes)
             {
-                var firstMust = m.Value.IndexOf("{{");
-                var secondMust = m.Value.IndexOf("}}");
-                var binding = m.Value.Substring(firstMust + 2).Remove(secondMust - 2);
-                object value = GetBindingValue(binding, dataContext);
-                if (value == null)
-                    m.Remove();
-                else
-                    m.Value = Regex.Replace(m.Value, "{{.*?}}", value.ToString());
+                var binding = Regex.Match(m.Value, "{{(.*?)}}").Groups[1].Value;
+                object value = GetBindingValue(binding, dataContext, variables);
+                m.Value = value == null ? m.Value : Regex.Replace(m.Value, "{{.*?}}", value.ToString());
             }
 
             foreach (var m in attributes)
             {
-                var firstMust = m.Value.IndexOf("{{");
-                var secondMust = m.Value.IndexOf("}}");
-                var binding = m.Value.Substring(firstMust + 2).Remove(secondMust - 2);
-                object value = GetBindingValue(binding, dataContext);
-                if (value == null)
-                    m.Remove();
-                else
-                    m.Value = Regex.Replace(m.Value, "{{.*?}}", value.ToString());
+                var binding = Regex.Match(m.Value, "{{(.*?)}}").Groups[1].Value;
+                object value = GetBindingValue(binding, dataContext, variables);
+                m.Value = value == null ? m.Value : Regex.Replace(m.Value, "{{.*?}}", value.ToString());
             }
         }
 
-        private static void BuildCollection(XElement coll, object dataContext)
+        private static void BuildCollection(XElement collTrigger, object dataContext, Dictionary<string, object> variables)
         {
-            var binding = coll.Attribute("collection").Value;
-            object value = GetBindingValue(binding, dataContext);
+            var attr = collTrigger.Attribute("for");
+            attr.Remove();
+            var attrValue = attr.Value;
+            string[] strings = attrValue.Split(' ').ToArray();
+            string variable = strings[0];
+            string bindingStr = strings[2];
+            if (strings.Length != 3 && strings[1] != "in")
+                throw new ArgumentException("Collection notation invalid");
+
+            object value = GetBindingValue(bindingStr, dataContext, variables);
             var collection = value as IEnumerable<object>;
             if (collection == null)
             {
-                coll.Remove();
+                collTrigger.Remove();
                 return;
             }
-            var slots = coll.Elements().Where(e => e.Attribute("slot") != null).ToLookup(e => e.Attribute("slot").Value);
-            foreach(var obj in collection)
+
+            foreach (var obj in collection)
             {
-                var slot = slots[obj.GetType().Name].First();
-                BuildElement(slot, obj);
+                if (!variables.TryGetValue(variable, out var previous))
+                    variables.Add(variable, obj);
+                else
+                    variables[variable] = obj;
+
+                var element = new XElement(collTrigger);
+                BuildElement(element, dataContext, variables);
+                collTrigger.AddAfterSelf(element);
             }
+            collTrigger.Remove();
+            variables.Remove(variable);
         }
 
-        private static object GetBindingValue(string binding, object dataContext)
+        private static void BuildSlotScope(XElement scopeElement, object dataContext, Dictionary<string, object> variables)
         {
-            object value = dataContext;
-            foreach (var prop in binding.Split('.'))
+            var slots = scopeElement.Elements().Where(e => e.Attribute("slot") != null).ToLookup(e => e.Attribute("slot").Value);
+            if (slots.Count() == 0)
+                return;
+
+            var attr = scopeElement.Attribute("slot-scope");
+            attr.Remove();
+            string type = GetBindingValue(attr.Value, dataContext, variables).GetType().Name;
+            if (slots[type] != null && slots[type].Count() == 0)
+                type = "~";
+            if (slots[type] == null)
+                return;
+            foreach (var slot in slots[type])
             {
-                if (value == null)
-                    break;
-                value = value.GetType().GetProperty(prop)?.GetValue(value);
+                slot.Attribute("slot").Remove();
+                BuildElement(slot, dataContext, variables);
             }
+
+            foreach (var s in slots.Where(e => e.Key != type))
+                s.Remove();
+
+            var elements = GetAllElements(scopeElement);
+            Bind(elements, dataContext, variables);
+        }
+
+        private static object GetBindingValue(string binding, object dataContext, Dictionary<string, object> variables)
+        {
+            var strings = binding.Split('.');
+            if (variables.TryGetValue(strings[0], out var value))
+                binding = binding.Replace(strings.Length > 1 ? strings[0] + "." : strings[0], "");
+            else
+                value = dataContext;
+            if (!string.IsNullOrEmpty(binding))
+                foreach (var prop in binding.Split('.'))
+                {
+                    if (value == null)
+                        break;
+                    value = value.GetType().GetProperty(prop)?.GetValue(value);
+                }
             return value;
         }
     }

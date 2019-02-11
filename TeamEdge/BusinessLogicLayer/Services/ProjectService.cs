@@ -43,7 +43,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<IEnumerable<FileDTO>> GetFilesForProject(int projectId, int userId)
         {
-            await _validationService.ValidateProject(projectId, userId);
+            await _validationService.ValidateProjectAccess(projectId, userId);
             return await _context.Files.Where(e => e.ProjectId == projectId).Select(e => new FileDTO
             {
                 Id = e.Id,

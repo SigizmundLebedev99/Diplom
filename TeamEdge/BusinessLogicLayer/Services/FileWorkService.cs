@@ -32,7 +32,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<FileDTO> CreateFile(CreateFileDTO model)
         {
-            await _validationService.ValidateProject(model.ProjectId, model.UserId);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId);
 
             string path = await _fileSystemService.DocsSave(model.File);
             return await CreateFile(model, path, false);
@@ -40,7 +40,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<FileDTO> CreateImage(CreateFileDTO model)
         {
-            await _validationService.ValidateProject(model.ProjectId, model.UserId);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId);
             using (MemoryStream stream = new MemoryStream())
             {
                 await model.File.CopyToAsync(stream);
@@ -75,17 +75,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
             };
             _context.Files.Add(file);
             await _context.SaveChangesAsync();
-            return isPicture? new PictureDTO
+            return new FileDTO()
             {
                 Id = file.Id,
                 DateOfCreation = file.DateOfCreation,
                 FileName = file.FileName,
-                ImageBase64 = path
-            }:new FileDTO()
-            {
-                Id = file.Id,
-                DateOfCreation = file.DateOfCreation,
-                FileName = file.FileName
+                IsPicture = isPicture,
+                ImageBase64 = isPicture ? file.Path : null
             };
         }
 
@@ -123,20 +119,21 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<IEnumerable<FileDTO>> GetFilesForProject(int userId, int projectId)
         {
-            await _validationService.ValidateProject(projectId, userId);
+            await _validationService.ValidateProjectAccess(projectId, userId);
             return await _context.Files.Where(e => e.ProjectId == projectId).Select(Selector).ToArrayAsync();
         }   
 
         public async Task DeleteFile(int userId, int fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(e => e.Id == fileId);
-            await _validationService.ValidateProject(file.ProjectId, userId, e=>e.CanWrite);
+            await _validationService.ValidateProjectAccess(file.ProjectId, userId, e=>e.CanWrite);
             _fileSystemService.RemoveFile(file.Path, file.IsPicture);
             _context.Files.Remove(file);
             await _context.SaveChangesAsync();
         }
 
-        private Expression<Func<_File, FileDTO>> Selector = e => e.IsPicture ? new PictureDTO
+        private Expression<Func<_File, FileDTO>> Selector = e => 
+        new FileDTO
         {
             Id = e.Id,
             FileName = e.FileName,
@@ -147,19 +144,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Id = e.CreatorId
             },
             DateOfCreation = e.DateOfCreation,
-            ImageBase64 = e.Path
-        } 
-        : new FileDTO
-        {
-            Id = e.Id,
-            FileName = e.FileName,
-            CreatedBy = new UserLightDTO
-            {
-                Avatar = e.Creator.Avatar,
-                Name = e.Creator.FullName,
-                Id = e.CreatorId
-            },
-            DateOfCreation = e.DateOfCreation
+            IsPicture = e.IsPicture,
+            ImageBase64 = e.IsPicture?e.Path:null
         };
     }
 }

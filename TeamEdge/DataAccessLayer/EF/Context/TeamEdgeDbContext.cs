@@ -42,6 +42,8 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<SubTask> SubTasks { get; set; }
 
+        public virtual DbSet<CommentFile> CommentFiles { get; set; }
+
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
 
         public IQueryable<T> GetWorkItems<T>(Expression<Func<BaseWorkItem, bool>> filter, Expression<Func<BaseWorkItem, T>> selector)
@@ -51,7 +53,6 @@ namespace TeamEdge.DAL.Context
                 .Concat(Epicks.Where(filter).Select(selector))
                 .Concat(Features.Where(filter).Select(selector));
         }
-
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -74,6 +75,16 @@ namespace TeamEdge.DAL.Context
             {
                 ent.HasKey(e => new { e.FileId, e.WorkItemId });
                 ent.HasOne(e => e.File).WithMany(e => e.WorkItemFiles).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            builder.Entity<CommentFile>(ent =>
+            {
+                ent.HasKey(e => new { e.FileId, e.WorkItemId, e.CommentId});
+                ent
+                .HasOne(e => e.WorkItemFile)
+                .WithMany(e => e.CommentFiles)
+                .HasForeignKey(e=>new { e.FileId, e.WorkItemId})
+                .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
