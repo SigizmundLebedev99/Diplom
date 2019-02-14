@@ -48,7 +48,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public Task SendInviteAsync(InviteCodeDTO model)
         {
-            string htmlPath = Path.Combine(_env.ContentRootPath, "AppData/Email/senInvite.html");
+            string htmlPath = Path.Combine(_env.ContentRootPath, "AppData/Email/sendInvite.html");
             var html = MessageBuilder.BuildMessageHtml(htmlPath, model);
             var mailMessage = new MailMessage
             {

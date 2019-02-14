@@ -32,10 +32,10 @@ namespace TeamEdge
                 throw new NotFoundException();
 
             var userId = await _context.Invites.Where(e => e.Id == model.InviteId).Select(e => e.ToUserId).FirstOrDefaultAsync();
-            if (userId == null)
+            if (userId == 0)
                 throw new NotFoundException();
 
-            var user = await _userManager.FindByIdAsync(userId.Value.ToString());
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null || user.EmailConfirmed)
             {
                 throw new NotFoundException();
@@ -57,16 +57,16 @@ namespace TeamEdge
 
         public async Task<TokenResultDTO> Token(LoginDTO model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Login);
-            if (user == null)
-                user = await _userManager.FindByNameAsync(model.Login);
-            if (user == null)
-                throw new NotFoundException("user_nf");
-            if (!await _userManager.CheckPasswordAsync(user, model.Password))
-                throw new NotFoundException("password_inv");
-            if (!user.EmailConfirmed)
-                throw new NotFoundException("email_not_confirmed");
-            return CreateToken(user);
+                var user = await _userManager.FindByEmailAsync(model.Login);
+                if (user == null)
+                    user = await _userManager.FindByNameAsync(model.Login);
+                if (user == null)
+                    throw new NotFoundException("user_nf");
+                if (!await _userManager.CheckPasswordAsync(user, model.Password))
+                    throw new NotFoundException("password_inv");
+                if (!user.EmailConfirmed)
+                    throw new NotFoundException("email_not_confirmed");
+                return CreateToken(user);
         }
 
         public TokenResultDTO CreateToken(User user)

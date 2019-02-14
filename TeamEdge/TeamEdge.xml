@@ -29,9 +29,15 @@
             main registration of new users; TODO: Email confirmation;
             </summary>
         </member>
-        <member name="M:TeamEdge.Controllers.AccountController.GetAuthenticationProviders">
+        <member name="M:TeamEdge.WebLayer.Controllers.CommentController.CreateComment(TeamEdge.Models.CreateCommentVM)">
             <summary>
-            Return OAuth providers
+            Create a new comment for workItem
+            </summary>
+            <returns>id of created entity</returns>
+        </member>
+        <member name="M:TeamEdge.WebLayer.Controllers.CommentController.GetComments(System.Int32,System.Int32,System.Int32)">
+            <summary>
+             Get list of comments for workItem
             </summary>
         </member>
         <member name="M:TeamEdge.WebLayer.Controllers.PartisipantController.SendInvite(TeamEdge.Models.CreateInviteVM)">

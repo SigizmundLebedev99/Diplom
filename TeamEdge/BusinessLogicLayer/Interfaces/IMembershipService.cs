@@ -7,7 +7,7 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
 {
     public interface IMembershipService
     {
-        Task<InviteCodeDTO> CreateInvite(CreateInviteDTO model);
+        Task<OperationResult<InviteCodeDTO>> CreateInvite(CreateInviteDTO model);
         Task<OperationResult> JoinProject(JoinProjectDTO model);
         Task UpdatePartisipantStatus(ChangeStatusDTO model);
         Task DeletePartisipant(DeletePartisipantDTO model);

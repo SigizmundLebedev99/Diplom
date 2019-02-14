@@ -13,9 +13,10 @@ using TeamEdge.DAL.Models;
 namespace TeamEdge.Migrations
 {
     [DbContext(typeof(TeamEdgeDbContext))]
-    partial class TeamEdgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190211190300_somethingWithComments")]
+    partial class somethingWithComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

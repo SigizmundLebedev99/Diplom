@@ -60,7 +60,7 @@ namespace TeamEdge
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.AddIdentity<User, IdentityRole<int>>().AddEntityFrameworkStores<TeamEdgeDbContext>();
+            services.AddIdentity<User, IdentityRole<int>>().AddEntityFrameworkStores<TeamEdgeDbContext>().AddDefaultTokenProviders();
 
             services.AddCustomAuthentication(Configuration);
 
@@ -110,9 +110,9 @@ namespace TeamEdge
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

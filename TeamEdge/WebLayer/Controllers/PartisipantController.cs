@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.Models;
@@ -34,12 +35,16 @@ namespace TeamEdge.WebLayer.Controllers
             var dto = _mapper.Map<CreateInviteDTO>(model);
             dto.FromUserId = User.Id();
             var result = await _membershipService.CreateInvite(dto);
-            result.FromAvatar = User.Avatar();
-            result.FromEmail = User.Email();
-            result.FromFullName = User.FullName();
-            result.FromId = User.Id();
-            await _emailService.SendInviteAsync(result);
-            return Ok(result);
+            if (result.Succeded)
+            {
+                var res = result.Result;
+                res.FromAvatar = User.Avatar();
+                res.FromEmail = User.Email();
+                res.FromFullName = User.FullName();
+                res.Code = Url.Action("RegisterWithInvite","RegistrationView", new { code = res.Code, inviteId = res.InviteId});
+                await _emailService.SendInviteAsync(res);
+            }
+            return result.GetResult();
         }
 
         /// <summary>

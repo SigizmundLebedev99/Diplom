@@ -38,7 +38,7 @@ namespace TeamEdge.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var token = _accountService.Token(model);
+            var token = await _accountService.Token(model);
             return Ok(token);
         }
 
