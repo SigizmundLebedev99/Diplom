@@ -23,6 +23,7 @@ namespace TeamEdge.WebLayer.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> RegisterWithInvite(string code, int inviteId)
         {
             if (string.IsNullOrEmpty(code) || inviteId == 0)

@@ -41,7 +41,9 @@ namespace TeamEdge.WebLayer.Controllers
                 res.FromAvatar = User.Avatar();
                 res.FromEmail = User.Email();
                 res.FromFullName = User.FullName();
-                res.Code = Url.Action("RegisterWithInvite","RegistrationView", new { code = res.Code, inviteId = res.InviteId});
+                res.Code = string.IsNullOrEmpty(res.Code) ? 
+                    Url.Action("Index", "Home") : 
+                    Url.Action("RegisterWithInvite", "RegistrationView", new { inviteId = res.InviteId, code = res.Code });
                 await _emailService.SendInviteAsync(res);
             }
             return result.GetResult();
