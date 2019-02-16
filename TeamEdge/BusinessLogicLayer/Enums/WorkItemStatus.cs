@@ -5,7 +5,6 @@
        New,
        Active,
        Closed,
-       Review,
-       Stoped
+       Review
     }
 }

@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
-using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.DAL.Mongo;
 using TeamEdge.DAL.Mongo.Models;

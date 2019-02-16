@@ -31,7 +31,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
             operRes.Plus(checkResult);
-
+            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
             if (model.ParentId != null)
                 operRes.Plus(await CheckParent<UserStory>(model.ProjectId, model.ParentId.Value));
 
@@ -75,18 +75,18 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var query = _context.Tasks
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
                 .Include(e => e.Description).ThenInclude(e => e.Branches)
-                .Include(e => e.Children)
+                .Include(e=> e.AssignedTo)
                 .Include(e => e.Parent);
 
             var entity = await query
                 .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number && e.Type == type);
+           
+            if (entity == null)
+                throw new NotFoundException("item_nf");
 
             if (nextentity.AssignedToId != null && nextentity.AssignedToId.Value != model.CreatorId)
                 if (!await _context.UserProjects.AnyAsync(e => e.UserId == model.CreatorId && e.ProjectId == model.ProjectId))
                     throw new UnauthorizedException("Назначать участников на задачу может только администратор");
-
-            if (entity == null)
-                throw new NotFoundException("item_nf");
 
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Type = type;
@@ -95,7 +95,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var checkResult = await CheckChildren<SubTask>(model.ChildrenIds, model.ProjectId);
             operRes.Plus(checkResult);
-
+            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
             if (model.ParentId != null)
                 operRes.Plus(await CheckParent<UserStory>(model.ProjectId, model.ParentId.Value));
 
@@ -135,7 +135,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             DescriptionId = e.DescriptionId,         
             Name = e.Name,
             Number = e.Number,
-            Status = e.Status,
+            Status = e.Status.ToString(),
             Children = e.Children.Select(a => new ItemDTO
             {
                 Code = WorkItemType.SubTask.Code(),

@@ -41,7 +41,8 @@ namespace TeamEdge.BusinessLogicLayer
             Code = item.Code,
             DescriptionId = item.DescriptionId,
             Name = item.Name,
-            Number = item.Number
+            Number = item.Number,
+            Status = item.Status.ToString()
         };
 
         public static void RestoreDescriptionData(WorkItemDescription previous, WorkItemDescription nextdesc)

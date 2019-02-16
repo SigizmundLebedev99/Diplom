@@ -78,6 +78,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
             operRes.Plus(checkResult);
+            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
 
             if (model.ParentId != null)
                 operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));

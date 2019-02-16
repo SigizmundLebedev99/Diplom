@@ -84,6 +84,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 operRes.Plus(await CheckParent<Feature>(model.ProjectId, model.ParentId.Value));
 
             operRes.Plus(checkResult);
+            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
+
             if (!operRes.Succeded)
                 return operRes;
 

@@ -62,9 +62,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             if (entity == null)
                 throw new NotFoundException("item_nf");
-            if (nextentity.AssignedToId != null && nextentity.AssignedToId.Value != model.CreatorId)
-                if (!await _context.UserProjects.AnyAsync(e => e.UserId == model.CreatorId && e.ProjectId == model.ProjectId))
-                    throw new UnauthorizedException("Назначать участников на задачу может только администратор");
+
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Number = entity.Number;
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
@@ -95,19 +93,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         private static readonly Expression<Func<SubTask, WorkItemDTO>> SelectExpression = e => new TaskInfoDTO
         {
-            AssignedTo = e.AssignedToId == null ? null : new UserDTO
-            {
-                Avatar = e.AssignedTo.Avatar,
-                Email = e.AssignedTo.Email,
-                FullName = e.AssignedTo.FullName,
-                Id = e.AssignedToId.Value,
-                UserName = e.AssignedTo.UserName
-            },
             Code = WorkItemType.SubTask.Code(),
             DescriptionId = e.DescriptionId,
             Name = e.Name,
             Number = e.Number,
-            Status = e.Status,
+            Status = e.Status.ToString(),
             Parent = e.Parent == null ? null : new ItemDTO
             {
                 Code = e.Parent.Type.Code(),

@@ -6,7 +6,7 @@ using TeamEdge.DAL.Models;
 
 namespace TeamEdge.DAL.Mongo.Models
 {
-    public class SimpleValueChanged : IPropertyChanged
+    public struct SimpleValueChanged : IPropertyChanged
     {
         public object Previous { get; set; }
 

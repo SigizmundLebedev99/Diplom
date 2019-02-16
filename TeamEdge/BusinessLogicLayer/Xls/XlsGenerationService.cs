@@ -19,6 +19,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         readonly TeamEdgeDbContext _context;
         readonly IValidationService _validationService;
         readonly IMapper _mapper;
+
         public XlsGenerationService(TeamEdgeDbContext context, IValidationService service, IMapper mapper)
         {
             _validationService = service;
@@ -30,15 +31,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             await _validationService.ValidateProjectAccess(projectId, userId);
 
-            IEnumerable<BaseWorkItem> tasksForUser = await _context.Tasks.Where(e => e.AssignedToId == userId)
-                .Select(e=>new TaskXlsDTO
+            var tasksForUser = await _context.Tasks.Where(e => e.AssignedToId == userId)
+                .Select(e => new TaskXlsDTO
                 {
                     Name = e.Name,
                     Number = $"{e.Code}-{e.Number}",
-                    DateStart = e.DateStart,
-                    DateFinish = e.DateFinish,
-                })
-                .Concat((IQueryable<BaseWorkItem>)_context.SubTasks.Where(e => e.AssignedToId == userId)).ToListAsync();
+                    //DateStart = e.DateStart,
+                    //DateFinish = e.DateFinish,
+                }).ToListAsync();
 
             var tasks = _mapper.Map<List<TaskXlsDTO>>(tasksForUser);
 

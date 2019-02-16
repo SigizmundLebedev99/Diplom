@@ -26,13 +26,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<Epick>(model);
-
+            
             var checkResult = await CheckChildren<Feature>(model.ChildrenIds, model.ProjectId);
             operRes.Plus(checkResult);
 
             if (!operRes.Succeded)
                 return operRes;
-
+            entity.Status = (WorkItemStatus)checkResult.Result.Select(e => (byte)e.Status).Max();
             var children = checkResult.Result;
             entity.Number = await GetNumber<Epick>(model.ProjectId);
             entity.DescriptionId = description.Id;
@@ -84,6 +84,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var checkResult = await CheckChildren<Feature>(model.ChildrenIds, model.ProjectId);
 
             operRes.Plus(checkResult);
+            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
+
             if (!operRes.Succeded)
                 return operRes;
 

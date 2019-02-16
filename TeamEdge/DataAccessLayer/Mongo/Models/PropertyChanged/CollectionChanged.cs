@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TeamEdge.DAL.Mongo.Models
 {
-    public class CollectionChanged : IPropertyChanged
+    public struct CollectionChanged : IPropertyChanged
     {
         public IEnumerable<object> Added { get; set; }
         public IEnumerable<object> Deleted { get; set; }

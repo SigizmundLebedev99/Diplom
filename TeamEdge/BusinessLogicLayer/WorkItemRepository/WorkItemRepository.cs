@@ -227,6 +227,29 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }  
 
+        public OperationResult CheckStatus<T>(IEnumerable<T> children,
+            WorkItemStatus newStatus) where T:BaseWorkItem
+        {
+            var operRes = new OperationResult(true);
+            switch (newStatus)
+            {
+                case WorkItemStatus.New:
+                    {
+                        if (children.Any(e => e.Status != WorkItemStatus.New))
+                            operRes.AddErrorMessage("status_inv_new");
+                        break;
+                    }
+                case WorkItemStatus.Closed:
+                case WorkItemStatus.Review:
+                    {
+                        if(children.Any(e => e.Status != WorkItemStatus.Closed))
+                            operRes.AddErrorMessage("status_inv_closed");
+                        break;
+                    }
+            }
+            return operRes;
+        }
+
         public WorkItemRepository(IServiceProvider provider)
         {
             _context = (TeamEdgeDbContext)provider.GetService(typeof(TeamEdgeDbContext));
