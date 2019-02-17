@@ -1,10 +1,13 @@
-﻿namespace TeamEdge.Models
+﻿using System;
+
+namespace TeamEdge.Models
 {
     public class SprintDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Stories { get; set; }
-        public int Tasks { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public TimeSpan? Duration { get; set; }
     }
 }

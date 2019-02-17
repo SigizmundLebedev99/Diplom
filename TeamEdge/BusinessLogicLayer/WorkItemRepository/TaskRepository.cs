@@ -29,7 +29,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<_Task>(model);
 
-            var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
+            var checkResult = await CheckChildren<SubTask>(model.ChildrenIds, model.ProjectId);
             operRes.Plus(checkResult);
             operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
             if (model.ParentId != null)
@@ -44,12 +44,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             entity.Number = await GetNumber<_Task>(model.ProjectId, t=>t.Type == entity.Type);
             entity.DescriptionId = description.Id;
 
-            if (children != null)
-            {
-                foreach (var t in children)
-                    t.ParentId = entity.DescriptionId;
-                _context.Tasks.UpdateRange(children);
-            }
+            AddChildren<SubTask, _Task>(checkResult.Result, description.Id);
 
             _context.Tasks.Add(entity);
 

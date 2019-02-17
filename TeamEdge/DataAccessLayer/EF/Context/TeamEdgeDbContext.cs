@@ -44,6 +44,8 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<CommentFile> CommentFiles { get; set; }
 
+        public virtual DbSet<SummaryTask> SummaryTasks { get; set; }
+
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
 
         public IQueryable<T> GetWorkItems<T>(Expression<Func<BaseWorkItem, bool>> filter, Expression<Func<BaseWorkItem, T>> selector)
@@ -51,6 +53,7 @@ namespace TeamEdge.DAL.Context
             return Tasks.Where(filter).Select(selector)
                 .Concat(UserStories.Where(filter).Select(selector))
                 .Concat(Epicks.Where(filter).Select(selector))
+                .Concat(SummaryTasks.Where(filter).Select(selector))
                 .Concat(Features.Where(filter).Select(selector));
         }
 

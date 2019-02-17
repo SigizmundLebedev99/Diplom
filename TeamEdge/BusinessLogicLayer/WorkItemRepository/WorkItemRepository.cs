@@ -73,19 +73,19 @@ namespace TeamEdge.BusinessLogicLayer.Services
         }
 
         protected void AddChildren<TChild, TPar>(IEnumerable<TChild> children, int parentId)
-            where TChild : BaseWorkItem, IBaseWorkItemWithParent<TPar>
+            where TChild : IBaseWorkItemWithParent<TPar>
             where TPar : BaseWorkItem
         {
             if (children != null)
             {
                 foreach (var t in children)
                     t.ParentId = parentId;
-                _context.Set<TChild>().UpdateRange(children);
+                _context.UpdateRange(children);
             }
         }
 
         protected void UpdateChildren<TChild, TPar>(IEnumerable<TChild> previous, IEnumerable<TChild> next, int parentId) 
-            where TChild : BaseWorkItem, IBaseWorkItemWithParent<TPar> 
+            where TChild : IBaseWorkItemWithParent<TPar> 
             where TPar: BaseWorkItem
         {
             IEnumerable<TChild> resultSeq;
@@ -119,7 +119,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 resultSeq = added.Concat(deleted);
             } 
             
-            _context.Set<TChild>().UpdateRange(resultSeq);
+            _context.UpdateRange(resultSeq);
         }
 
         protected void UpdateFiles(IEnumerable<WorkItemFile> previous, IEnumerable<WorkItemFile> next, int itemId)
@@ -204,17 +204,27 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem
         {
+            return await CheckChildrenTemplate(childrenIds, projectId, _context.Set<T>());
+        }
+
+        protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId, IQueryable<T> context) where T : BaseWorkItem
+        {
+            return await CheckChildrenTemplate(childrenIds, projectId, context);
+        }
+
+        protected async Task<OperationResult<IEnumerable<T>>> CheckChildrenTemplate<T>(int[] childrenIds, int projectId, IQueryable<T> context) where T : BaseWorkItem
+        {
             var operRes = new OperationResult<IEnumerable<T>>(true);
             T[] children = null;
             if (childrenIds != null && childrenIds.Length > 0)
             {
-                children = await _context.Set<T>()
+                children = await context
                     .Where(t => t.Description.ProjectId == projectId
                     && childrenIds.Contains(t.DescriptionId)).ToArrayAsync();
 
                 if (children.Length < childrenIds.Length)
                 {
-                    foreach (var i in childrenIds.Where(i => !children.Any(e=>e.DescriptionId == i)))
+                    foreach (var i in childrenIds.Where(i => !children.Any(e => e.DescriptionId == i)))
                     {
                         operRes.AddErrorMessage("children_nf", i);
                     }
@@ -225,7 +235,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 }
             }
             return operRes;
-        }  
+        }
 
         public OperationResult CheckStatus<T>(IEnumerable<T> children,
             WorkItemStatus newStatus) where T:BaseWorkItem

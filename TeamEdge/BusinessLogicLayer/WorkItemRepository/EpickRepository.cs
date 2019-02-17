@@ -114,7 +114,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             DescriptionId = e.DescriptionId,
             Name = e.Name,
             Number = e.Number,
-            Status = e.Status,
+            Status = e.Status.ToString(),
             Children = e.Children.Select(a => new ItemDTO
             {
                 Code = WorkItemType.Feature.Code(),

@@ -6,6 +6,6 @@
         public int Number { get; set; }
         public string Name { get; set; }
         public int DescriptionId { get; set; }
-        public string Status { get; set; } 
+        public WorkItemStatus Status { get; set; } 
     }
 }

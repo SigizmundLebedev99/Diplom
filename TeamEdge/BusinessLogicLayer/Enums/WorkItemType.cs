@@ -17,6 +17,9 @@ namespace TeamEdge
         UserStory,
 
         [WorkItem("SUBTASK", typeof(SubTaskRepository), typeof(CreateSubTaskDTO))]
-        SubTask
+        SubTask,
+
+        [WorkItem("SUmmary", typeof(SubTaskRepository), typeof(CreateSubTaskDTO))]
+        SummaryTask
     }
 }

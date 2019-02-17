@@ -42,7 +42,7 @@ namespace TeamEdge.BusinessLogicLayer
             DescriptionId = item.DescriptionId,
             Name = item.Name,
             Number = item.Number,
-            Status = item.Status.ToString()
+            Status = item.Status
         };
 
         public static void RestoreDescriptionData(WorkItemDescription previous, WorkItemDescription nextdesc)
@@ -55,16 +55,16 @@ namespace TeamEdge.BusinessLogicLayer
         }
     }
 
-    class WorkItemComparer<T> : IEqualityComparer<T> where T : BaseWorkItem
+    class WorkItemComparer<T> : IEqualityComparer<T>
     {
         public bool Equals(T x, T y)
         {
-            return x.DescriptionId == y.DescriptionId;
+            return (x as BaseWorkItem).DescriptionId == (y as BaseWorkItem).DescriptionId;
         }
 
         public int GetHashCode(T obj)
         {
-            return obj.DescriptionId.GetHashCode();
+            return (obj as BaseWorkItem).DescriptionId.GetHashCode();
         }
     }
 }

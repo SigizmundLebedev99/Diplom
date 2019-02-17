@@ -43,11 +43,9 @@ namespace TeamEdge.Mapper
                     Branch = r
                 })));
 
-            CreateMap<CreateSprintDTO, Sprint>()
-                .ForMember(e=>e.Tasks,c=>c.Ignore())
-                .ForMember(e=>e.UserStories,c=>c.Ignore());
-
+            CreateMap<CreateSprintDTO, Sprint>();
             CreateMap<CreateSprintVM, CreateSprintDTO>();
+            CreateMap<Sprint, SprintDTO>();
 
             CreateMap<User, UserDTO>();
             CreateMap<WorkItemDescription, DescriptionDTO>();

@@ -8,8 +8,8 @@ namespace TeamEdge.Models
         public int ProjectId { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public int[] UserStories { get; set; }
-        public int[] Tasks { get; set; }
+        public int? Days { get; set; }
+        public int? Hours { get; set; }
         public int CreatorId { get; set; }
     }
 }

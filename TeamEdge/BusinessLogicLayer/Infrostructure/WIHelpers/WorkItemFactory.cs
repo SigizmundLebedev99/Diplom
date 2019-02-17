@@ -34,7 +34,7 @@ namespace TeamEdge
         private static IEnumerable<WorkItemSlot> EnumElements;
     }
 
-    public class WorkItemSlot
+    class WorkItemSlot
     {
         public WorkItemAttribute Attribute { get; set; }
         public string EnumElement { get; set; }

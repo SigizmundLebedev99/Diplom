@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
-using TeamEdge.DAL.Mongo.Models;
 
 namespace TeamEdge.DAL.Models
 {

@@ -8,11 +8,10 @@ namespace TeamEdge.Models
     public class DescriptionDTO
     {
         public string Description { get; set; }
-        public string DescriptionCode { get; set; }
         public DateTime DateOfCreation { get; set; }
-        public UserDTO CreatedBy { get; set; }
+        public UserLightDTO CreatedBy { get; set; }
         public DateTime? LastUpdate { get; set; }
-        public UserDTO LastUpdateBy { get; set; }
+        public UserLightDTO LastUpdateBy { get; set; }
         public int FilesCount { get; set; }
     }
 }

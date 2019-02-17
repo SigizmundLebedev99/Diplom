@@ -118,7 +118,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Priority = e.Priority,
             SprintId = e.SprintId,
             SprintName = e.SprintId == null? null : e.Sprint.Name,
-            Status = e.Status,
+            Status = e.Status.ToString(),
             Children = e.Children.Select(a=>new ItemDTO
             {
                 DescriptionId = a.DescriptionId,
