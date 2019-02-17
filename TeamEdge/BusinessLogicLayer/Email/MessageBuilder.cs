@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using TeamEdge.DAL.Mongo.Models;
-using TeamEdge.Models;
-using System.Xml.Linq;
-using Microsoft.AspNetCore.Hosting;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace TeamEdge.BusinessLogicLayer.Email
 {
@@ -61,20 +57,46 @@ namespace TeamEdge.BusinessLogicLayer.Email
 
         private static void Bind(IEnumerable<XElement> elements, object dataContext, Dictionary<string, object> variables)
         {
-            var mustashes = elements.Where(e => Regex.IsMatch(e.Value, "{{.*?}}") && !e.HasElements);
-            var attributes = elements.SelectMany(e => e.Attributes().Where(a => Regex.IsMatch(a.Value, "{{.*?}}")));
+            var reg = new Regex("{{(.*?)}}");
+            var mustashes = elements.Where(e => reg.IsMatch(e.Value) && !e.HasElements);
+            var attributes = elements.SelectMany(e => e.Attributes().Where(a => reg.IsMatch(a.Value)));
             foreach (var m in mustashes)
             {
-                var binding = Regex.Match(m.Value, "{{(.*?)}}").Groups[1].Value;
-                object value = GetBindingValue(binding, dataContext, variables);
-                m.Value = value == null ? m.Value : Regex.Replace(m.Value, "{{.*?}}", value.ToString());
+                var matches = reg.Matches(m.Value);
+                foreach (Match match in matches)
+                {
+                    var binding = match.Groups[1].Value;
+                    object value = GetBindingValue(binding, dataContext, variables);
+                    m.Value = value == null ? m.Value : reg.Replace(m.Value,
+                        new MatchEvaluator((mh) =>
+                        {
+                            if (mh.Index == match.Index)
+                                return value.ToString();
+                            else
+                                return mh.Value;
+
+                        })
+                    );
+                }
             }
 
             foreach (var m in attributes)
             {
-                var binding = Regex.Match(m.Value, "{{(.*?)}}").Groups[1].Value;
-                object value = GetBindingValue(binding, dataContext, variables);
-                m.Value = value == null ? m.Value : Regex.Replace(m.Value, "{{.*?}}", value.ToString());
+                var matches = reg.Matches(m.Value);
+                foreach (Match match in matches)
+                {
+                    var binding = match.Groups[1].Value;
+                    object value = GetBindingValue(binding, dataContext, variables);
+                    m.Value = value == null ? m.Value : reg.Replace(m.Value,
+                        new MatchEvaluator((mh) =>
+                        {
+                            if (mh.Value == match.Value)
+                                return value.ToString();
+                            else
+                                return mh.Value;
+                        })
+                    );
+                }
             }
         }
 

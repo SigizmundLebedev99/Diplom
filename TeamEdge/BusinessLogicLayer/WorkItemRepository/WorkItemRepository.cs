@@ -14,7 +14,7 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    public abstract class WorkItemRepository
+    abstract class WorkItemRepository
     {
         protected readonly TeamEdgeDbContext _context;
         protected readonly IMapper _mapper;
@@ -74,7 +74,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         protected void AddChildren<TChild, TPar>(IEnumerable<TChild> children, int parentId)
             where TChild : IBaseWorkItemWithParent<TPar>
-            where TPar : BaseWorkItem
+            where TPar : IBaseWorkItem
         {
             if (children != null)
             {
@@ -86,7 +86,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         protected void UpdateChildren<TChild, TPar>(IEnumerable<TChild> previous, IEnumerable<TChild> next, int parentId) 
             where TChild : IBaseWorkItemWithParent<TPar> 
-            where TPar: BaseWorkItem
+            where TPar: IBaseWorkItem
         {
             IEnumerable<TChild> resultSeq;
 
@@ -207,12 +207,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return await CheckChildrenTemplate(childrenIds, projectId, _context.Set<T>());
         }
 
-        protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId, IQueryable<T> context) where T : BaseWorkItem
+        protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId, IQueryable<T> context) where T : IBaseWorkItem
         {
             return await CheckChildrenTemplate(childrenIds, projectId, context);
         }
 
-        protected async Task<OperationResult<IEnumerable<T>>> CheckChildrenTemplate<T>(int[] childrenIds, int projectId, IQueryable<T> context) where T : BaseWorkItem
+        protected async Task<OperationResult<IEnumerable<T>>> CheckChildrenTemplate<T>(int[] childrenIds, int projectId, IQueryable<T> context) where T : IBaseWorkItem
         {
             var operRes = new OperationResult<IEnumerable<T>>(true);
             T[] children = null;
@@ -238,7 +238,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         }
 
         public OperationResult CheckStatus<T>(IEnumerable<T> children,
-            WorkItemStatus newStatus) where T:BaseWorkItem
+            WorkItemStatus newStatus) where T : IBaseWorkItem
         {
             var operRes = new OperationResult(true);
             switch (newStatus)

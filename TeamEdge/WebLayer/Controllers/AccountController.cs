@@ -42,9 +42,6 @@ namespace TeamEdge.Controllers
             return Ok(token);
         }
 
-        /// <summary>
-        /// main registration of new users; TODO: Email confirmation;
-        /// </summary>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterUserDTO model)
         {
@@ -63,7 +60,15 @@ namespace TeamEdge.Controllers
                 "Account",
                 new { userId = user.Id, code },
                 protocol: HttpContext.Request.Scheme);
-            await _emailService.SendConfirmationAsync(_mapper.Map<UserDTO>(user), callbackUrl);
+            
+            await _emailService.SendConfirmationAsync(new ConfirmEmailBM
+            {
+                FullName = user.FullName,
+                Url = callbackUrl,
+                Email = user.Email,
+                Scheme = Request.Scheme,
+                Host = Request.Host.ToString()
+            });
             return Ok();
         }
 

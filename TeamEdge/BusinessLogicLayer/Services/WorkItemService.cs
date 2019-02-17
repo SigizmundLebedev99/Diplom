@@ -39,7 +39,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 query = GetRepository(model.Code).GetItems(model);
             }
             else
-                query = _context.GetWorkItems(WorkItemHelper.GetFilter<BaseWorkItem>(model), WorkItemHelper.ItemDTOSelector);
+                query = _context.GetWorkItems(WorkItemHelper.GetFilter<IBaseWorkItem>(model), WorkItemHelper.ItemDTOSelector);
 
             return await query.ToListAsync();
         }

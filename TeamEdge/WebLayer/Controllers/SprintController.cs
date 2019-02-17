@@ -40,12 +40,5 @@ namespace TeamEdge.WebLayer.Controllers
             var res = await _sprintService.GetSprintsForProject(User.Id(), projectId);
             return Ok(res);
         }
-
-        [HttpPost("{sprintId}/item/{itemId}")]
-        public async Task<IActionResult> AddItemToSprintSprints(int sprintId, int itemId)
-        {
-            await _sprintService.AddItemToSprint(User.Id(), itemId, sprintId);
-            return Ok();
-        }
     }
 }

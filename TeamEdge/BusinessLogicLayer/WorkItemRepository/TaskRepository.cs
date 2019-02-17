@@ -11,7 +11,7 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    public class TaskRepository : WorkItemRepository
+    class TaskRepository : WorkItemRepository
     {
         public TaskRepository(IServiceProvider provider) : base(provider) { }
 
@@ -70,6 +70,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var query = _context.Tasks
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
                 .Include(e => e.Description).ThenInclude(e => e.Branches)
+                .Include(e => e.Description).ThenInclude(e => e.Tags)
                 .Include(e=> e.AssignedTo)
                 .Include(e => e.Parent);
 
@@ -147,24 +148,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
             },
             Description = new DescriptionDTO
             {
-                CreatedBy = new UserDTO
+                CreatedBy = new UserLightDTO
                 {
                     Avatar = e.Description.Creator.Avatar,
-                    Email = e.Description.Creator.Email,
-                    FullName = e.Description.Creator.FullName,
                     Id = e.Description.CreatorId,
-                    UserName = e.Description.Creator.UserName
+                    Name = e.Description.Creator.FullName
                 },
                 DateOfCreation = e.Description.DateOfCreation,
                 Description = e.Description.DescriptionText,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserDTO
+                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserLightDTO
                 {
-                    Avatar = e.Description.LastUpdater.Avatar,
-                    Email = e.Description.LastUpdater.Email,
-                    FullName = e.Description.LastUpdater.FullName,
-                    Id = e.Description.LastUpdaterId.Value,
-                    UserName = e.Description.LastUpdater.UserName
+                    Avatar = e.Description.Creator.Avatar,
+                    Id = e.Description.CreatorId,
+                    Name = e.Description.Creator.FullName
                 }
             }
         };

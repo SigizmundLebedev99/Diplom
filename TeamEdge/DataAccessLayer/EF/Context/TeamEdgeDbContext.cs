@@ -48,7 +48,7 @@ namespace TeamEdge.DAL.Context
 
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
 
-        public IQueryable<T> GetWorkItems<T>(Expression<Func<BaseWorkItem, bool>> filter, Expression<Func<BaseWorkItem, T>> selector)
+        public IQueryable<T> GetWorkItems<T>(Expression<Func<IBaseWorkItem, bool>> filter, Expression<Func<IBaseWorkItem, T>> selector)
         {
             return Tasks.Where(filter).Select(selector)
                 .Concat(UserStories.Where(filter).Select(selector))

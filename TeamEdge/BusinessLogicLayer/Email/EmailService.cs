@@ -41,9 +41,18 @@ namespace TeamEdge.BusinessLogicLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task SendConfirmationAsync(UserDTO to, string url)
+        public Task SendConfirmationAsync(ConfirmEmailBM model)
         {
-            throw new NotImplementedException();
+            string htmlPath = Path.Combine(_env.ContentRootPath, "AppData/Email/confirm.html");
+            var html = MessageBuilder.BuildMessageHtml(htmlPath, model);
+            var mailMessage = new MailMessage
+            {
+                Subject = $"Подтвердите свой email",
+                Body = html,
+                IsBodyHtml = true,
+            };
+            mailMessage.To.Add(model.Email);
+            return _smtpClient.SendMailAsync(mailMessage);
         }
 
         public Task SendInviteAsync(InviteCodeDTO model)

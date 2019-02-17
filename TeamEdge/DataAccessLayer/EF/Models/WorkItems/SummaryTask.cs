@@ -20,11 +20,11 @@ namespace TeamEdge.DAL.Models
 
         ICollection<SummaryTask> IBaseWorkItemWithChild<SummaryTask>.Children { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public IQueryable<BaseWorkItem> AllChildren
+        public IEnumerable<IBaseWorkItemWithParent<SummaryTask>> AllChildren
         {
             get
             {
-                return Children.Concat((IEnumerable<BaseWorkItem>)((IBaseWorkItemWithChild<SummaryTask>)this).Children).AsQueryable();
+                return Children.Concat((IEnumerable<IBaseWorkItemWithParent<SummaryTask>>)((IBaseWorkItemWithChild<SummaryTask>)this).Children);
             }
         }
 

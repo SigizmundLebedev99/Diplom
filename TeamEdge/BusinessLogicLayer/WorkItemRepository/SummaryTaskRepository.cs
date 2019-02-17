@@ -10,7 +10,7 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    public class SummaryTaskRepository : WorkItemRepository
+    class SummaryTaskRepository : WorkItemRepository
     {
         public SummaryTaskRepository(IServiceProvider provider) : base(provider)
         {
@@ -22,7 +22,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var entity = _mapper.Map<SummaryTask>(model);
 
             var checkResult = await CheckChildren(model.ChildrenIds, model.ProjectId, 
-                _context.Tasks.Concat((IQueryable<BaseWorkItem>)_context.SummaryTasks));
+                _context.Tasks.Concat((IQueryable<IBaseWorkItemWithParent<SummaryTask>>)_context.SummaryTasks));
             operRes.Plus(checkResult);
 
             if (model.ParentId != null)
@@ -35,8 +35,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             entity.Number = await GetNumber<SummaryTask>(model.ProjectId);
             entity.DescriptionId = description.Id;
 
-            AddChildren<IBaseWorkItemWithParent<SubTask>, SubTask>(checkResult.Result
-                .Select(e=>(IBaseWorkItemWithParent<SubTask>)e), 
+            AddChildren<IBaseWorkItemWithParent<SummaryTask>, SummaryTask>(checkResult.Result, 
                 description.Id);
 
             _context.SummaryTasks.Add(entity);
@@ -59,9 +58,59 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .FirstOrDefaultAsync();
         }
 
-        public override Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
-            throw new NotImplementedException();
+            var operRes = new OperationResult<WorkItemDTO>(true);
+
+            var nextentity = _mapper.Map<SummaryTask>(model);
+            var nextdesc = _mapper.Map<WorkItemDescription>(model);
+
+            var query = _context.SummaryTasks
+                .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
+                .Include(e => e.Description).ThenInclude(e => e.Branches)
+                .Include(e=> e.Description).ThenInclude(e=>e.Tags)
+                .Include(e => e.Children)
+                .Include(e=>((IBaseWorkItemWithChild<SummaryTask>)e).Children)
+                .Include(e => e.Parent);
+
+            var entity = await query
+                .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number);
+
+            if (entity == null)
+                throw new NotFoundException("item_nf");
+
+            nextentity.DescriptionId = entity.DescriptionId;
+            nextentity.Number = entity.Number;
+            WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
+
+            var checkResult = await CheckChildren(model.ChildrenIds, model.ProjectId,
+               _context.Tasks.Concat((IQueryable<IBaseWorkItemWithParent<SummaryTask>>)_context.SummaryTasks));
+            operRes.Plus(checkResult);
+            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
+
+            if (model.ParentId != null)
+                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
+
+            if (!operRes.Succeded)
+                return operRes;
+
+            var files = nextdesc.Files;
+            var tags = nextdesc.Tags;
+            nextdesc.Files = null;
+            nextdesc.Tags = null;
+            DetachAllEntities(entity);
+            _context.WorkItemDescriptions.Update(nextdesc);
+            UpdateFiles(entity.Description.Files, files, nextdesc.Id);
+            UpdateTags(entity.Description.Tags, tags);
+            UpdateChildren<IBaseWorkItemWithParent<SummaryTask>, SummaryTask>(entity.AllChildren, checkResult.Result, entity.DescriptionId);
+            _context.SummaryTasks.Update(nextentity);
+
+            await _context.SaveChangesAsync();
+
+            var result = await query.Where(e => e.DescriptionId == entity.DescriptionId).ToListAsync();
+            operRes.Result = result.Select(SelectExpression.Compile()).First();
+            _historyService.CompareForChanges(entity, result.First(), _httpContext.User);
+            return operRes;
         }
 
         private Expression<Func<SummaryTask, WorkItemDTO>> SelectExpression = e => new SummaryTaskInfoDTO

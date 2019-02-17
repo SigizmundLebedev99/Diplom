@@ -9,7 +9,7 @@ namespace TeamEdge.BusinessLogicLayer
 {
     static class WorkItemHelper
     {
-        public static Expression<Func<T, bool>> GetFilter<T>(GetItemsDTO model) where T : BaseWorkItem
+        public static Expression<Func<T, bool>> GetFilter<T>(GetItemsDTO model) where T : IBaseWorkItem
         {
             var par = Parameter(typeof(T));
 
@@ -36,7 +36,7 @@ namespace TeamEdge.BusinessLogicLayer
             return Lambda<Func<T, bool>>(filter, par);
         }
 
-        public static Expression<Func<BaseWorkItem, ItemDTO>> ItemDTOSelector = item => new ItemDTO
+        public static Expression<Func<IBaseWorkItem, ItemDTO>> ItemDTOSelector = item => new ItemDTO
         {
             Code = item.Code,
             DescriptionId = item.DescriptionId,
@@ -55,16 +55,16 @@ namespace TeamEdge.BusinessLogicLayer
         }
     }
 
-    class WorkItemComparer<T> : IEqualityComparer<T>
+    class WorkItemComparer<T> : IEqualityComparer<T> where T : IBaseWorkItem
     {
         public bool Equals(T x, T y)
         {
-            return (x as BaseWorkItem).DescriptionId == (y as BaseWorkItem).DescriptionId;
+            return x.DescriptionId == y.DescriptionId;
         }
 
         public int GetHashCode(T obj)
         {
-            return (obj as BaseWorkItem).DescriptionId.GetHashCode();
+            return obj.DescriptionId.GetHashCode();
         }
     }
 }

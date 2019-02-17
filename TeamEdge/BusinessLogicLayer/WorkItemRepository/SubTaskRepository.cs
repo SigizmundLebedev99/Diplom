@@ -11,7 +11,7 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    public class SubTaskRepository : WorkItemRepository
+    class SubTaskRepository : WorkItemRepository
     {
         public SubTaskRepository(IServiceProvider provider) : base(provider) { }
 
@@ -55,7 +55,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var query = _context.SubTasks
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
-                .Include(e => e.Description).ThenInclude(e => e.Branches);
+                .Include(e => e.Description).ThenInclude(e => e.Tags)
+                .Include(e => e.Description).ThenInclude(e => e.Branches)
+                .Include(e => e.Parent);
 
             var entity = await query
                 .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number);
@@ -107,24 +109,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
             },
             Description = new DescriptionDTO
             {
-                CreatedBy = new UserDTO
+                CreatedBy = e.Description.Creator == null? null:new UserLightDTO
                 {
                     Avatar = e.Description.Creator.Avatar,
-                    Email = e.Description.Creator.Email,
-                    FullName = e.Description.Creator.FullName,
                     Id = e.Description.CreatorId,
-                    UserName = e.Description.Creator.UserName
+                    Name = e.Description.Creator.FullName
                 },
                 DateOfCreation = e.Description.DateOfCreation,
                 Description = e.Description.DescriptionText,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserDTO
+                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserLightDTO
                 {
-                    Avatar = e.Description.LastUpdater.Avatar,
-                    Email = e.Description.LastUpdater.Email,
-                    FullName = e.Description.LastUpdater.FullName,
-                    Id = e.Description.LastUpdaterId.Value,
-                    UserName = e.Description.LastUpdater.UserName
+                    Avatar = e.Description.Creator.Avatar,
+                    Id = e.Description.CreatorId,
+                    Name = e.Description.Creator.FullName
                 }
             }
         };

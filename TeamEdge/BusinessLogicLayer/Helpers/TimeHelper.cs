@@ -66,7 +66,7 @@ namespace TeamEdge.BusinessLogicLayer.Helpers
             {
                 if (obj.StartDate > obj.EndDate || obj.StartDate == obj.EndDate)
                     return false;
-                obj.Duration = (obj.EndDate.Value - obj.StartDate.Value).ToInt16();
+                obj.Duration = (obj.EndDate - obj.StartDate).ToInt16();
             }
             else if(obj.StartDate != null && obj.EndDate == null && obj.Duration != null)
             {
