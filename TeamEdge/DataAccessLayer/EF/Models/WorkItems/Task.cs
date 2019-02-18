@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TeamEdge.BusinessLogicLayer;
+using TeamEdge.BusinessLogicLayer.Helpers;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.DAL.Models
 {
-    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithParent<SummaryTask>, IBaseWorkItemWithChild<SubTask>
+    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithParent<SummaryTask>, IBaseWorkItemWithChild<SubTask>, IGauntItem
     {
         public ICollection<SubTask> Children { get; set; }
         public int? ParentId { get; set; }
@@ -30,5 +31,44 @@ namespace TeamEdge.DAL.Models
         int? IBaseWorkItemWithParent<SummaryTask>.ParentId { get; set; }
         [ForeignKey("SummaryTask")]
         SummaryTask IBaseWorkItemWithParent<SummaryTask>.Parent { get; set; }
+
+        private int? prevTaskId { get; set; }
+        private int? prevSummaryTaskId { get; set; }
+        [ForeignKey("prevTaskId")]
+        private _Task prevTask { get; set; }
+        [ForeignKey("prevSummaryTaskId")]
+        private SummaryTask prevSummaryTask { get; set; }
+
+        public int? PreviousId
+        {
+            get
+            {
+                return prevTaskId == null ? prevSummaryTaskId : prevTaskId;
+            }
+        }
+        public IGauntItem Previous
+        {
+            get
+            {
+                return prevTask == null ? (IGauntItem)prevSummaryTask : prevTask;
+            }
+        }
+
+        public void SetPrevious(IGauntItem parent)
+        {
+            switch (parent)
+            {
+                case _Task task:
+                    {
+                        prevTaskId = task.DescriptionId;
+                        break;
+                    }
+                case SummaryTask summaryTask:
+                    {
+                        prevSummaryTaskId = summaryTask.DescriptionId;
+                        break;
+                    }
+            }
+        }
     }
 }

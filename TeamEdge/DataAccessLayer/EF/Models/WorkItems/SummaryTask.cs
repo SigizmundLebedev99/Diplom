@@ -8,7 +8,7 @@ using TeamEdge.DAL.Models;
 
 namespace TeamEdge.DAL.Models
 {
-    public class SummaryTask : BaseWorkItem, IBaseWorkItemWithChild<_Task>, IBaseWorkItemWithChild<SummaryTask>, IBaseWorkItemWithParent<SummaryTask>, ITimeConstraint
+    public class SummaryTask : BaseWorkItem, IBaseWorkItemWithChild<_Task>, IBaseWorkItemWithChild<SummaryTask>, IBaseWorkItemWithParent<SummaryTask>, ITimeConstraint, IGauntItem
     {
         public override string Code => WorkItemType.SummaryTask.Code();
 
@@ -45,5 +45,44 @@ namespace TeamEdge.DAL.Models
             set { }
         }
         public short? Duration { get { return (EndDate - StartDate).ToInt16(); } set { } }
+
+        private int? prevTaskId { get; set; }
+        private int? prevSummaryTaskId { get; set; }
+        [ForeignKey("prevTaskId")]
+        private _Task prevTask { get; set; }
+        [ForeignKey("prevSummaryTaskId")]
+        private SummaryTask prevSummaryTask { get; set; }
+
+        public int? PreviousId
+        {
+            get
+            {
+                return prevTaskId == null ? prevSummaryTaskId : prevTaskId;
+            }
+        }
+        public IGauntItem Previous
+        {
+            get
+            {
+                return prevTask == null ? (IGauntItem)prevSummaryTask : prevTask;
+            }
+        }
+
+        public void SetPrevious(IGauntItem parent)
+        {
+            switch (parent)
+            {
+                case _Task task:
+                    {
+                        prevTaskId = task.DescriptionId;
+                        break;
+                    }
+                case SummaryTask summaryTask:
+                    {
+                        prevSummaryTaskId = summaryTask.DescriptionId;
+                        break;
+                    }
+            }
+        }
     }
 }
