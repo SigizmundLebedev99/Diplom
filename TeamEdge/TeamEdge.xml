@@ -24,11 +24,6 @@
             Returns jwt token for authorization after authentication
             </summary>
         </member>
-        <member name="M:TeamEdge.Controllers.AccountController.Register(TeamEdge.Models.RegisterUserDTO)">
-            <summary>
-            main registration of new users; TODO: Email confirmation;
-            </summary>
-        </member>
         <member name="M:TeamEdge.WebLayer.Controllers.CommentController.CreateComment(TeamEdge.Models.CreateCommentVM)">
             <summary>
             Create a new comment for workItem

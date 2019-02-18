@@ -12,7 +12,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\Images\Avatars\" />
     <Folder Include="wwwroot\Images\wiImages\" />
-    <Folder Include="wwwroot\logos\" />
   </ItemGroup>
 
   <ItemGroup>

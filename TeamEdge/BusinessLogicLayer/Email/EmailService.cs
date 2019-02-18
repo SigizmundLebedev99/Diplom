@@ -18,16 +18,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         readonly IHostingEnvironment _env;
         readonly SmtpClient _smtpClient;
+        readonly string _from;
+        readonly string _fromPass;
 
         public EmailService(IHostingEnvironment env, IConfiguration config)
         {
             _env = env;
+            _from = config.GetValue<string>("Email:From");
+            _fromPass = config.GetValue<string>("Email:Password");
             _smtpClient = new SmtpClient(config.GetValue<string>("Email:Host"), Convert.ToInt32(config.GetValue<string>("Email:Port")))
             {
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(config.GetValue<string>("Email:From"), config.GetValue<string>("Email:Password")),
-                EnableSsl = true
+                EnableSsl = true,
+                Credentials = new NetworkCredential(_from, _fromPass)
             };
         }
 
@@ -50,6 +54,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Subject = $"Подтвердите свой email",
                 Body = html,
                 IsBodyHtml = true,
+                From = new MailAddress(_from, "Администрация Team Edge")
             };
             mailMessage.To.Add(model.Email);
             return _smtpClient.SendMailAsync(mailMessage);

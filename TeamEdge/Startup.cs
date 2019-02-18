@@ -100,6 +100,7 @@ namespace TeamEdge
             });
             });
 
+            services.AddCors();
             services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
         }
 
@@ -110,6 +111,10 @@ namespace TeamEdge
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors(options => 
+            {
+                options.AllowAnyOrigin();
+            });
             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseStaticFiles();
             app.UseAuthentication();

@@ -3,15 +3,36 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <style>
+        body {
+            margin: 0px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size:medium;
+            color:dodgerblue;
+        }
+
+        .card {
+            margin: 20px;
+            background-color:blanchedalmond;
+        }
+
+        .header{
+            width:100px;
+            text-align:center;
+            margin:0 auto;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight:bold;
+        }
+
+    </style>
 </head>
 <body>
-	<div>
-		<img src="{{Scheme}}/{{Host}}/logos/Logo.png"/>
-		<h3>Team Edge</h3>
-	</div>
-	<div>
+    <div class="header">
+        <h1>Team Edge</h1>
+    </div>
+	<div class="card">
 		<p>Уважаемый {{FullName}}, благодарим за регистрацию в Team Edge</p>
-		<p>Пожалуйста, подтвердите свой email</p>
+		<p>Для подтверждения своего адреса электронной почты, перейдите по ссылке ниже</p>
 		<div>
 			<a href="{{Url}}">
 				<h2>Подтвердить email</h2>

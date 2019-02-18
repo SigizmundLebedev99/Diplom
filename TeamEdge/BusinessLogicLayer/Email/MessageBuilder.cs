@@ -15,6 +15,13 @@ namespace TeamEdge.BusinessLogicLayer.Email
             return document.ToString();
         }
 
+        public static string BuildMessageHtml(string path, object dataContext, Dictionary<string, object> variables)
+        {
+            var document = XDocument.Load(path);
+            BuildElement(document.Root, dataContext, variables);
+            return document.ToString();
+        }
+
         private static void BuildElement(XElement element, object dataContext, Dictionary<string, object> variables)
         {
             var allElements = GetAllElements(element).ToList();
