@@ -6,8 +6,8 @@ namespace TeamEdge.DAL.Mongo
 {
     public interface IMongoContext
     {
-        IMongoCollection<HistoryRecord> HistoryRecords { get;}
-        IMongoCollection<TestCase> TestCases { get; }
+        IMongoCollection<HistoryRecord> HistoryRecords { get; }
+
         IMongoDatabase Database { get; }
     }
 }

@@ -84,7 +84,7 @@ namespace TeamEdge.Controllers
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return View(user);
+                return View(new ConfirmEmailBM { FullName = user.Firstname, Url = Url.Action("Index", "Home")});
             return View("Error");
         }
 

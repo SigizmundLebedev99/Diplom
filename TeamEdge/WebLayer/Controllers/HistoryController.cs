@@ -5,26 +5,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TeamEdge.BusinessLogicLayer;
 using TeamEdge.DAL.Mongo;
 using TeamEdge.DAL.Mongo.Models;
 
 namespace TeamEdge.WebLayer.Controllers
 {
     [Route("api/history")]
-    [Authorize]
     public class HistoryController : Controller
     {
-        readonly IMongoContext _context;
+        readonly ExportHistoryService _exportService;  
 
-        public HistoryController(IMongoContext context)
+        public HistoryController(ExportHistoryService service)
         {
-            _context = context;
+            _exportService = service;
         }
 
-        [HttpGet("item/code/{code}/number/{number}")]
-        public async Task<IActionResult> GetHistoryForWI(string code, int number, [FromQuery]int skip, [FromQuery]int take = 20)
+        [HttpGet("project/{projectId}/code/{code}/number/{number}")]
+        public async Task<IActionResult> GetHistoryForWI(int projectId, string code, int number, [FromQuery]int skip, [FromQuery]int take = 20)
         {
-            return Ok();
+            var res = await _exportService.GetHistoryRecordsForItem(projectId, code, number, skip, take);
+            return Ok(res);
+        }
+
+        [HttpGet("project/{projectId}")]
+        public async Task<IActionResult> GetHistoryForProject(int projectId, [FromQuery]int skip, [FromQuery]int take = 20)
+        {
+            var res = await _exportService.GetHistoryRecordsForProject(projectId, skip, take);
+            return Ok(res);
         }
     }
 }

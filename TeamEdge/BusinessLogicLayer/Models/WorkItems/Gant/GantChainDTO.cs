@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TeamEdge.Models
 {
-    public class GauntChainDTO
+    public class GantChainDTO
     {
         public string Code { get; set; }
 
@@ -14,7 +14,7 @@ namespace TeamEdge.Models
         public int Number { get; set; }
         public string Name { get; set; }
         public int? PreviousId { get; set; }
-        public GauntChainDTO Next { get; set; }
+        public GantChainDTO Next { get; set; }
 
         public int? ParentId { get; set; }
     }

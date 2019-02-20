@@ -10,16 +10,16 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    public class GauntService
+    public class GantService
     {
         readonly TeamEdgeDbContext _context;
         readonly IValidationService _validationService;
-        public GauntService(TeamEdgeDbContext context)
+        public GantService(TeamEdgeDbContext context)
         {
             _context = context;
         }
 
-        public async Task<GauntDiagramDTO> GetGauntDiagram(int projectId)
+        public async Task<GantDiagramDTO> GetGantDiagram(int projectId)
         {
             var items = await _context.SummaryTasks.Where(e => e.Description.ProjectId == projectId).Select(e =>
               new SummaryChainDTO
@@ -29,17 +29,17 @@ namespace TeamEdge.BusinessLogicLayer.Services
                   Name = e.Name,
                   Number = e.Number,
                   Status = e.Status,
-                  ParentId = e.ParentId,
-                  Children = new List<GauntChainDTO>()
+                  ParentId = e.SummaryTaskId,
+                  Children = new List<GantChainDTO>()
               }).Concat(_context.Tasks.Select(e=>
-              new GauntChainDTO
+              new GantChainDTO
               {
                   Code = e.Code,
                   DescriptionId = e.DescriptionId,
                   Name = e.Name,
                   Number = e.Number,
                   Status = e.Status,
-                  ParentId = ((IBaseWorkItemWithParent<SummaryTask>)e).ParentId,
+                  ParentId = e.SummaryTaskId,
               })).ToDictionaryAsync(e=>e.DescriptionId);
 
             foreach(var el in items)
@@ -55,7 +55,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 }
             }
 
-            return new GauntDiagramDTO
+            return new GantDiagramDTO
             {
                 Elements = items.Select(e => e.Value).Where(e => e.ParentId == null)
             };

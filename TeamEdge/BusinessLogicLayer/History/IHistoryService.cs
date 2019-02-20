@@ -10,6 +10,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
 {
     public interface IHistoryService
     {
-        Task CompareForChanges<T>(T previous, T next, ClaimsPrincipal user) where T : BaseWorkItem;
+        void CompareForChanges<T>(T previous, T next, ClaimsPrincipal user) where T : BaseWorkItem;
     }
 }

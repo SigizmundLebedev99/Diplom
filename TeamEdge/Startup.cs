@@ -78,6 +78,7 @@ namespace TeamEdge
             services.AddScoped<IMongoContext, MongoContext>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<AccountService>();
+            services.AddTransient<ExportHistoryService>();
 
             services.AddMvc();
             services.AddMemoryCache();

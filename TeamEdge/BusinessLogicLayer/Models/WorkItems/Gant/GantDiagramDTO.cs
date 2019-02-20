@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace TeamEdge.Models
 {
-    public class GauntDiagramDTO
+    public class GantDiagramDTO
     {
-        public IEnumerable<GauntChainDTO> Elements { get; set; }
+        public IEnumerable<GantChainDTO> Elements { get; set; }
     }
 }

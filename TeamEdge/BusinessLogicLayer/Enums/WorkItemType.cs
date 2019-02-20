@@ -19,7 +19,7 @@ namespace TeamEdge
         [WorkItem("SUBTASK", typeof(SubTaskRepository), typeof(CreateSubTaskDTO))]
         SubTask,
 
-        [WorkItem("SUmmary", typeof(SubTaskRepository), typeof(CreateSubTaskDTO))]
+        [WorkItem("SUMMARY", typeof(SummaryTaskRepository), typeof(CreateSubTaskDTO))]
         SummaryTask
     }
 }

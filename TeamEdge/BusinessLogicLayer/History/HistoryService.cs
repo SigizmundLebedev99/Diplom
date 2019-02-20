@@ -24,9 +24,9 @@ namespace TeamEdge.BusinessLogicLayer.History
             _mongo = mongo;
         }
 
-        public Task CompareForChanges<T>(T previous, T next, ClaimsPrincipal user) where T : BaseWorkItem
+        public void CompareForChanges<T>(T previous, T next, ClaimsPrincipal user) where T : BaseWorkItem
         {
-            return Task.Run(() => 
+            Task.Run(() => 
             {
                 try
                 {
