@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +21,8 @@ using TeamEdge.Mapper;
 using TeamEdge.BusinessLogicLayer.History;
 using TeamEdge.DAL.Mongo;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace TeamEdge
 {
@@ -102,6 +104,12 @@ namespace TeamEdge
 
             services.AddCors();
             services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
+            services.Configure<RazorViewEngineOptions>(o =>
+            {
+                o.ViewLocationFormats.Clear();
+                o.ViewLocationFormats.Add("/WebLayer/Views/{1}/{0}" + RazorViewEngine.ViewExtension);
+                o.ViewLocationFormats.Add("/WebLayer/Views/Shared/{0}" + RazorViewEngine.ViewExtension);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,6 +118,10 @@ namespace TeamEdge
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true,
+                });
             }
             app.UseCors(options => 
             {
@@ -125,8 +137,11 @@ namespace TeamEdge
 
                 c.DocExpansion(DocExpansion.None);
             });
-           
-            app.UseMvc();
+
+            app.UseMvc(routes => routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Home", action = "Index" })
+            );
         }
     }
 }

@@ -1,11 +1,5 @@
 {
-  "name": "aspnetcore-vuejs",
-  "description": "ASP.NET Core & VueJS Starter project",
-  "author": "Mark Pieszak",
-  "repository": {
-    "url": "https://github.com/MarkPieszak/aspnetcore-Vue-starter"
-  },
-  "license": "MIT",
+  "name": "teamedge",
   "scripts": {
     "dev": "cross-env ASPNETCORE_ENVIRONMENT=Development NODE_ENV=development dotnet run",
     "build": "npm run build-vendor:prod && npm run build:prod",
@@ -18,10 +12,12 @@
   "dependencies": {
     "axios": "^0.15.3",
     "core-js": "^2.5.3",
+    "material-design-icons-iconfont": "^4.0.5",
     "vue": "^2.5.16",
     "vue-router": "^2.8.1",
     "vue-server-renderer": "^2.5.16",
     "vue-template-compiler": "^2.5.16",
+    "vuetify": "^1.5.2",
     "vuex": "^2.5.0",
     "vuex-router-sync": "^4.3.2"
   },
