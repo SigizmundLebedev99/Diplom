@@ -66,8 +66,6 @@ namespace TeamEdge.Controllers
                 FullName = user.FullName,
                 Url = callbackUrl,
                 Email = user.Email,
-                Scheme = Request.Scheme,
-                Host = Request.Host.ToString()
             });
             return Ok();
         }
@@ -77,16 +75,16 @@ namespace TeamEdge.Controllers
         {
             if (userId == null || code == null)
             {
-                return View("ConfirmationError");
+                return View("Error");
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return View("ConfirmationError");
+                return View("Error");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return View("ConfirmEmail", user);
+                return View(user);
             return View("Error");
         }
 

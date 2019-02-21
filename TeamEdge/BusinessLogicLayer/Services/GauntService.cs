@@ -55,7 +55,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 }
             }
 
-            var result = new GauntDiagramDTO
+            return new GauntDiagramDTO
             {
                 Elements = items.Select(e => e.Value).Where(e => e.ParentId == null)
             };
