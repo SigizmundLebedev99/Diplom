@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div>
         <h1>Weather forecast</h1>
 
@@ -6,7 +6,7 @@
 
         <div v-if="!forecasts" class="text-center">
             <p><em>Loading...</em></p>
-            <h1><icon icon="spinner" pulse/></h1>            
+            <h1><v-icon>spinner</v-icon></h1>            
         </div>
 
         <template v-if="forecasts">

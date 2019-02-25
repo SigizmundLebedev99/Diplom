@@ -1,10 +1,41 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿<template>
+  <v-dialog :width="resize({xs:300, sm:450 , md:500, lg:500})" v-model="dialog">
+    <v-card class="elevation-12">
+      <v-toolbar dark color="primary">
+        <v-toolbar-title>Login form</v-toolbar-title>
+      </v-toolbar>
+      <v-card-text>
+        <v-form>
+          <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
+          <v-text-field id="password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary">Login</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+<script>
+  import { mapMutations, mapGetters} from "vuex";
+  export default {
+    data(){
+      return{
+      }
+    },
+    methods:{
+    },
+    computed:{
+      dialog:{
+        ...mapGetters({
+          get:'auth/getOpened'
+        }),
+        ...mapMutations({
+          set:'auth/setOpened'
+        })
+      }
+    }
+  }
+</script>
 
-</body>
-</html>

@@ -5,8 +5,9 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import App from 'components/app-root'
 import Vuetify from 'vuetify'
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'vuetify/dist/vuetify.min.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import './mixin'
 
 Vue.use(Vuetify, {
   theme: {
@@ -22,13 +23,6 @@ Vue.use(Vuetify, {
 })
 
 Vue.prototype.$http = axios
-
-Vue.http.interceptors.push((request, next) => {
-  request.headers.set('Authorization', 'Bearer ' + localStorage.getItem('token'))
-  request.headers.set('Accept', 'application/json')
-  next()
-})
-
 sync(store, router)
 
 const app = new Vue({
