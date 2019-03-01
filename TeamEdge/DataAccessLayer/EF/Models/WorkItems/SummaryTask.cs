@@ -8,81 +8,38 @@ using TeamEdge.DAL.Models;
 
 namespace TeamEdge.DAL.Models
 {
-    public class SummaryTask : BaseWorkItem, IBaseWorkItemWithChild<_Task>, IBaseWorkItemWithChild<SummaryTask>, IBaseWorkItemWithParent<SummaryTask>, ITimeConstraint, IGauntItem
+    public class SummaryTask : BaseWorkItem, IBaseWorkItemWithChild<_Task>, IBaseWorkItemWithChild<SummaryTask>, IBaseWorkItemWithParent<SummaryTask>, ITimeConstraint
     {
         public override string Code => WorkItemType.SummaryTask.Code();
+        public int? ParentId { get; set; }
+        [ForeignKey("ParentId")]
+        public SummaryTask Parent { get; set; }
 
+        public ICollection<SummaryTask> SummaryTaskChildren { get; set; }
         public ICollection<_Task> Children { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public int? ParentId { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        [ForeignKey("ParentId")]
-        public SummaryTask Parent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int? PreviousTaskId { get; set; }
+        public int? PreviousSummaryTaskId { get; set; }
+        [ForeignKey("PreviousTaskId")]
+        public _Task PreviousTask { get; set; }
+        [ForeignKey("PreviousSummaryTaskId")]
+        private SummaryTask PreviousSummaryTask { get; set; }
 
-        ICollection<SummaryTask> IBaseWorkItemWithChild<SummaryTask>.Children { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int? ParentSummaryTaskId { get; internal set; }
+        public SummaryTask ParentSummaryTask { get; set; }
+
+        ICollection<SummaryTask> IBaseWorkItemWithChild<SummaryTask>.Children { get => SummaryTaskChildren; set => SummaryTaskChildren = value; }
 
         public IEnumerable<IBaseWorkItemWithParent<SummaryTask>> AllChildren
         {
             get
             {
-                return Children.Concat((IEnumerable<IBaseWorkItemWithParent<SummaryTask>>)((IBaseWorkItemWithChild<SummaryTask>)this).Children);
+                return Children.Concat((IEnumerable<IBaseWorkItemWithParent<SummaryTask>>)SummaryTaskChildren);
             }
         }
 
-        public DateTime? StartDate
-        {
-            get
-            {
-                return AllChildren.Select(e => ((ITimeConstraint)e).StartDate).Min();
-            }
-            set { }
-        }
-        public DateTime? EndDate
-        {
-            get
-            {
-                return AllChildren.Select(e => ((ITimeConstraint)e).EndDate).Max();
-            }
-            set { }
-        }
-        public short? Duration { get { return (EndDate - StartDate).ToInt16(); } set { } }
-
-        private int? prevTaskId { get; set; }
-        private int? prevSummaryTaskId { get; set; }
-        [ForeignKey("prevTaskId")]
-        private _Task prevTask { get; set; }
-        [ForeignKey("prevSummaryTaskId")]
-        private SummaryTask prevSummaryTask { get; set; }
-
-        public int? PreviousId
-        {
-            get
-            {
-                return prevTaskId == null ? prevSummaryTaskId : prevTaskId;
-            }
-        }
-        public IGauntItem Previous
-        {
-            get
-            {
-                return prevTask == null ? (IGauntItem)prevSummaryTask : prevTask;
-            }
-        }
-
-        public void SetPrevious(IGauntItem parent)
-        {
-            switch (parent)
-            {
-                case _Task task:
-                    {
-                        prevTaskId = task.DescriptionId;
-                        break;
-                    }
-                case SummaryTask summaryTask:
-                    {
-                        prevSummaryTaskId = summaryTask.DescriptionId;
-                        break;
-                    }
-            }
-        }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public short? Duration { get; set; }
     }
 }

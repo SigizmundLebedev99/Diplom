@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                   Name = e.Name,
                   Number = e.Number,
                   Status = e.Status,
-                  ParentId = e.SummaryTaskId,
+                  ParentId = e.ParentSummaryTaskId,
                   Children = new List<GantChainDTO>()
               }).Concat(_context.Tasks.Select(e=>
               new GantChainDTO
@@ -39,7 +39,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                   Name = e.Name,
                   Number = e.Number,
                   Status = e.Status,
-                  ParentId = e.SummaryTaskId,
+                  ParentId = e.ParentSummaryTaskId
               })).ToDictionaryAsync(e=>e.DescriptionId);
 
             foreach(var el in items)

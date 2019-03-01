@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -70,7 +71,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Include(e => e.Description).ThenInclude(e => e.Branches)
                 .Include(e=> e.Description).ThenInclude(e=>e.Tags)
                 .Include(e => e.Children)
-                .Include(e=>((IBaseWorkItemWithChild<SummaryTask>)e).Children)
+                .Include(e=>e.SummaryTaskChildren)
                 .Include(e => e.Parent);
 
             var entity = await query
