@@ -160,9 +160,11 @@ namespace TeamEdge.Migrations
 
                     b.Property<int?>("AssignedToId");
 
-                    b.Property<DateTime?>("DateFinish");
+                    b.Property<short?>("Duration");
 
-                    b.Property<DateTime?>("DateStart");
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<int?>("GantPreviousId");
 
                     b.Property<string>("Name")
                         .HasMaxLength(64);
@@ -171,11 +173,11 @@ namespace TeamEdge.Migrations
 
                     b.Property<int?>("ParentId");
 
+                    b.Property<int?>("ParentSummaryTaskId");
+
+                    b.Property<DateTime?>("StartDate");
+
                     b.Property<byte>("Status");
-
-                    b.Property<int?>("SummaryTaskDescriptionId");
-
-                    b.Property<short?>("TimeSpan");
 
                     b.Property<byte>("Type");
 
@@ -185,7 +187,7 @@ namespace TeamEdge.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("SummaryTaskDescriptionId");
+                    b.HasIndex("ParentSummaryTaskId");
 
                     b.ToTable("Tasks");
                 });
@@ -406,6 +408,8 @@ namespace TeamEdge.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
+                    b.Property<int?>("GauntPreviousId");
+
                     b.Property<string>("Name")
                         .HasMaxLength(64);
 
@@ -413,13 +417,15 @@ namespace TeamEdge.Migrations
 
                     b.Property<int?>("ParentId");
 
+                    b.Property<int?>("ParentSummaryTaskId");
+
                     b.Property<DateTime?>("StartDate");
 
                     b.Property<byte>("Status");
 
                     b.HasKey("DescriptionId");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("GauntPreviousId");
 
                     b.ToTable("SummaryTasks");
                 });
@@ -663,9 +669,9 @@ namespace TeamEdge.Migrations
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TeamEdge.DAL.Models.SummaryTask")
+                    b.HasOne("TeamEdge.DAL.Models.SummaryTask", "ParentSummaryTask")
                         .WithMany("Children")
-                        .HasForeignKey("SummaryTaskDescriptionId")
+                        .HasForeignKey("ParentSummaryTaskId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -796,9 +802,9 @@ namespace TeamEdge.Migrations
                         .HasForeignKey("DescriptionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TeamEdge.DAL.Models.SummaryTask", "Parent")
+                    b.HasOne("TeamEdge.DAL.Models.WorkItemDescription", "GauntPrevious")
                         .WithMany()
-                        .HasForeignKey("ParentId")
+                        .HasForeignKey("GauntPreviousId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

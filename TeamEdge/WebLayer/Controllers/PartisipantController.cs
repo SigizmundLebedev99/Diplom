@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -57,8 +57,7 @@ namespace TeamEdge.WebLayer.Controllers
         {
             var operRes = await _membershipService.JoinProject(new JoinProjectDTO {
                 InviteId = inviteId,
-                UserId = User.Id(),
-                Email = User.Email()});
+                UserId = User.Id()});
             return operRes.GetResult();
         }
         

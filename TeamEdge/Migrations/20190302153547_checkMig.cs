@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace TeamEdge.Migrations
 {
-    public partial class inProgress : Migration
+    public partial class checkMig : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -161,84 +161,6 @@ namespace TeamEdge.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Files",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatorId = table.Column<int>(nullable: false),
-                    DateOfCreation = table.Column<DateTime>(nullable: false),
-                    FileName = table.Column<string>(maxLength: 128, nullable: true),
-                    FilePath = table.Column<string>(maxLength: 512, nullable: true),
-                    ProjectId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Files", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Files_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatorId = table.Column<int>(nullable: false),
-                    DateOfCreation = table.Column<DateTime>(nullable: false),
-                    Json = table.Column<string>(nullable: true),
-                    Text = table.Column<string>(nullable: false),
-                    WorkItemId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Invites",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatorId = table.Column<int>(nullable: false),
-                    DateOfCreation = table.Column<DateTime>(nullable: false),
-                    Email = table.Column<string>(nullable: true),
-                    IsAccepted = table.Column<bool>(nullable: false),
-                    ProjRole = table.Column<int>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: false),
-                    RepoRole = table.Column<int>(nullable: false),
-                    ToUserId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Invites", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Invites_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Invites_AspNetUsers_ToUserId",
-                        column: x => x.ToUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -247,8 +169,7 @@ namespace TeamEdge.Migrations
                     CreatorId = table.Column<int>(nullable: false),
                     DateOfCreation = table.Column<DateTime>(nullable: false),
                     Logo = table.Column<string>(maxLength: 128, nullable: true),
-                    Name = table.Column<string>(maxLength: 64, nullable: true),
-                    RepositoryId = table.Column<int>(nullable: true)
+                    Name = table.Column<string>(maxLength: 64, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -262,26 +183,97 @@ namespace TeamEdge.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Repositories",
+                name: "Files",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatorId = table.Column<int>(nullable: false),
                     DateOfCreation = table.Column<DateTime>(nullable: false),
+                    FileName = table.Column<string>(maxLength: 128, nullable: true),
+                    IsPicture = table.Column<bool>(nullable: false),
+                    Path = table.Column<string>(nullable: true),
                     ProjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Repositories", x => x.Id);
+                    table.PrimaryKey("PK_Files", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Repositories_AspNetUsers_CreatorId",
+                        name: "FK_Files_AspNetUsers_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Repositories_Projects_ProjectId",
+                        name: "FK_Files_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invites",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatorId = table.Column<int>(nullable: false),
+                    DateOfCreation = table.Column<DateTime>(nullable: false),
+                    IsAccepted = table.Column<bool>(nullable: false),
+                    ProjRole = table.Column<int>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false),
+                    RepoRole = table.Column<int>(nullable: false),
+                    ToUserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invites", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invites_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Invites_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Invites_AspNetUsers_ToUserId",
+                        column: x => x.ToUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sprints",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatorId = table.Column<int>(nullable: false),
+                    DateOfCreation = table.Column<DateTime>(nullable: false),
+                    Duration = table.Column<short>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
+                    ProjectId = table.Column<int>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sprints", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sprints_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sprints_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -294,6 +286,7 @@ namespace TeamEdge.Migrations
                 {
                     UserId = table.Column<int>(nullable: false),
                     ProjectId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     ProjRole = table.Column<int>(nullable: false),
                     RepoRole = table.Column<int>(nullable: false)
                 },
@@ -322,10 +315,9 @@ namespace TeamEdge.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatorId = table.Column<int>(nullable: false),
                     DateOfCreation = table.Column<DateTime>(nullable: false),
-                    DescriptionCode = table.Column<string>(nullable: true),
                     DescriptionText = table.Column<string>(nullable: true),
                     LastUpdate = table.Column<DateTime>(nullable: true),
-                    LastUpdaterId = table.Column<int>(nullable: false),
+                    LastUpdaterId = table.Column<int>(nullable: true),
                     ProjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -365,6 +357,34 @@ namespace TeamEdge.Migrations
                     table.PrimaryKey("PK_CodeLinks", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CodeLinks_WorkItemDescriptions_WorkItemId",
+                        column: x => x.WorkItemId,
+                        principalTable: "WorkItemDescriptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatorId = table.Column<int>(nullable: false),
+                    DateOfCreation = table.Column<DateTime>(nullable: false),
+                    Text = table.Column<string>(nullable: false),
+                    WorkItemId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comments_WorkItemDescriptions_WorkItemId",
                         column: x => x.WorkItemId,
                         principalTable: "WorkItemDescriptions",
                         principalColumn: "Id",
@@ -416,28 +436,25 @@ namespace TeamEdge.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestCases",
+                name: "SummaryTasks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatorId = table.Column<int>(nullable: false),
-                    DateOfCreation = table.Column<DateTime>(nullable: false),
-                    ObjectId = table.Column<string>(maxLength: 64, nullable: true),
-                    WorkItemId = table.Column<int>(nullable: false)
+                    DescriptionId = table.Column<int>(nullable: false),
+                    Duration = table.Column<short>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
+                    Number = table.Column<int>(nullable: false),
+                    ParentId = table.Column<int>(nullable: true),
+                    ParentSummaryTaskId = table.Column<int>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: true),
+                    Status = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestCases", x => x.Id);
+                    table.PrimaryKey("PK_SummaryTasks", x => x.DescriptionId);
                     table.ForeignKey(
-                        name: "FK_TestCases_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TestCases_WorkItemDescriptions_WorkItemId",
-                        column: x => x.WorkItemId,
+                        name: "FK_SummaryTasks_WorkItemDescriptions_DescriptionId",
+                        column: x => x.DescriptionId,
                         principalTable: "WorkItemDescriptions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -458,37 +475,9 @@ namespace TeamEdge.Migrations
                         column: x => x.FileId,
                         principalTable: "Files",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_WorkItemFiles_WorkItemDescriptions_WorkItemId",
-                        column: x => x.WorkItemId,
-                        principalTable: "WorkItemDescriptions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WorkItemHistories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatorId = table.Column<int>(nullable: false),
-                    DateOfCreation = table.Column<DateTime>(nullable: false),
-                    ObjectId = table.Column<string>(maxLength: 64, nullable: true),
-                    WorkItemId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkItemHistories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WorkItemHistories_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_WorkItemHistories_WorkItemDescriptions_WorkItemId",
                         column: x => x.WorkItemId,
                         principalTable: "WorkItemDescriptions",
                         principalColumn: "Id",
@@ -518,9 +507,11 @@ namespace TeamEdge.Migrations
                 columns: table => new
                 {
                     DescriptionId = table.Column<int>(nullable: false),
+                    AcceptenceCriteria = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 64, nullable: true),
                     Number = table.Column<int>(nullable: false),
                     ParentId = table.Column<int>(nullable: true),
+                    Risk = table.Column<byte>(nullable: false),
                     Status = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
@@ -541,33 +532,28 @@ namespace TeamEdge.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sprints",
+                name: "CommentFiles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatorId = table.Column<int>(nullable: false),
-                    DateOfCreation = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    FeatureId = table.Column<int>(nullable: true),
-                    Name = table.Column<string>(maxLength: 64, nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false)
+                    FileId = table.Column<int>(nullable: false),
+                    WorkItemId = table.Column<int>(nullable: false),
+                    CommentId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sprints", x => x.Id);
+                    table.PrimaryKey("PK_CommentFiles", x => new { x.FileId, x.WorkItemId, x.CommentId });
                     table.ForeignKey(
-                        name: "FK_Sprints_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_CommentFiles_Comments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Sprints_Features_FeatureId",
-                        column: x => x.FeatureId,
-                        principalTable: "Features",
-                        principalColumn: "DescriptionId",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_CommentFiles_WorkItemFiles_FileId_WorkItemId",
+                        columns: x => new { x.FileId, x.WorkItemId },
+                        principalTable: "WorkItemFiles",
+                        principalColumns: new[] { "FileId", "WorkItemId" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -576,12 +562,10 @@ namespace TeamEdge.Migrations
                 {
                     DescriptionId = table.Column<int>(nullable: false),
                     AcceptenceCriteria = table.Column<string>(nullable: true),
-                    AcceptenceCriteriaCode = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 64, nullable: true),
                     Number = table.Column<int>(nullable: false),
                     ParentId = table.Column<int>(nullable: true),
                     Priority = table.Column<byte>(nullable: false),
-                    Risk = table.Column<byte>(nullable: false),
                     SprintId = table.Column<int>(nullable: true),
                     Status = table.Column<byte>(nullable: false)
                 },
@@ -613,13 +597,17 @@ namespace TeamEdge.Migrations
                 columns: table => new
                 {
                     DescriptionId = table.Column<int>(nullable: false),
-                    AssignedToId = table.Column<int>(nullable: false),
+                    AssignedToId = table.Column<int>(nullable: true),
+                    Duration = table.Column<short>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: true),
+                    GantPreviousId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(maxLength: 64, nullable: true),
                     Number = table.Column<int>(nullable: false),
                     ParentId = table.Column<int>(nullable: true),
+                    ParentSummaryTaskId = table.Column<int>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: true),
                     Status = table.Column<byte>(nullable: false),
-                    Type = table.Column<byte>(nullable: false),
-                    _TaskDescriptionId = table.Column<int>(nullable: true)
+                    Type = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -643,8 +631,35 @@ namespace TeamEdge.Migrations
                         principalColumn: "DescriptionId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tasks_Tasks__TaskDescriptionId",
-                        column: x => x._TaskDescriptionId,
+                        name: "FK_Tasks_SummaryTasks_ParentSummaryTaskId",
+                        column: x => x.ParentSummaryTaskId,
+                        principalTable: "SummaryTasks",
+                        principalColumn: "DescriptionId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubTasks",
+                columns: table => new
+                {
+                    DescriptionId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 64, nullable: true),
+                    Number = table.Column<int>(nullable: false),
+                    ParentId = table.Column<int>(nullable: true),
+                    Status = table.Column<byte>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubTasks", x => x.DescriptionId);
+                    table.ForeignKey(
+                        name: "FK_SubTasks_WorkItemDescriptions_DescriptionId",
+                        column: x => x.DescriptionId,
+                        principalTable: "WorkItemDescriptions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SubTasks_Tasks_ParentId",
+                        column: x => x.ParentId,
                         principalTable: "Tasks",
                         principalColumn: "DescriptionId",
                         onDelete: ReferentialAction.Restrict);
@@ -695,6 +710,11 @@ namespace TeamEdge.Migrations
                 column: "WorkItemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CommentFiles_CommentId",
+                table: "CommentFiles",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_CreatorId",
                 table: "Comments",
                 column: "CreatorId");
@@ -713,6 +733,11 @@ namespace TeamEdge.Migrations
                 name: "IX_Files_CreatorId",
                 table: "Files",
                 column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Files_ProjectId",
+                table: "Files",
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invites_CreatorId",
@@ -735,34 +760,24 @@ namespace TeamEdge.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_RepositoryId",
-                table: "Projects",
-                column: "RepositoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Repositories_CreatorId",
-                table: "Repositories",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Repositories_ProjectId",
-                table: "Repositories",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sprints_CreatorId",
                 table: "Sprints",
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sprints_FeatureId",
+                name: "IX_Sprints_ProjectId",
                 table: "Sprints",
-                column: "FeatureId");
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subscribes_WorkItemId",
                 table: "Subscribes",
                 column: "WorkItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubTasks_ParentId",
+                table: "SubTasks",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_AssignedToId",
@@ -775,19 +790,9 @@ namespace TeamEdge.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks__TaskDescriptionId",
+                name: "IX_Tasks_ParentSummaryTaskId",
                 table: "Tasks",
-                column: "_TaskDescriptionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestCases_CreatorId",
-                table: "TestCases",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestCases_WorkItemId",
-                table: "TestCases",
-                column: "WorkItemId");
+                column: "ParentSummaryTaskId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserProjects_ProjectId",
@@ -825,59 +830,13 @@ namespace TeamEdge.Migrations
                 column: "WorkItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkItemHistories_CreatorId",
-                table: "WorkItemHistories",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkItemHistories_WorkItemId",
-                table: "WorkItemHistories",
-                column: "WorkItemId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_WorkItemTags_WorkItemDescId",
                 table: "WorkItemTags",
                 column: "WorkItemDescId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Comments_WorkItemDescriptions_WorkItemId",
-                table: "Comments",
-                column: "WorkItemId",
-                principalTable: "WorkItemDescriptions",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Invites_Projects_ProjectId",
-                table: "Invites",
-                column: "ProjectId",
-                principalTable: "Projects",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Projects_Repositories_RepositoryId",
-                table: "Projects",
-                column: "RepositoryId",
-                principalTable: "Repositories",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Projects_AspNetUsers_CreatorId",
-                table: "Projects");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Repositories_AspNetUsers_CreatorId",
-                table: "Repositories");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Repositories_Projects_ProjectId",
-                table: "Repositories");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -897,7 +856,7 @@ namespace TeamEdge.Migrations
                 name: "CodeLinks");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "CommentFiles");
 
             migrationBuilder.DropTable(
                 name: "Invites");
@@ -906,19 +865,10 @@ namespace TeamEdge.Migrations
                 name: "Subscribes");
 
             migrationBuilder.DropTable(
-                name: "Tasks");
-
-            migrationBuilder.DropTable(
-                name: "TestCases");
+                name: "SubTasks");
 
             migrationBuilder.DropTable(
                 name: "UserProjects");
-
-            migrationBuilder.DropTable(
-                name: "WorkItemFiles");
-
-            migrationBuilder.DropTable(
-                name: "WorkItemHistories");
 
             migrationBuilder.DropTable(
                 name: "WorkItemTags");
@@ -927,16 +877,28 @@ namespace TeamEdge.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "UserStories");
+                name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "WorkItemFiles");
+
+            migrationBuilder.DropTable(
+                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "Files");
 
             migrationBuilder.DropTable(
-                name: "Sprints");
+                name: "UserStories");
+
+            migrationBuilder.DropTable(
+                name: "SummaryTasks");
 
             migrationBuilder.DropTable(
                 name: "Features");
+
+            migrationBuilder.DropTable(
+                name: "Sprints");
 
             migrationBuilder.DropTable(
                 name: "Epicks");
@@ -945,13 +907,10 @@ namespace TeamEdge.Migrations
                 name: "WorkItemDescriptions");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Repositories");
+                name: "AspNetUsers");
         }
     }
 }

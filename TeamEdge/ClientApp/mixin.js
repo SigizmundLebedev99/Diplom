@@ -1,11 +1,18 @@
 import Vue from 'vue'
-
+var breakpoints = ['xs','sm','md','lg','xl']
 Vue.mixin({
   methods:{
-    resize(sizes){
-      var size = sizes[this.$vuetify.breakpoint.name];
-      if(!size)
-        return undefined;
+    ofSize(sizes){
+      var breakpoint = this.$vuetify.breakpoint.name;
+      var index = breakpoints.indexOf(breakpoint);
+      var size = sizes[breakpoint];
+      if(!size){
+        for(var i = index; i >=0;i--){
+          size = sizes[breakpoints[i]]
+          if(size)
+            return size;
+        }
+      }
       return size;
     }
   }

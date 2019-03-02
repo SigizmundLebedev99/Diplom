@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TeamEdge.BusinessLogicLayer;
@@ -26,26 +26,17 @@ namespace TeamEdge.DAL.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        [Column("SummaryTask")]
         public int? ParentSummaryTaskId { get; set; }
-        [ForeignKey("SummaryTask")]
+        [ForeignKey("ParentSummaryTaskId")]
         public SummaryTask ParentSummaryTask { get; set; }
 
-        private int? prevTaskId { get; set; }
-        private int? prevSummaryTaskId { get; set; }
-        [ForeignKey("prevTaskId")]
-        private _Task prevTask { get; set; }
-        [ForeignKey("prevSummaryTaskId")]
-        private SummaryTask prevSummaryTask { get; set; }
-
+        [NotMapped]
         int? IBaseWorkItemWithParent<SummaryTask>.ParentId { get => ParentSummaryTaskId; set { ParentSummaryTaskId = value; } }
+        [NotMapped]
         SummaryTask IBaseWorkItemWithParent<SummaryTask>.Parent { get => ParentSummaryTask; set => ParentSummaryTask = value; }
 
-        public int? PreviousTaskId { get; set; }
-        public int? PreviousSummaryTaskId { get; set; }
-        [ForeignKey("PreviousTaskId")]
-        public _Task PreviousTask { get; set; }
-        [ForeignKey("PreviousSummaryTaskId")]
-        private SummaryTask PreviousSummaryTask { get; set; }
+        public int? GantPreviousId { get; set; }
+        [ForeignKey("GantPreviousId")]
+        WorkItemDescription GantPrevious { get; set; }
     }
 }

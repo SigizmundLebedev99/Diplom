@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -77,12 +77,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (invite == null)
                 throw new NotFoundException("invite_nf", $"Не удалось найти инвайт с id = {model.InviteId}");
             
-            if (invite.ToUserId != model.UserId || invite.ProjectId == model.ProjectId)
-                operRes.AddErrorMessage("user_inv", $"Ошибка доступа");
             if (!operRes.Succeded)
                 return operRes;
-
-            _context.UserProjects.Add(_mapper.Map<UserProject>(invite));
+            var newUP = _mapper.Map<UserProject>(invite);
+            if (await _context.UserProjects.AnyAsync(e => e.ProjectId == invite.ProjectId && e.UserId == model.UserId))
+                _context.UserProjects.Update(newUP);
+            else
+                _context.UserProjects.Add(newUP);
             invite.IsAccepted = true;
             _context.Invites.Update(invite);
             await _context.SaveChangesAsync();
@@ -94,13 +95,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             var operRes = new OperationResult(true);
             await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId, e=>e.IsAdmin);
-            //var userProj = await _context
-            //    .UserProjects
-            //    .AnyAsync(u => u.UserId == model.UserId && u.ProjectId == model.ProjectId && !u.IsDeleted);
-            //if(!userProj)
-            //    throw new NotFoundException("user_nf",
-            //        $"Не удалось найти пользователя c id = {model.UserId} для проекта c id={model.ProjectId}");
-
             _context.UserProjects.Update(_mapper.Map<UserProject>(model));
             await _context.SaveChangesAsync();
         }
@@ -115,7 +109,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (user != null)
             {
                 if(await _context.Invites.Select(e=>new { userId = e.ToUserId , e.ProjectId})
-                    .Concat(_context.UserProjects.Select(e=>new { userId = e.UserId, e.ProjectId}))
+                    .Concat(_context.UserProjects.Where(e=>!e.IsDeleted).Select(e=>new { userId = e.UserId, e.ProjectId}))
                     .AnyAsync(e=>e.ProjectId == model.ProjectId && e.userId == user.Id))
                 {
                     operRes.AddErrorMessage("user_already_in");

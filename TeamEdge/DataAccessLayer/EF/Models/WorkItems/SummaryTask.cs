@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using TeamEdge.BusinessLogicLayer;
-using TeamEdge.BusinessLogicLayer.Helpers;
-using TeamEdge.DAL.Models;
 
 namespace TeamEdge.DAL.Models
 {
@@ -15,18 +13,14 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("ParentId")]
         public SummaryTask Parent { get; set; }
 
-        public ICollection<SummaryTask> SummaryTaskChildren { get; set; }
-        public ICollection<_Task> Children { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public int? PreviousTaskId { get; set; }
-        public int? PreviousSummaryTaskId { get; set; }
-        [ForeignKey("PreviousTaskId")]
-        public _Task PreviousTask { get; set; }
-        [ForeignKey("PreviousSummaryTaskId")]
-        private SummaryTask PreviousSummaryTask { get; set; }
-
+        public virtual ICollection<SummaryTask> SummaryTaskChildren { get; set; }
+        public virtual ICollection<_Task> Children { get; set; }
         public int? ParentSummaryTaskId { get; internal set; }
         public SummaryTask ParentSummaryTask { get; set; }
+
+        public int? GauntPreviousId { get; set; }
+        [ForeignKey("GauntPreviousId")]
+        public WorkItemDescription GauntPrevious { get; set; }
 
         ICollection<SummaryTask> IBaseWorkItemWithChild<SummaryTask>.Children { get => SummaryTaskChildren; set => SummaryTaskChildren = value; }
 

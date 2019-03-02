@@ -13,8 +13,8 @@ using TeamEdge.DAL.Models;
 namespace TeamEdge.Migrations
 {
     [DbContext(typeof(TeamEdgeDbContext))]
-    [Migration("20190211190300_somethingWithComments")]
-    partial class somethingWithComments
+    [Migration("20190302154132_anowerOne")]
+    partial class anowerOne
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -161,6 +161,12 @@ namespace TeamEdge.Migrations
 
                     b.Property<int?>("AssignedToId");
 
+                    b.Property<short?>("Duration");
+
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<int?>("GantPreviousId");
+
                     b.Property<string>("Name")
                         .HasMaxLength(64);
 
@@ -168,7 +174,9 @@ namespace TeamEdge.Migrations
 
                     b.Property<int?>("ParentId");
 
-                    b.Property<int?>("SprintId");
+                    b.Property<int?>("ParentSummaryTaskId");
+
+                    b.Property<DateTime?>("StartDate");
 
                     b.Property<byte>("Status");
 
@@ -180,7 +188,7 @@ namespace TeamEdge.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.HasIndex("SprintId");
+                    b.HasIndex("ParentSummaryTaskId");
 
                     b.ToTable("Tasks");
                 });
@@ -288,8 +296,6 @@ namespace TeamEdge.Migrations
 
                     b.Property<DateTime>("DateOfCreation");
 
-                    b.Property<string>("Email");
-
                     b.Property<bool>("IsAccepted");
 
                     b.Property<int>("ProjRole");
@@ -298,7 +304,7 @@ namespace TeamEdge.Migrations
 
                     b.Property<int>("RepoRole");
 
-                    b.Property<int?>("ToUserId");
+                    b.Property<int>("ToUserId");
 
                     b.HasKey("Id");
 
@@ -342,6 +348,8 @@ namespace TeamEdge.Migrations
 
                     b.Property<DateTime>("DateOfCreation");
 
+                    b.Property<short?>("Duration");
+
                     b.Property<DateTime?>("EndDate");
 
                     b.Property<string>("Name")
@@ -377,8 +385,6 @@ namespace TeamEdge.Migrations
                 {
                     b.Property<int>("DescriptionId");
 
-                    b.Property<int?>("AssignedToId");
-
                     b.Property<string>("Name")
                         .HasMaxLength(64);
 
@@ -390,11 +396,39 @@ namespace TeamEdge.Migrations
 
                     b.HasKey("DescriptionId");
 
-                    b.HasIndex("AssignedToId");
-
                     b.HasIndex("ParentId");
 
                     b.ToTable("SubTasks");
+                });
+
+            modelBuilder.Entity("TeamEdge.DAL.Models.SummaryTask", b =>
+                {
+                    b.Property<int>("DescriptionId");
+
+                    b.Property<short?>("Duration");
+
+                    b.Property<DateTime?>("EndDate");
+
+                    b.Property<int?>("GauntPreviousId");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(64);
+
+                    b.Property<int>("Number");
+
+                    b.Property<int?>("ParentId");
+
+                    b.Property<int?>("ParentSummaryTaskId");
+
+                    b.Property<DateTime?>("StartDate");
+
+                    b.Property<byte>("Status");
+
+                    b.HasKey("DescriptionId");
+
+                    b.HasIndex("GauntPreviousId");
+
+                    b.ToTable("SummaryTasks");
                 });
 
             modelBuilder.Entity("TeamEdge.DAL.Models.User", b =>
@@ -636,9 +670,9 @@ namespace TeamEdge.Migrations
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TeamEdge.DAL.Models.Sprint", "Sprint")
-                        .WithMany("Tasks")
-                        .HasForeignKey("SprintId")
+                    b.HasOne("TeamEdge.DAL.Models.SummaryTask", "ParentSummaryTask")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentSummaryTaskId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -751,11 +785,6 @@ namespace TeamEdge.Migrations
 
             modelBuilder.Entity("TeamEdge.DAL.Models.SubTask", b =>
                 {
-                    b.HasOne("TeamEdge.DAL.Models.User", "AssignedTo")
-                        .WithMany()
-                        .HasForeignKey("AssignedToId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("TeamEdge.DAL.Models.WorkItemDescription", "Description")
                         .WithMany()
                         .HasForeignKey("DescriptionId")
@@ -764,6 +793,19 @@ namespace TeamEdge.Migrations
                     b.HasOne("TeamEdge.DAL.Models._Task", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("TeamEdge.DAL.Models.SummaryTask", b =>
+                {
+                    b.HasOne("TeamEdge.DAL.Models.WorkItemDescription", "Description")
+                        .WithMany()
+                        .HasForeignKey("DescriptionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("TeamEdge.DAL.Models.WorkItemDescription", "GauntPrevious")
+                        .WithMany()
+                        .HasForeignKey("GauntPreviousId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -793,7 +835,7 @@ namespace TeamEdge.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("TeamEdge.DAL.Models.Sprint", "Sprint")
-                        .WithMany("UserStories")
+                        .WithMany()
                         .HasForeignKey("SprintId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
