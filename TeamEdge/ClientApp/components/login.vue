@@ -2,44 +2,53 @@
   <v-dialog :width="ofSize({xs:'300px', sm:'450px' , md:'500px'})" v-model="dialog">
     <v-card class="elevation-12">
       <v-toolbar dark color="primary">
-        <v-toolbar-title>Войти</v-toolbar-title>
+        <v-toolbar-title>Вход</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <v-form ref="form" v-model="valid">
-          <v-text-field v-model="logData.login" 
+          <v-text-field 
+          v-model="model.login" 
           prepend-icon="person" 
           label="Логин" 
           :rules="logEmptRule"
           required
           type="text"></v-text-field>
           <v-text-field 
-          v-model="logData.password" 
+          v-model="model.password"
           prepend-icon="lock" 
           label="Пароль"
           :rules="passEmptRule"
           required
           type="password"></v-text-field>
         </v-form>
+        
       </v-card-text>
       <v-card-actions>
-        <v-layout row justify-space-between align-center>
+        <v-layout row justify-space-between>
+        <v-btn class="ml-2" color="primary" @click="register()" flat small>Регистрация</v-btn>
+        <v-btn class="mr-2" color="primary" @click="forgotPass()" flat small>Забыли пароль?</v-btn>
+        </v-layout>
+      </v-card-actions>
+      <v-card-actions>
           <v-checkbox color="primary"
               class="ml-2"
               v-model="remember"
               label="Запомнить меня"></v-checkbox>
-          <v-btn color="primary" class="mr-2" @click="onSignIn">Login</v-btn>
-        </v-layout>
+          <v-btn color="primary" class="mr-2" @click="onSignIn">Войти</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 <script>
   import { mapMutations, mapGetters} from "vuex";
+  import onResize from "../mixins/on-resize"
+  import formValidation from "../mixins/form-validation"
   export default {
+    mixins:[onResize, formValidation],
     data(){
       return{
         valid:false,
-        logData:{
+        model:{
           login:"",
           password:""
         },
@@ -61,16 +70,13 @@
         signIn:'auth/signIn',
         setOp:'auth/setOpened'
       }),
-      validate () {
-        if (this.$refs.form.validate()) {
-          this.snackbar = true
-        }
+      register(){
+        this.dialog = false;
+        this.$router.push("/registration");
       },
-      reset () {
-        this.$refs.form.reset()
-      },
-      resetValidation () {
-        this.$refs.form.resetValidation()
+      forgotPass(){
+        this.dialog = false;
+        this.$router.push("/forgotpass");
       }
     },
     computed:{

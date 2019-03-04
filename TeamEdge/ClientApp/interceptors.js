@@ -1,8 +1,8 @@
 import axios from 'axios';
-import store from './store/auth'
+import {mapGetters} from 'vuex'
 
 axios.interceptors.request.use(function(config) {
-    const token = store.getters.token;
+    const token = mapGetters({token:'auth.token'})[0];
     if(token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

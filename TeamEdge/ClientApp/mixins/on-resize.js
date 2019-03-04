@@ -1,6 +1,5 @@
-import Vue from 'vue'
 var breakpoints = ['xs','sm','md','lg','xl']
-Vue.mixin({
+export default{
   methods:{
     ofSize(sizes){
       var breakpoint = this.$vuetify.breakpoint.name;
@@ -16,4 +15,4 @@ Vue.mixin({
       return size;
     }
   }
-})
+}
