@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <v-toolbar color="primary" dark>
-      <v-toolbar-side-icon></v-toolbar-side-icon>
-      <v-toolbar-title class="title header">TEAM EDGE</v-toolbar-title>
+      <v-toolbar-title class="font-weight-bold">
+        <img src="/logos/TEcut.png" class="logo" :height="ofSize({xs:50,sm:53,md:55})"/><span>TEAM EDGE</span></v-toolbar-title>
       <v-layout row align-center>
         <v-spacer/>
         <template v-if="!isLoggedIn">
@@ -51,8 +51,10 @@
 
 <script>
     import Login from './login'
+    import onResize from "../mixins/on-resize"
     import { mapMutations, mapGetters} from 'vuex';
     export default {
+      mixins:[onResize],
       mounted(){
         this.signedIn();
       },
@@ -84,8 +86,7 @@
 </script>
 
 <style>
-.header{
-    font-family: "League Spartan", sans-serif;
-    font-weight: bold;
-  }
+.logo{
+  margin-right: 12px;
+}
 </style>
