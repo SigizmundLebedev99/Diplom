@@ -28,10 +28,10 @@
             label="Логин" 
             :rules="defaultRule('login')"
             required></v-text-field>
-            <v-text-field 
+            <v-text-field
             v-model="model.password"
             label="Пароль" 
-            :rules="defaultRule('pass')"
+            :rules="[...defaultRule('pass'), passRule]"
             required type="password"></v-text-field>
             <v-text-field
             label="Повторите пароль"
@@ -44,7 +44,7 @@
           </v-card-actions>
         </v-card>
       </v-flex>
-    </v-layout>
+    </v-layout>   
   </v-container>
 </template>
 
@@ -72,7 +72,9 @@
             email:{first:"Необходимо ввести email",second:"Email не должен содержать пробелов"},
           },
           confirmPassRule:[v=> v === this.model.password || "Пароли не совпадают"],
-          emailRule:v => /.+@.+/.test(v) || 'Неверный email'
+          emailRule:v => /.+@.+/.test(v) || 'Неверный email',
+          passRule:v => (v || '').length >= 8 ||
+              `Пароль должен быть длиннее 8 символов`
         }
     },
     methods:{
@@ -86,7 +88,7 @@
         this.$http.post(`/api/account/register`, this.model).then(
           response=>{
             console.log(response);
-            this.$router.push("/");
+            this.$router.push({name:"afterRegister"});
           },
           response=>{
             console.log(response);

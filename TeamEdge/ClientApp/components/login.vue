@@ -9,11 +9,13 @@
           <v-text-field 
           v-model="model.login" 
           prepend-icon="person" 
-          label="Логин" 
+          label="Логин"
+          :placeholder="loginP"
           :rules="logEmptRule"
           required
           type="text"></v-text-field>
-          <v-text-field 
+          <v-text-field
+          :placeholder="passP"
           v-model="model.password"
           prepend-icon="lock" 
           label="Пароль"
@@ -52,18 +54,42 @@
           login:"",
           password:""
         },
+        loginP:"",
+        passP:"",
         remember:true,
         logEmptRule:[v=>!!v||"Необходимо ввести логин",
          v=>!/^.*\s.*$/.test(v) || "Логин не должен содержать пробелов"],
         passEmptRule:[v=>!!v||"Необходимо ввести пароль",
-         v=>!/^.*\s.*$/.test(v) || "Пароль не должен содержать пробелов"]
+          v=>!/^.*\s.*$/.test(v) || "Пароль не должен содержать пробелов"]
       }
     },
     methods:{
       onSignIn(){
+        this.clean();
         this.validate();
         if(this.valid){
-          this.reset();
+          this.$http.post('/api/account/token', this.model)
+          .then(
+            r=>
+            {
+              this.signIn({remember:this.remember, profile:r.data});
+            },
+            r=>{
+              var alias = r.response.data.Alias
+              if(alias === "user_nf"){
+                this.reset();
+                this.loginP = "Неверный логин";
+              }
+              else if(alias === "password_inv"){
+                this.model.password = "";
+                this.passP = "Неверный пароль";
+              }
+              else if(alias === "email_not_confirmed"){
+                this.reset();
+                this.passP = "Email не подтвержден";
+              }
+            }
+          )
         }
       },
       ...mapMutations({
@@ -77,6 +103,10 @@
       forgotPass(){
         this.dialog = false;
         this.$router.push("/forgotpass");
+      },
+      clean(){
+        this.loginP="";
+        this.passP="";
       }
     },
     computed:{
@@ -88,6 +118,7 @@
           this.setOp(value);
           this.reset();
           this.resetValidation();
+          this.clean();
         }
       }
     }

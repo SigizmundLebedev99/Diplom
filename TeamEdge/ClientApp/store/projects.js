@@ -1,12 +1,11 @@
 import Vue from 'vue'
 
 const actions = {
-    async fetchData({commit, rootState}){
+    async fetchProjects({commit, rootState}){
         try{
-            console.log(rootState.auth.getters.profile.Id);
             var responce = await Vue.http.get(`/api/project/user/${rootState.auth.getters.profile.Id}`);
-            commit('setInvites', responce.body.invites);
-            commit('setProjects', responce.body.projects);
+            commit('setInvites', responce.data.invites);
+            commit('setProjects', responce.data.projects);
         }
         catch(ex){
         }
@@ -22,6 +21,10 @@ const mutations = {
     }
 }
 
+const getters = {
+    invitesCount:state => state.invites.length
+}
+
 const state = ()=>({
     invites: [],
     projects: []
@@ -29,6 +32,7 @@ const state = ()=>({
 
 export default {
     namespaced:true,
+    actions,
     mutations,
     state
 }

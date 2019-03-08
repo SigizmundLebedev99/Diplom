@@ -2,49 +2,39 @@
   <v-app>
     <v-toolbar color="primary" dark>
       <v-toolbar-title class="font-weight-bold">
-        <img src="/logos/TEcut.png" class="logo" :height="ofSize({xs:50,sm:53,md:55})"/><span>TEAM EDGE</span></v-toolbar-title>
-      <v-layout row align-center>
-        <v-spacer/>
+        <img src="/logos/TEcut.png" class="logo" :height="ofSize({xs:50,sm:46,md:55})"/>
+        <span v-show="ofSize({xs:false, sm:true})">TEAM EDGE</span>
+      </v-toolbar-title>
+      <v-layout row align-center justify-end>
         <template v-if="!isLoggedIn">
           <v-btn @click="openSignInDialog()" flat>Войти</v-btn>
         </template>
         <template v-else>
-          <v-subheader>Lebedev Dmitriy</v-subheader>
-          <v-avatar size="36px" class="mr-3">
+          <span class="white--text">{{profile.fullName}}</span>
+          <v-avatar size="36px" class="ml-3">
             <img v-if="profile.avatar"
             :src="profile.avatar"
             alt="Avatar">
             <v-icon size="36px" dark v-else>account_circle</v-icon>
           </v-avatar>
         </template>
-        <v-menu offset-y>
-          <template v-slot:activator="{ on }">
-            <v-btn v-show="isLoggedIn" icon v-on="on" flat>
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-tile @click="signOut()">    
-              <v-list-tile-avatar>
-                <v-icon>
-                  face
-                </v-icon>
-              </v-list-tile-avatar>            
-              <v-list-tile-title>Профиль</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile @click="signOut()">  
-              <v-list-tile-avatar>
-                <v-icon>
-                  cancel
-                </v-icon>
-              </v-list-tile-avatar>               
-              <v-list-tile-title>Выйти</v-list-tile-title>
-            </v-list-tile>
-          </v-list>
-        </v-menu>
+        <side-menu/>
       </v-layout>
     </v-toolbar>
     <router-view></router-view>
+    <v-footer height="auto">
+      <v-layout column class="grey darken-2 white--text text-xs-center">
+        <v-container>
+          <p>Контактные данные:</p>
+          <v-layout row align-center justify-center wrap>
+            <v-flex xs12 md4 class="text-no-wrap">Email: dilebedev99@gmail.com</v-flex>
+            <v-flex xs12 md4 class="text-no-wrap">Телефон: 8-(917)-264-38-50</v-flex>
+          </v-layout>
+        </v-container>
+        <v-divider></v-divider>
+        <p>&copy;2018 — Team Edge</p>
+      </v-layout>
+    </v-footer>
     <login></login>
   </v-app>
 </template>
@@ -52,6 +42,7 @@
 <script>
     import Login from './login'
     import onResize from "../mixins/on-resize"
+    import SideMenu from './side-menu'
     import { mapMutations, mapGetters} from 'vuex';
     export default {
       mixins:[onResize],
@@ -59,7 +50,8 @@
         this.signedIn();
       },
       components: {
-        'login': Login
+        'login': Login,
+        'side-menu':SideMenu
       },
       data () {
         return {
