@@ -1,12 +1,12 @@
 <template>
   <v-app>
     <v-toolbar color="primary" dark>
-      <v-toolbar-title class="font-weight-bold">
-        <img src="/logos/TEcut.png" class="logo" :height="ofSize({xs:50,sm:46,md:55})"/>
+      <v-toolbar-title class="font-weight-bold" @click="$router.push('/')">
+        <img src="/logos/TEcut.png" class="mr-2" :height="ofSize({xs:50,sm:46,md:55})"/>
         <span v-show="ofSize({xs:false, sm:true})">TEAM EDGE</span>
       </v-toolbar-title>
       <v-layout row align-center justify-end>
-        <template v-if="!isLoggedIn">
+        <template v-if="!profile">
           <v-btn @click="openSignInDialog()" flat>Войти</v-btn>
         </template>
         <template v-else>
@@ -21,8 +21,9 @@
         <side-menu/>
       </v-layout>
     </v-toolbar>
-    <router-view></router-view>
-    <v-footer height="auto">
+    <router-view class="view"></router-view>
+    <login></login>
+    <v-footer height="auto" class="footer-keeper">
       <v-layout column class="grey darken-2 white--text text-xs-center">
         <v-container>
           <p>Контактные данные:</p>
@@ -35,7 +36,6 @@
         <p>&copy;2018 — Team Edge</p>
       </v-layout>
     </v-footer>
-    <login></login>
   </v-app>
 </template>
 
@@ -43,7 +43,7 @@
     import Login from './login'
     import onResize from "../mixins/on-resize"
     import SideMenu from './side-menu'
-    import { mapMutations, mapGetters} from 'vuex';
+    import { mapMutations, mapGetters, mapActions} from 'vuex';
     export default {
       mixins:[onResize],
       mounted(){
@@ -59,8 +59,10 @@
         }
       },
       methods:{
-        ...mapMutations({
-          signedIn:'auth/signedIn',
+        ...mapActions({
+          signedIn:'auth/signedIn'
+        }),
+        ...mapMutations({ 
           setOpened:'auth/setOpened',
           signOut:'auth/signOut'
         }),
@@ -70,15 +72,14 @@
       },
       computed:{
         ...mapGetters({
-          isLoggedIn:'auth/isLoggedIn',
           profile:'auth/profile'
         })
       }
     }
 </script>
 
-<style>
-.logo{
-  margin-right: 12px;
+<style scoped>
+.view{
+  min-height: 100%;
 }
 </style>

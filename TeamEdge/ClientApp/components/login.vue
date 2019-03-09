@@ -42,7 +42,7 @@
   </v-dialog>
 </template>
 <script>
-  import { mapMutations, mapGetters} from "vuex";
+  import { mapMutations, mapGetters, mapActions} from "vuex";
   import onResize from "../mixins/on-resize"
   import formValidation from "../mixins/form-validation"
   export default {
@@ -93,8 +93,10 @@
         }
       },
       ...mapMutations({
-        signIn:'auth/signIn',
         setOp:'auth/setOpened'
+      }),
+      ...mapActions({
+        signIn:'auth/signIn'
       }),
       register(){
         this.dialog = false;

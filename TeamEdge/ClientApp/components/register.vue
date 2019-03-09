@@ -73,8 +73,8 @@
           },
           confirmPassRule:[v=> v === this.model.password || "Пароли не совпадают"],
           emailRule:v => /.+@.+/.test(v) || 'Неверный email',
-          passRule:v => (v || '').length >= 8 ||
-              `Пароль должен быть длиннее 8 символов`
+          passRule:v => (v || '').length >= 6 ||
+              `Пароль должен быть длиннее 6 символов`
         }
     },
     methods:{

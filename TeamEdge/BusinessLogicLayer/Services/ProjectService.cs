@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -83,16 +83,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             if (!await _context.Users.AnyAsync(u => u.Id == userId))
                 throw new UnauthorizedException();
-
+            var tasks = await _context.Tasks.Where(t => t.AssignedToId == userId && (t.Status == WorkItemStatus.Active || t.Status == WorkItemStatus.New))
+                .Select(t => new { t.Description.ProjectId }).ToArrayAsync();
             return await _context.Users
                 .Where(u=>u.Id == userId)
                 .Select(u => new ProjectsForUserDTO
                 {
-                    Projects = u.UserProjects.Select(p => new ProjectDTO
+                    Projects = u.UserProjects.Select(p => new ProjectForUserDTO()
                     {
                         Id = p.ProjectId,
                         Logo = p.Project.Logo,
-                        Name = p.Project.Name
+                        Name = p.Project.Name,
+                        AccessStatus = p.ProjRole,
+                        HasTasks = tasks.Any(e=>e.ProjectId == p.ProjectId),
+                        UsersCount = p.Project.Users.Count()
                     }),
                     Invites = u.Invites.Where(i=>!i.IsAccepted).Select(i => new InviteForUserDTO
                     {

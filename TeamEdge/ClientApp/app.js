@@ -7,7 +7,7 @@ import App from 'components/app-root'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import './interceptors'
+import interceptionSetup from './interception/interceptors'
 
 Vue.use(Vuetify, {
   theme: {
@@ -24,7 +24,7 @@ Vue.use(Vuetify, {
 
 Vue.prototype.$http = axios
 sync(store, router)
-
+interceptionSetup();
 const app = new Vue({
   store,
   router,

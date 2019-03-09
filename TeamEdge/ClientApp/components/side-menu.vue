@@ -1,12 +1,12 @@
 <template>
     <v-menu offset-y>
         <template v-slot:activator="{ on }">
-            <v-btn v-show="isLoggedIn" icon v-on="on" flat>
+            <v-btn v-show="profile" icon v-on="on" flat>
                 <v-icon>more_vert</v-icon>
             </v-btn>
         </template>
         <v-list>
-            <v-list-tile @click="signOut()">    
+            <v-list-tile @click="$router.push({name:'projects'})">    
                 <v-list-tile-avatar>
                     <v-icon>
                         work
@@ -52,7 +52,7 @@ export default {
     },
     computed:{
         ...mapGetters({
-            isLoggedIn:'auth/isLoggedIn'
+            profile:'auth/profile'
         })
     }
 }

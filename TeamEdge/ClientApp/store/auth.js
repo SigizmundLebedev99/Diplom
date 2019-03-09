@@ -1,3 +1,5 @@
+import router from '../router/index'
+
 const mutations = {
   setOpened(state, payload){
     state.open = payload;
@@ -23,11 +25,24 @@ const mutations = {
   }
 }
 
+const actions = {
+  signedIn({commit, dispatch, getters}){
+    commit('signedIn');
+    if(getters.profile){
+      router.push({name:'projects'});
+      dispatch('projects/fetchProjects',{},{root:true});
+    }
+  },
+  signIn({commit, dispatch}, profile){
+    commit('signIn', profile);
+    dispatch('projects/fetchProjects',{},{root:true});
+  }
+}
+
 const getters = {
   getOpened:state=>state.open,
-  isLoggedIn : state => state.profile,
   profile: state => state.profile,
-  token:state=>state.profile?state.profile.token:null
+  token:state=>state.profile?state.profile.access_token:null
 }
 
 const state = ()=>({
@@ -38,7 +53,8 @@ const state = ()=>({
     lastName:null,
     patronymic:null,
     email: null,
-    avatar: null
+    avatar: null,
+    access_token:null
   }
 })
 
@@ -47,4 +63,5 @@ export default {
   mutations,
   getters,
   state,
+  actions
 }
