@@ -4,10 +4,13 @@ const mutations = {
   setOpened(state, payload){
     state.open = payload;
   },
+  setReturnUrl(state, payload){
+    state.returnUrl = payload;
+  },
   signedIn(state) {
     var user = localStorage.getItem('user');
     if(user)
-      state.profile = (JSON.parse(user))   
+      state.profile = (JSON.parse(user))
     else
       state.profile = null;
   },
@@ -18,9 +21,14 @@ const mutations = {
       localStorage.setItem('user', JSON.stringify(payload.profile));
     }
     state.open = false;
+    if(state.returnUrl){
+      router.push(returnUrl);
+      state.returnUrl = null;
+    }
   },
   signOut(state){
     state.profile = null;
+    router.push('/');
     localStorage.removeItem('user');
   }
 }
@@ -35,18 +43,25 @@ const actions = {
   },
   signIn({commit, dispatch}, profile){
     commit('signIn', profile);
+    router.push({name:'projects'});
     dispatch('projects/fetchProjects',{},{root:true});
+  },
+  reSign({commit}, returnUrl){
+    commit('signOut');
+    commit('setOpened', true);
+    commit('setReturnUrl', returnUrl);
   }
 }
 
 const getters = {
   getOpened:state=>state.open,
-  profile: state => state.profile,
+  profile:state=>state.profile,
   token:state=>state.profile?state.profile.access_token:null
 }
 
 const state = ()=>({
   open: false,
+  returnUrl:null,
   profile: {
     Id:null,
     firstName:null,

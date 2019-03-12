@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cfbb14ef68f240e1bf64"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d4155513bc8d6c54026c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -14015,7 +14015,7 @@ exports = module.exports = __webpack_require__(46)();
 
 
 // module
-exports.push([module.i, "\n.view[data-v-c01f6260]{\r\n  min-height: 100%;\n}\r\n", "", {"version":3,"sources":["C:/Users/hp/Desktop/TeamEdge/TeamEdge/ClientApp/components/ClientApp\\components/app-root.vue"],"names":[],"mappings":";AAiFA;EACA,iBAAA;CACA","file":"app-root.vue","sourcesContent":["<template>\r\n  <v-app>\r\n    <v-toolbar color=\"primary\" dark>\r\n      <v-toolbar-title class=\"font-weight-bold\" @click=\"$router.push('/')\">\r\n        <img src=\"/logos/TEcut.png\" class=\"mr-2\" :height=\"ofSize({xs:50,sm:46,md:55})\"/>\r\n        <span v-show=\"ofSize({xs:false, sm:true})\">TEAM EDGE</span>\r\n      </v-toolbar-title>\r\n      <v-layout row align-center justify-end>\r\n        <template v-if=\"!profile\">\r\n          <v-btn @click=\"openSignInDialog()\" flat>Войти</v-btn>\r\n        </template>\r\n        <template v-else>\r\n          <span class=\"white--text\">{{profile.fullName}}</span>\r\n          <v-avatar size=\"36px\" class=\"ml-3\">\r\n            <img v-if=\"profile.avatar\"\r\n            :src=\"profile.avatar\"\r\n            alt=\"Avatar\">\r\n            <v-icon size=\"36px\" dark v-else>account_circle</v-icon>\r\n          </v-avatar>\r\n        </template>\r\n        <side-menu/>\r\n      </v-layout>\r\n    </v-toolbar>\r\n    <router-view class=\"view\"></router-view>\r\n    <login></login>\r\n    <v-footer height=\"auto\" class=\"footer-keeper\">\r\n      <v-layout column class=\"grey darken-2 white--text text-xs-center\">\r\n        <v-container>\r\n          <p>Контактные данные:</p>\r\n          <v-layout row align-center justify-center wrap>\r\n            <v-flex xs12 md4 class=\"text-no-wrap\">Email: dilebedev99@gmail.com</v-flex>\r\n            <v-flex xs12 md4 class=\"text-no-wrap\">Телефон: 8-(917)-264-38-50</v-flex>\r\n          </v-layout>\r\n        </v-container>\r\n        <v-divider></v-divider>\r\n        <p>&copy;2018 — Team Edge</p>\r\n      </v-layout>\r\n    </v-footer>\r\n  </v-app>\r\n</template>\r\n\r\n<script>\r\n    import Login from './login'\r\n    import onResize from \"../mixins/on-resize\"\r\n    import SideMenu from './side-menu'\r\n    import { mapMutations, mapGetters, mapActions} from 'vuex';\r\n    export default {\r\n      mixins:[onResize],\r\n      mounted(){\r\n        this.signedIn();\r\n      },\r\n      components: {\r\n        'login': Login,\r\n        'side-menu':SideMenu\r\n      },\r\n      data () {\r\n        return {\r\n          drawer:false\r\n        }\r\n      },\r\n      methods:{\r\n        ...mapActions({\r\n          signedIn:'auth/signedIn'\r\n        }),\r\n        ...mapMutations({ \r\n          setOpened:'auth/setOpened',\r\n          signOut:'auth/signOut'\r\n        }),\r\n        openSignInDialog(){\r\n          this.setOpened(true);\r\n        }\r\n      },\r\n      computed:{\r\n        ...mapGetters({\r\n          profile:'auth/profile'\r\n        })\r\n      }\r\n    }\r\n</script>\r\n\r\n<style scoped>\r\n.view{\r\n  min-height: 100%;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.view[data-v-c01f6260]{\r\n  min-height: 100%;\n}\r\n", "", {"version":3,"sources":["C:/Users/mg/Desktop/d/TeamEdge/ClientApp/components/ClientApp\\components/app-root.vue"],"names":[],"mappings":";AAiFA;EACA,iBAAA;CACA","file":"app-root.vue","sourcesContent":["<template>\r\n  <v-app>\r\n    <v-toolbar color=\"primary\" dark>\r\n      <v-toolbar-title class=\"font-weight-bold\" @click=\"$router.push('/')\">\r\n        <img src=\"/logos/TEcut.png\" class=\"mr-2\" :height=\"ofSize({xs:50,sm:46,md:55})\"/>\r\n        <span v-show=\"ofSize({xs:false, sm:true})\">TEAM EDGE</span>\r\n      </v-toolbar-title>\r\n      <v-layout row align-center justify-end>\r\n        <template v-if=\"!profile\">\r\n          <v-btn @click=\"openSignInDialog()\" flat>Войти</v-btn>\r\n        </template>\r\n        <template v-else>\r\n          <span class=\"white--text\">{{profile.fullName}}</span>\r\n          <v-avatar size=\"36px\" class=\"ml-3\">\r\n            <img v-if=\"profile.avatar\"\r\n            :src=\"profile.avatar\"\r\n            alt=\"Avatar\">\r\n            <v-icon size=\"36px\" dark v-else>account_circle</v-icon>\r\n          </v-avatar>\r\n        </template>\r\n        <side-menu/>\r\n      </v-layout>\r\n    </v-toolbar>\r\n    <router-view class=\"view\"></router-view>\r\n    <login></login>\r\n    <v-footer height=\"auto\" class=\"footer-keeper\">\r\n      <v-layout column class=\"grey darken-2 white--text text-xs-center\">\r\n        <v-container>\r\n          <p>Контактные данные:</p>\r\n          <v-layout row align-center justify-center wrap>\r\n            <v-flex xs12 md4 class=\"text-no-wrap\">Email: dilebedev99@gmail.com</v-flex>\r\n            <v-flex xs12 md4 class=\"text-no-wrap\">Телефон: 8-(917)-264-38-50</v-flex>\r\n          </v-layout>\r\n        </v-container>\r\n        <v-divider></v-divider>\r\n        <p>&copy;2018 — Team Edge</p>\r\n      </v-layout>\r\n    </v-footer>\r\n  </v-app>\r\n</template>\r\n\r\n<script>\r\n    import Login from './login'\r\n    import onResize from \"../mixins/on-resize\"\r\n    import SideMenu from './side-menu'\r\n    import { mapMutations, mapGetters, mapActions} from 'vuex';\r\n    export default {\r\n      mixins:[onResize],\r\n      mounted(){\r\n        this.signedIn();\r\n      },\r\n      components: {\r\n        'login': Login,\r\n        'side-menu':SideMenu\r\n      },\r\n      data () {\r\n        return {\r\n          drawer:false\r\n        }\r\n      },\r\n      methods:{\r\n        ...mapActions({\r\n          signedIn:'auth/signedIn'\r\n        }),\r\n        ...mapMutations({ \r\n          setOpened:'auth/setOpened',\r\n          signOut:'auth/signOut'\r\n        }),\r\n        openSignInDialog(){\r\n          this.setOpened(true);\r\n        }\r\n      },\r\n      computed:{\r\n        ...mapGetters({\r\n          profile:'auth/profile'\r\n        })\r\n      }\r\n    }\r\n</script>\r\n\r\n<style scoped>\r\n.view{\r\n  min-height: 100%;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -14029,7 +14029,7 @@ exports = module.exports = __webpack_require__(46)();
 
 
 // module
-exports.push([module.i, "\n.title-img[data-v-c0b155b4]{\r\n    border-radius:12px;\n}\r\n", "", {"version":3,"sources":["C:/Users/hp/Desktop/TeamEdge/TeamEdge/ClientApp/components/ClientApp\\components/title-page.vue"],"names":[],"mappings":";AAqBA;IACA,mBAAA;CACA","file":"title-page.vue","sourcesContent":["<template>\r\n    <v-container grid-list-md fluid>\r\n        <v-layout row wrap>\r\n            <v-flex xs12 sm5 md4>\r\n                <v-img class=\"title-img\" src=\"/logos/TE.png\"/>\r\n            </v-flex>\r\n            <v-flex xs12 sm5 offset-sm-1 md6 offset-md-1>\r\n                <v-layout align-center justify-center row fill-height>\r\n                    <blockquote class=\"blockquote text-xs-center\">Team Edge - проект, представляющий собой комплексное решение, объединяющее в себе учет рабочего времени, систему управления версиями, сбор данных, построение отчётов, отслеживание статусов и изменений по проекту и предназначенное для совместной работы над проектами по разработке программного обеспечения.</blockquote>\r\n                </v-layout>\r\n            </v-flex>\r\n        </v-layout>\r\n    </v-container>\r\n</template>\r\n\r\n<script>\r\nexport default {\r\n}\r\n</script>\r\n\r\n<style scoped>\r\n.title-img{\r\n    border-radius:12px;\r\n}\r\n</style>\r\n\r\n\r\n\r\n\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.title-img[data-v-c0b155b4]{\n    border-radius:12px;\n}\n", "", {"version":3,"sources":["C:/Users/mg/Desktop/d/TeamEdge/ClientApp/components/ClientApp\\components/title-page.vue"],"names":[],"mappings":";AAuBA;IACA,mBAAA;CACA","file":"title-page.vue","sourcesContent":["<template>\n  <v-container grid-list-md fluid>\n    <v-layout column>\n      <v-layout row justify-space-around class=\"mt-5\">\n          <v-img class=\"title-img\" src=\"/logos/TE.png\" :max-width=\"ofSize({xs:300,sm:350,md:400})\"/>\n      </v-layout>\n      <v-layout align-center justify-center row fill-height class=\"mt-5\">\n        <v-flex md5>\n          <blockquote class=\"blockquote text-xs-center\">Team Edge - проект, представляющий собой комплексное решение, объединяющее в себе учет рабочего времени, систему управления версиями, сбор данных, построение отчётов, отслеживание статусов и изменений по проекту и предназначенное для совместной работы над проектами по разработке программного обеспечения.</blockquote>\n        </v-flex>\n      </v-layout>\n    </v-layout>\n  </v-container>\n</template>\n\n<script>\nimport onResize from '../mixins/on-resize'\nexport default {\n  mixins:[onResize]\n}\n</script>\n\n<style scoped>\n.title-img{\n    border-radius:12px;\n}\n</style>\n\n\n\n\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -14451,7 +14451,16 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = {};
+
+var _onResize = __webpack_require__(36);
+
+var _onResize2 = _interopRequireDefault(_onResize);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+  mixins: [_onResize2.default]
+};
 
 /***/ }),
 /* 80 */
@@ -16508,7 +16517,7 @@ __webpack_require__(221);
 
 __webpack_require__(220);
 
-var _interceptors = __webpack_require__(252);
+var _interceptors = __webpack_require__(120);
 
 var _interceptors2 = _interopRequireDefault(_interceptors);
 
@@ -16540,7 +16549,53 @@ exports.router = _index2.default;
 exports.store = _store2.default;
 
 /***/ }),
-/* 120 */,
+/* 120 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _promise = __webpack_require__(126);
+
+var _promise2 = _interopRequireDefault(_promise);
+
+exports.default = function () {
+  _axios2.default.interceptors.request.use(function (config) {
+    var token = _index2.default.getters['auth/token'];
+    if (token) {
+      config.headers.Authorization = 'Bearer ' + token;
+    }
+    return config;
+  }, function (err) {
+    return _promise2.default.reject(err);
+  });
+  _axios2.default.interceptors.response.use(undefined, function (err) {
+    if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+      _index2.default.dispatch('auth/reSign', _index4.default.path);
+    }
+    throw err;
+  });
+};
+
+var _axios = __webpack_require__(70);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _index = __webpack_require__(73);
+
+var _index2 = _interopRequireDefault(_index);
+
+var _index3 = __webpack_require__(72);
+
+var _index4 = _interopRequireDefault(_index3);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
 /* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16597,6 +16652,9 @@ var mutations = {
   setOpened: function setOpened(state, payload) {
     state.open = payload;
   },
+  setReturnUrl: function setReturnUrl(state, payload) {
+    state.returnUrl = payload;
+  },
   signedIn: function signedIn(state) {
     var user = localStorage.getItem('user');
     if (user) state.profile = JSON.parse(user);else state.profile = null;
@@ -16607,9 +16665,14 @@ var mutations = {
       localStorage.setItem('user', (0, _stringify2.default)(payload.profile));
     }
     state.open = false;
+    if (state.returnUrl) {
+      _index2.default.push(returnUrl);
+      state.returnUrl = null;
+    }
   },
   signOut: function signOut(state) {
     state.profile = null;
+    _index2.default.push('/');
     localStorage.removeItem('user');
   }
 };
@@ -16631,7 +16694,15 @@ var actions = {
         dispatch = _ref2.dispatch;
 
     commit('signIn', profile);
+    _index2.default.push({ name: 'projects' });
     dispatch('projects/fetchProjects', {}, { root: true });
+  },
+  reSign: function reSign(_ref3, returnUrl) {
+    var commit = _ref3.commit;
+
+    commit('signOut');
+    commit('setOpened', true);
+    commit('setReturnUrl', returnUrl);
   }
 };
 
@@ -16650,6 +16721,7 @@ var getters = {
 var state = function state() {
   return {
     open: false,
+    returnUrl: null,
     profile: {
       Id: null,
       firstName: null,
@@ -20783,54 +20855,45 @@ var render = function() {
     [
       _c(
         "v-layout",
-        { attrs: { row: "", wrap: "" } },
+        { attrs: { column: "" } },
         [
           _c(
-            "v-flex",
-            { attrs: { xs12: "", sm5: "", md4: "" } },
+            "v-layout",
+            {
+              staticClass: "mt-5",
+              attrs: { row: "", "justify-space-around": "" }
+            },
             [
               _c("v-img", {
                 staticClass: "title-img",
-                attrs: { src: "/logos/TE.png" }
+                attrs: {
+                  src: "/logos/TE.png",
+                  "max-width": _vm.ofSize({ xs: 300, sm: 350, md: 400 })
+                }
               })
             ],
             1
           ),
           _vm._v(" "),
           _c(
-            "v-flex",
+            "v-layout",
             {
+              staticClass: "mt-5",
               attrs: {
-                xs12: "",
-                sm5: "",
-                "offset-sm-1": "",
-                md6: "",
-                "offset-md-1": ""
+                "align-center": "",
+                "justify-center": "",
+                row: "",
+                "fill-height": ""
               }
             },
             [
-              _c(
-                "v-layout",
-                {
-                  attrs: {
-                    "align-center": "",
-                    "justify-center": "",
-                    row: "",
-                    "fill-height": ""
-                  }
-                },
-                [
-                  _c(
-                    "blockquote",
-                    { staticClass: "blockquote text-xs-center" },
-                    [
-                      _vm._v(
-                        "Team Edge - проект, представляющий собой комплексное решение, объединяющее в себе учет рабочего времени, систему управления версиями, сбор данных, построение отчётов, отслеживание статусов и изменений по проекту и предназначенное для совместной работы над проектами по разработке программного обеспечения."
-                      )
-                    ]
+              _c("v-flex", { attrs: { md5: "" } }, [
+                _c("blockquote", { staticClass: "blockquote text-xs-center" }, [
+                  _vm._v(
+                    "Team Edge - проект, представляющий собой комплексное решение, объединяющее в себе учет рабочего времени, систему управления версиями, сбор данных, построение отчётов, отслеживание статусов и изменений по проекту и предназначенное для совместной работы над проектами по разработке программного обеспечения."
                   )
-                ]
-              )
+                ])
+              ])
             ],
             1
           )
@@ -47399,43 +47462,6 @@ __webpack_require__(116);
 __webpack_require__(115);
 module.exports = __webpack_require__(114);
 
-
-/***/ }),
-/* 252 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _promise = __webpack_require__(126);
-
-var _promise2 = _interopRequireDefault(_promise);
-
-exports.default = function () {
-    _axios2.default.interceptors.request.use(function (config) {
-        var token = _index2.default.getters['auth/token'];
-        if (token) {
-            config.headers.Authorization = 'Bearer ' + token;
-        }
-        return config;
-    }, function (err) {
-        return _promise2.default.reject(err);
-    });
-};
-
-var _axios = __webpack_require__(70);
-
-var _axios2 = _interopRequireDefault(_axios);
-
-var _index = __webpack_require__(73);
-
-var _index2 = _interopRequireDefault(_index);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ })
 /******/ ]);
