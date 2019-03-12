@@ -2,6 +2,7 @@ import router from '../router/index'
 
 const mutations = {
   setOpened(state, payload){
+    state.returnUrl = null;
     state.open = payload;
   },
   setReturnUrl(state, payload){

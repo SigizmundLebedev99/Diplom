@@ -62,9 +62,9 @@
         ...mapActions({
           signedIn:'auth/signedIn'
         }),
-        ...mapMutations({ 
+        ...mapMutations({
           setOpened:'auth/setOpened',
-          signOut:'auth/signOut'
+          signOut:'auth/signOut',
         }),
         openSignInDialog(){
           this.setOpened(true);
