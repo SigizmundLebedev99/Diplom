@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -100,7 +100,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     {
                         EvictionCallback = (k, v, r, s) =>
                         {
-                            RemoveFile(v.ToString(), true);
+                            if(r == EvictionReason.Expired)
+                                RemoveFile(v.ToString(), true);
                         }
                     });
                 _cache.Set(userId, res, options);
@@ -135,7 +136,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public void Commit(int userId, string path)
         {
-            string value = _cache.Get(userId).ToString();
+            string value = _cache.Get(userId)?.ToString();
             if (path == null && !string.IsNullOrEmpty(value))
                 RemoveFile(value, true);
             if(value!=path)

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using System.Linq;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
@@ -20,7 +20,7 @@ namespace TeamEdge.Mapper
             CreateMap<ChangeStatusDTO, UserProject>();
             CreateMap<Project, ProjectDTO>();
             CreateMap<CreateProjectDTO, Project>().ForMember(e=>e.CreatorId, c=>c.MapFrom(e=>e.UserId));
-            CreateMap<CreateProjectVM, CreateProjectDTO>().ForMember(e => e.Logo, c => c.Ignore());
+            CreateMap<CreateProjectVM, CreateProjectDTO>();
             CreateMap<FileDTO, _File>().ReverseMap();
 
             CreateMap<CreateTaskDTO, _Task>();
