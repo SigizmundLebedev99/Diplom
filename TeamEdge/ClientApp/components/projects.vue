@@ -4,30 +4,81 @@
             <span class="title ml-3">
                 Ваши проекты
             </span>
-            <v-btn>
-                <v-icon>add</v-icon>
-                <span class="text-none">Создать проект</span>
-            </v-btn>
+            <create-project></create-project>
         </v-layout>
         <v-divider></v-divider>
-        <v-layout v-if="projects.length === 0" justify-space-around align-center>
-            <span class="title ml-3 text-xs-center">
-                На данный момент у вы не принимаете участия ни в каком проекте.
-            </span>
+        <v-layout justify-center v-show="loading">
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
         </v-layout>
+        <div v-show="!loading">
+            <v-layout v-if="projects.length === 0" justify-space-around align-center>
+                <span class="title ml-3 text-xs-center">
+                    На данный момент у вы не принимаете участия ни в каком проекте.
+                </span>
+            </v-layout>
+            <v-container v-else>
+                <v-layout wrap :class="ofSize({xs:'column align-center', sm:'row justify-center'})">
+                    <v-card v-for="(p,i) in projects" :key="i" dark width="200px" class="m-2 elevation-12">
+                        <v-toolbar dark dense color="primary" class="nopad" flat>
+                                <v-spacer></v-spacer>
+                                <v-btn flat small class="text-none">
+                                    Перейти
+                                    <v-icon dark rigth class="ml-2">arrow_forward</v-icon>
+                                </v-btn>
+                        </v-toolbar>
+                        <v-card-title class="subheading">{{`${i + 1}) ${p.name}`}}</v-card-title>
+                        <v-card-text>
+                            <v-layout align-center column>
+                                <v-avatar size="100" class="mb-3" color="white">
+                                    <v-icon v-if="!p.logo" size="80" light>work</v-icon>
+                                    <img v-else :src="p.logo"/>
+                                </v-avatar>
+                                <span>Вы {{partRoles[p.accessStatus]}}</span>
+                                <v-layout row class="mt-3">
+                                    <v-icon>people</v-icon>
+                                    <span class="ml-2">Участников: {{p.usersCount}}</span>
+                                </v-layout>
+                                
+                            </v-layout>
+                        </v-card-text>
+                    </v-card>
+                </v-layout>
+                <v-layout justify-center class="mt-5">
+                    <v-btn color="primary" class="text-none" @click="fetchProjects()">Обновить</v-btn>
+                </v-layout>
+                
+            </v-container>
+        </div>
     </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 import onResize from '../mixins/on-resize'
+import createProjects from './create-project'
+import roles from '../data/roles'
 export default {
     mixins:[onResize],
+    components:{
+        'create-project':createProjects
+    },
+    methods:{
+        ...mapActions({
+            fetchProjects:'projects/fetchProjects'
+        })
+    },
     computed:{
-        ...mapGetters({projects:'projects/projects'})
+        ...mapGetters({
+                projects:'projects/projects',
+                loading:'projects/loading'}),
+        partRoles(){
+            return roles;
+        }
     }
 }
 </script>
+
+
 
 
 

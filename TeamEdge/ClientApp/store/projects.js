@@ -2,13 +2,14 @@ import axios from 'axios'
 
 const actions = {
     fetchProjects({commit, rootState}){
+        commit('setLoading', true);
         axios.get(`/api/project/user/${rootState.auth.profile.userId}`)
         .then(response => {
             commit('setInvites', response.data.invites);
             commit('setProjects', response.data.projects);
+            commit('setLoading',false);
         }, response => {
-            console.log(response),
-            console.log(response.response)
+            commit('setLoading',false);
         });   
     }
 }
@@ -19,17 +20,22 @@ const mutations = {
     },
     setProjects(state, payload){
         state.projects = payload;
+    },
+    setLoading(state, payload){
+        state.loading = payload;
     }
 }
 
 const getters = {
     projects: state=> state.projects,
-    invites: state=>state.invites
+    invites: state=>state.invites,
+    loading: state=>state.loading
 }
 
 const state = ()=>({
     invites: [],
-    projects: []
+    projects: [],
+    loading: false
 })
 
 export default {

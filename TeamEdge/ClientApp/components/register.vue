@@ -40,7 +40,9 @@
           </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="sendData()" color="primary">OK</v-btn>
+            <v-layout row justify-end>
+              <v-btn @click="sendData()" color="primary">OK</v-btn>
+            </v-layout>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -87,11 +89,9 @@
           return;
         this.$http.post(`/api/account/register`, this.model).then(
           response=>{
-            console.log(response);
             this.$router.push({name:"afterRegister"});
           },
           response=>{
-            console.log(response);
           }
         )
       }

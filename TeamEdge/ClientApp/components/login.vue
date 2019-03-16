@@ -36,7 +36,7 @@
               class="ml-2"
               v-model="remember"
               label="Запомнить меня"></v-checkbox>
-          <v-btn color="primary" class="mr-2" @click="onSignIn">Войти</v-btn>
+          <v-btn color="primary" class="mr-2" @click="onSignIn" :loading="loading">Войти</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -49,6 +49,7 @@
     mixins:[onResize, formValidation],
     data(){
       return{
+        loading:false,
         valid:false,
         model:{
           login:"",
@@ -68,11 +69,13 @@
         this.clean();
         this.validate();
         if(this.valid){
+          this.loading = true;
           this.$http.post('/api/account/token', this.model)
           .then(
             r=>
             {
               this.signIn({remember:this.remember, profile:r.data});
+              this.loading = false;
             },
             r=>{
               var alias = r.response.data.Alias
@@ -88,6 +91,7 @@
                 this.reset();
                 this.passP = "Email не подтвержден";
               }
+              this.loading = false;
             }
           )
         }

@@ -13,7 +13,7 @@ export default function(){
   });
   axios.interceptors.response.use(undefined,
     function (err) {
-    if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+    if (err.response.status === 401) {
       store.dispatch('auth/reSign', router.path);
     }
     throw err;
