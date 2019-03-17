@@ -5,6 +5,7 @@ import Projects from '../components/onApp/projects'
 import Begin from '../components/onApp/begin'
 import Project from '../components/onProject/project'
 import Home from '../components/onProject/home'
+import Dashboard from '../components/onProject/dashboard'
 import { ifAuthenticated } from './hooks'
 
 export const routes = [
@@ -21,7 +22,8 @@ export const routes = [
   {
     path:'/project/:projId', component: Project,
     children:[
-      {name:'project', path:'/', component: Home, beforeEnter: ifAuthenticated}
+      {name:'project', path:'/', component: Home, beforeEnter: ifAuthenticated},
+      {name:'dashboard', path:'dashboard', component: Dashboard, beforeEnter: ifAuthenticated}
     ]
   }
 ]

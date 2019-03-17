@@ -35,19 +35,35 @@
             </v-layout>
             </v-container>
  
-
-            <v-list class="pt-0">
-                <v-divider class="m-0"></v-divider>
-
-                <v-list-tile
+            <v-divider class="m-0"></v-divider>
+            <v-list class="p-0">
+                <v-list-tile :class="routeSel('project')"
                     @click="goTo('project')">
                     <v-list-tile-action>
-                    <v-icon>dashboard</v-icon>
+                    <v-icon :class="routeSel('project')">dashboard</v-icon>
                     </v-list-tile-action>
 
                     <v-list-tile-content>
                     <v-list-tile-title>Доска</v-list-tile-title>
                     </v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile :class="routeSel('dashboard')"
+                    @click="goTo('dashboard')">
+                    <v-list-tile-action>
+                    <v-icon :class="routeSel('dashboard')">build</v-icon>
+                    </v-list-tile-action>
+
+                    <v-list-tile-content>
+                    <v-list-tile-title>Единицы работы</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+            <v-divider class="m-0"></v-divider>
+            <v-list>
+                <v-list-tile v-for="(wi,i) in workItems" :key="i">
+                    <v-list-title>
+                        {{wi.code}}
+                    </v-list-title>
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
@@ -66,25 +82,28 @@
         </v-toolbar>
         
         <v-content>
-            <v-container fluid>
-                <v-layout column justify-center align-center v-show="loading" fill-height>
+            <v-container v-show="loading">
+                <v-layout column justify-center align-center fill-height>
                     <v-progress-circular indeterminate color="primary"></v-progress-circular>
                 </v-layout>
-                <router-view v-show="!loading"></router-view>
             </v-container>
+            <router-view v-show="!loading"></router-view>
         </v-content>
+        <create-work-item></create-work-item>
     </div>
 </template>
 
 <script>
 import sideMenu from '../side-menu'
+import createWI from './create-wi.vue'
 import onResize from '../../mixins/on-resize'
 import {mapActions,mapGetters} from 'vuex'
 export default {
     mixins:[onResize],
     components:
     {
-        'side-menu':sideMenu
+        'side-menu':sideMenu,
+        'create-work-item':createWI
     },
     data:function(){
         return{
@@ -94,7 +113,7 @@ export default {
             { title: 'About', icon: 'question_answer' }
             ],
             mini: true,
-            right: true
+            selected:1
         }
     },
     mounted(){
@@ -105,18 +124,36 @@ export default {
         ...mapActions({
            fetchProj: 'project/fetchProject' 
         }),
-        goTo(name){
+        goTo(name, id){
             this.$router.push({name:name});
             this.mini = true;
+            this.selected = id;
+        },
+        routeSel(name){
+            return this.$route.name === name?'selected':'notselected'
+        },
+        select(id){
+            return this.selected == id?'selected':'notselected'
         }
     },
     computed:{
         ...mapGetters({
             loading:'project/loading',
             project:'project/project',
-            profile:'auth/profile'
+            profile:'auth/profile',
+            workItems:'project/workItems'
         })
     }
 }
 </script>
+<style scoped>
+.selected{
+    background: #fafafa;
+    color: black;
+    transition:none;
+}
+.notselected{
+    transition:none;
+}
+</style>
 
