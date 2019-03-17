@@ -1,10 +1,10 @@
-import router from '../router/index'
 import axios from 'axios'
 
 const getters = {
     role:(state)=>state.currentProj.role,
     participants:(state)=>state.currentProj.participants,
-
+    project:(state)=>state.currentProj,
+    loading:(state)=>state.loading
 };
 
 const mutations = {
@@ -18,9 +18,8 @@ const mutations = {
 
 const actions = {
     fetchProject({commit}, projId){
-        router.push({name:'project', params:{id:projId}})
         commit('setLoading', true);
-        axios.get(`/api/projects/${projId}`).then(
+        axios.get(`/api/project/${projId}`).then(
             r=>{
                 commit('setProject', r.data);
                 commit('setLoading', false);

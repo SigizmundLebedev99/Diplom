@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\Images\Avatars\" />
     <Folder Include="wwwroot\Images\wiImages\" />
   </ItemGroup>

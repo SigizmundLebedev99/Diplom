@@ -43,8 +43,8 @@
 </template>
 <script>
   import { mapMutations, mapGetters, mapActions} from "vuex";
-  import onResize from "../mixins/on-resize"
-  import formValidation from "../mixins/form-validation"
+  import onResize from "../../mixins/on-resize"
+  import formValidation from "../../mixins/form-validation"
   export default {
     mixins:[onResize, formValidation],
     data(){

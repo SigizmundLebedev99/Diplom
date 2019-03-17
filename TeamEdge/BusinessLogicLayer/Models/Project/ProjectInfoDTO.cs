@@ -1,4 +1,6 @@
-﻿namespace TeamEdge.Models
+using TeamEdge.DAL.Models;
+
+namespace TeamEdge.Models
 {
     public struct ProjectInfoDTO
     {
@@ -6,5 +8,6 @@
         public int Id { get; set; }
         public string Logo { get; set; }
         public string Name { get; set; }
+        public ProjectAccessLevel AccessLevel { get; set; }
     }
 }

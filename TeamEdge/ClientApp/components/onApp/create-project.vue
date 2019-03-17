@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import onResize from '../mixins/on-resize'
-import formValidation from '../mixins/form-validation'
+import onResize from '../../mixins/on-resize'
+import formValidation from '../../mixins/form-validation'
 import { mapActions } from 'vuex'
 export default {
     mixins:[onResize, formValidation],

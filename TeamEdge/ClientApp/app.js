@@ -31,6 +31,8 @@ const app = new Vue({
   ...App
 })
 
+store.dispatch('auth/signedIn')
+
 export {
   app,
   router,

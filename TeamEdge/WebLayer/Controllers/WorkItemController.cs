@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -53,6 +53,13 @@ namespace TeamEdge.WebLayer.Controllers
             model.CreatorId = User.Id();
             var res = await _workItemService.UpdateWorkItem(number, model);
             return res.GetResult();
+        }
+
+        [HttpGet("project/{projectId}/user/{userId}")]
+        public async Task<IActionResult> GetTasksForUser(int projectId, int userId)
+        {
+            var res = await _workItemService.GetTasksForUser(projectId, userId);
+            return Ok(res);
         }
     }
 }

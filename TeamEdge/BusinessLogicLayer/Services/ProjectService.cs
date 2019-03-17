@@ -60,7 +60,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<ProjectInfoDTO> GetProjectInfo(int projectId, int userId)
         {
-            if (!await _context.UserProjects.AnyAsync(u => u.UserId == userId && u.ProjectId == projectId))
+            var up = await _context.UserProjects.Where(u => u.UserId == userId && u.ProjectId == projectId).Select(e => new { e.ProjRole }).FirstOrDefaultAsync();
+            if (up == null)
                 throw new UnauthorizedException();
 
             return await _context.Projects.Select(p => new ProjectInfoDTO
@@ -75,7 +76,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 }).ToArray(),
                 Id = p.Id,
                 Logo = p.Logo,
-                Name = p.Name
+                Name = p.Name,
+                AccessLevel = up.ProjRole
             }).FirstOrDefaultAsync(e=>e.Id == projectId);
         }
 

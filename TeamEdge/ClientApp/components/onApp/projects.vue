@@ -21,7 +21,7 @@
                     <v-card v-for="(p,i) in projects" :key="i" dark width="200px" class="m-2 elevation-12">
                         <v-toolbar dark dense color="primary" class="nopad" flat>
                                 <v-spacer></v-spacer>
-                                <v-btn flat small class="text-none">
+                                <v-btn flat small class="text-none" @click="goToProj(p.id)">
                                     Перейти
                                     <v-icon dark rigth class="ml-2">arrow_forward</v-icon>
                                 </v-btn>
@@ -30,7 +30,7 @@
                         <v-card-text>
                             <v-layout align-center column>
                                 <v-avatar size="100" class="mb-3" color="white">
-                                    <v-icon v-if="!p.logo" size="80" light>work</v-icon>
+                                    <v-icon v-if="!p.logo" size="80" light color="primary">work</v-icon>
                                     <img v-else :src="p.logo"/>
                                 </v-avatar>
                                 <span>Вы {{partRoles[p.accessStatus]}}</span>
@@ -54,9 +54,9 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
-import onResize from '../mixins/on-resize'
+import onResize from '../../mixins/on-resize'
 import createProjects from './create-project'
-import roles from '../data/roles'
+import roles from '../../data/roles'
 export default {
     mixins:[onResize],
     components:{
@@ -65,7 +65,10 @@ export default {
     methods:{
         ...mapActions({
             fetchProjects:'projects/fetchProjects'
-        })
+        }),
+        goToProj(projId){
+            this.$router.push({name:'project', params:{projId:projId}})
+        }
     },
     computed:{
         ...mapGetters({

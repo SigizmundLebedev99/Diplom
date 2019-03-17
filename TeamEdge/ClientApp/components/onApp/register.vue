@@ -51,8 +51,8 @@
 </template>
 
 <script>
-  import onResize from "../mixins/on-resize"
-  import formValidation from "../mixins/form-validation"
+  import onResize from "../../mixins/on-resize"
+  import formValidation from "../../mixins/form-validation"
   export default {
     mixins:[onResize, formValidation],
     data(){

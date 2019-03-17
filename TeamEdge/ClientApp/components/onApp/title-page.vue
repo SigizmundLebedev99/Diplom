@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import onResize from '../mixins/on-resize'
+import onResize from '../../mixins/on-resize'
 export default {
   mixins:[onResize]
 }

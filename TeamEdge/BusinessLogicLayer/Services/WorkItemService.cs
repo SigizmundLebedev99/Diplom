@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -74,6 +74,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (!operRes.Succeded)
                 return operRes;
             return await GetRepository(model.Code).UpdateWorkItem(number, model);
+        }
+
+        public async Task<IEnumerable<ItemDTO>> GetTasksForUser(int projectId, int userId)
+        {
+            await _validationService.ValidateProjectAccess(projectId, userId);
+            return await _context.Tasks.Where(e => e.AssignedToId == userId && e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector)
+                .Concat(_context.SubTasks.Where(e => e.AssignedToId == userId && e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector)).ToListAsync();
         }
 
         #region Privates

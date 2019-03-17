@@ -11,7 +11,7 @@ const mutations = {
   signedIn(state) {
     var user = localStorage.getItem('user');
     if(user)
-      state.profile = (JSON.parse(user))
+      state.profile = JSON.parse(user)
     else
       state.profile = null;
   },
@@ -26,6 +26,9 @@ const mutations = {
       router.push(returnUrl);
       state.returnUrl = null;
     }
+    else{
+      router.push({name:'projects'});
+    }
   },
   signOut(state){
     state.profile = null;
@@ -38,13 +41,12 @@ const actions = {
   signedIn({commit, dispatch, getters}){
     commit('signedIn');
     if(getters.profile){
-      router.push({name:'projects'});
       dispatch('projects/fetchProjects',{},{root:true});
     }
   },
   signIn({commit, dispatch}, profile){
     commit('signIn', profile);
-    router.push({name:'projects'});
+    
     dispatch('projects/fetchProjects',{},{root:true});
   },
   reSign({commit}, returnUrl){
@@ -64,7 +66,7 @@ const state = ()=>({
   open: false,
   returnUrl:null,
   profile: {
-    Id:null,
+    userId:null,
     firstName:null,
     lastName:null,
     patronymic:null,
