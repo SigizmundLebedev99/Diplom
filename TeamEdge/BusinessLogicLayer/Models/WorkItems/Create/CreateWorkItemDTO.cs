@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using TeamEdge.WebLayer;
 
 namespace TeamEdge.Models
@@ -10,7 +10,6 @@ namespace TeamEdge.Models
         public string Code { get; set; }
         public string Name { get; set; }
         public string DescriptionText { get; set; }
-        public string DescriptionCode { get; set; }
         public int[] FileIds { get; set; }
         public string[] Branches { get; set; }
         public string[] Tags { get; set; }

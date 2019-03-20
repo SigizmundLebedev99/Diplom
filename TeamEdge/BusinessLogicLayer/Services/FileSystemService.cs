@@ -23,7 +23,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public FileSystemService(PathParams parameters, IHostingEnvironment environment, IMemoryCache cache)
         {
             _params = parameters;
-            //_logger = logger;
             _environment = environment;
             _cache = cache;
         }
@@ -39,12 +38,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 return null;
 
             string hash = GetHashFromFile(file.OpenReadStream());
-
-            //_logger.LogDebug("Compute new doc location.");
-            string dir1 = Path.Combine(_environment.ContentRootPath, _params.FileDirectoryPath,hash.Substring(0, 2));
+            string dir1 = Path.Combine(_environment.ContentRootPath, _params.FileDirectoryPath, hash.Substring(0, 2));
             string dir2 = $"{dir1}/{hash.Substring(2, 2)}/";
-
-            //_logger.LogDebug("Check directory existance.");
             if (!Directory.Exists(dir1))
             {
                 Directory.CreateDirectory(dir1);
@@ -52,18 +47,29 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }
             else if (!Directory.Exists(dir2))
                 Directory.CreateDirectory(dir2);
-
-            //_logger.LogDebug("Start copy doc to server.");
             string result = dir2 + file.FileName;
             using (FileStream sw = new FileStream(result, FileMode.Create))
             {
                 await file.CopyToAsync(sw);
             }
-
-            //_logger.LogDebug($"File \"{file.FileName}\" save to path \"${result}\".");
-
-            //_logger.LogDebug("End of DocsSave action.");
             return result.Replace(_environment.ContentRootPath, "");
+        }
+
+        public async Task<string> ImageSave(IFormFile file)
+        {
+            if (file == null || string.IsNullOrEmpty(_params.FileDirectoryPath))
+                return null;
+
+            string hash = GetHashFromFile(file.OpenReadStream());
+            string ext = file.FileName.Split('.').Last();
+            string result = Path.Combine(_environment.WebRootPath, "Images", "Avatars", $"{hash}.{ext}");
+
+            using (var fs = new FileStream(result, FileMode.Create))
+            {
+                await file.CopyToAsync(fs);
+            }
+
+            return result.Replace(_environment.WebRootPath, "");
         }
 
         public async Task<string> AvatarSave(IFormFile file, int userId)
@@ -71,14 +77,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (file == null || string.IsNullOrEmpty(_environment.WebRootPath))
                 return null;
 
-            //_logger.LogDebug($"AvatarSave action for file {file.FileName} started!");
-
-            ////_logger.LogDebug("Check for image.");
             Image<Rgba32> src = Image.Load(file.OpenReadStream());
-            ////_logger.LogDebug("Resize image to 128x128.");
             Image<Rgba32> image = src.Clone(e => e.Resize(128, 128));
-
-            ////_logger.LogDebug("Compute hash from new image.");
             string hash = GetHashFromFile(file.OpenReadStream());
             string ext = file.FileName.Split('.').Last();
             string result = Path.Combine(_environment.WebRootPath, "Images","Avatars",$"{hash}.{ext}");
@@ -87,9 +87,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 await file.CopyToAsync(fs);
             }
-            //_logger.LogDebug($"File \"{file.FileName}\" save to path \"${result}\".");
 
-            //_logger.LogDebug("End of AvatarSave action.");
             var res = result.Replace(_environment.WebRootPath, "");
             if (!_cache.TryGetValue(userId, out var value))
             {

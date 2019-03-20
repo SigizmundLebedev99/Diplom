@@ -69,7 +69,7 @@
         </v-navigation-drawer>
         <v-toolbar dense color="primary" dark app>
             <v-toolbar-side-icon @click.stop="mini = !mini"></v-toolbar-side-icon>
-            <v-toolbar-title v-if="ofSize({xs:false, sm:true})" class="white--text">TEAM EDGE</v-toolbar-title>
+            <v-toolbar-title class="white--text hidden-sm-and-down">TEAM EDGE</v-toolbar-title>
             <v-spacer></v-spacer>
             <span class="white--text">{{profile.fullName}}</span>
             <v-avatar size="36px" class="ml-3">
@@ -96,10 +96,8 @@
 <script>
 import sideMenu from '../side-menu'
 import createWI from './create-wi.vue'
-import onResize from '../../mixins/on-resize'
 import {mapActions,mapGetters} from 'vuex'
 export default {
-    mixins:[onResize],
     components:
     {
         'side-menu':sideMenu,

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +71,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         [HttpPost("file/image")]
-        public async Task<IActionResult> SaveImage(IFormFile file)
+        public async Task<IActionResult> SaveAvatar(IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest();
@@ -84,13 +84,6 @@ namespace TeamEdge.WebLayer.Controllers
         {
             var result = await _fileWorkService.GetFilesForProject(User.Id(), projectId);
             return Ok(result);
-        }
-
-        [HttpDelete("file/{fileId}")]
-        public async Task<IActionResult> DeleteFile(int fileId)
-        {
-            await _fileWorkService.DeleteFile(User.Id(), fileId);
-            return Ok();
         }
     } 
 }

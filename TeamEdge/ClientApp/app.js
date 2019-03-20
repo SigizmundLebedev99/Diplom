@@ -8,7 +8,9 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import interceptionSetup from './interception/interceptors'
+import CKEditor from '@ckeditor/ckeditor5-vue';
 
+Vue.use( CKEditor );
 Vue.use(Vuetify, {
   theme: {
     primary: '#5271ff',

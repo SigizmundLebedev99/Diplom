@@ -3,7 +3,7 @@
         <v-toolbar color="transparent" flat dense>
             <v-toolbar-title>Единицы работы</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon @click="openCreateDialog({dialog:true})">
+            <v-btn icon @click="preWICreating()">
                 <v-icon>
                     add
                 </v-icon>
@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import {mapActions} from 'vuex'
 export default {
     methods:{
-        ...mapMutations({openCreateDialog:'createWorkItem/setDialog'})
+        ...mapActions({preWICreating:'createWorkItem/preWICreating'})
     }
 }
 </script>

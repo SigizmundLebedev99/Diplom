@@ -3,7 +3,7 @@
     <v-toolbar color="primary" dark>
       <v-toolbar-title @click="$router.push('/')">
         <img src="/logos/TEcut.png" class="mr-2" :height="ofSize({xs:50,sm:46,md:55})"/>
-        <span v-show="ofSize({xs:false, sm:true})">TEAM EDGE</span>
+        <span class="hidden-sm-and-down">TEAM EDGE</span>
       </v-toolbar-title>
       <v-layout row align-center justify-end>
           <template v-if="!profile">

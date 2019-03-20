@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -33,7 +34,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task<FileDTO> CreateFile(CreateFileDTO model)
         {
             await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId);
-
             string path = await _fileSystemService.DocsSave(model.File);
             return await CreateFile(model, path, false);
         }
@@ -41,12 +41,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task<FileDTO> CreateImage(CreateFileDTO model)
         {
             await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId);
-            using (MemoryStream stream = new MemoryStream())
-            {
-                await model.File.CopyToAsync(stream);
-                string path = $"{model.File.ContentType};base64, " + Convert.ToBase64String(stream.ToArray());
-                return await CreateFile(model, path, true);
-            }  
+            string path = await _fileSystemService.ImageSave(model.File);
+            return await CreateFile(model, path, true);
         }
 
         private async Task<FileDTO> CreateFile(CreateFileDTO model, string path, bool isPicture)
@@ -81,7 +77,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 DateOfCreation = file.DateOfCreation,
                 FileName = file.FileName,
                 IsPicture = isPicture,
-                ImageBase64 = isPicture ? file.Path : null
+                Path = isPicture ? file.Path : null
             };
         }
 
@@ -145,7 +141,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             },
             DateOfCreation = e.DateOfCreation,
             IsPicture = e.IsPicture,
-            ImageBase64 = e.IsPicture?e.Path:null
+            Path = e.IsPicture?e.Path:null
         };
     }
 }
