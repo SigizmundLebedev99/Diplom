@@ -5,7 +5,7 @@
             </v-flex>
             <v-flex xs12 md5>
                 <v-card  class="mb-2">
-                    <v-toolbar color="transparent" flat>
+                    <v-toolbar color="transparent" flat dense>
                         <v-toolbar-title>Ваши задачи</v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-btn icon>
@@ -35,7 +35,7 @@
             </v-flex>
             <v-flex xs12 md4>
                 <v-card>
-                    <v-toolbar color="transparent" flat>
+                    <v-toolbar color="transparent" flat dense>
                         <v-toolbar-title>Участники проекта</v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-btn icon>

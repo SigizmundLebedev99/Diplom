@@ -38,7 +38,7 @@
             <v-divider class="m-0"></v-divider>
             <v-list class="p-0">
                 <v-list-tile :class="routeSel('project')"
-                    @click="goTo('project')">
+                    @click.stop="goTo('project')">
                     <v-list-tile-action>
                     <v-icon :class="routeSel('project')">dashboard</v-icon>
                     </v-list-tile-action>
@@ -48,7 +48,7 @@
                     </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile :class="routeSel('dashboard')"
-                    @click="goTo('dashboard')">
+                    @click.stop="goTo('dashboard')">
                     <v-list-tile-action>
                     <v-icon :class="routeSel('dashboard')">build</v-icon>
                     </v-list-tile-action>
