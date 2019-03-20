@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" :width="ofSize({xs:350, sm:400})">
+    <v-dialog v-model="opened" :width="ofSize({xs:350, sm:400})" persistent>
         <v-btn slot="activator">
             <v-icon>add</v-icon>
             <span class="text-none">Создать проект</span>
@@ -7,6 +7,12 @@
         <v-card class="elevation-12">
             <v-toolbar dark color="primary">
                 <v-toolbar-title>Новый проект</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon @click="close()">
+                  <v-icon >
+                    close
+                  </v-icon>
+                </v-btn>
             </v-toolbar>
             <v-card-text>
                 <v-form ref="form" v-model="valid">
@@ -51,7 +57,7 @@ export default {
             this.validate();
             if(this.valid){
                 this.$http.post("api/project", {Name:this.name, Logo:this.logo}).then(
-                    r=>{this.fetchProjects(); this.dialog = false;},
+                    r=>{this.fetchProjects(); this.close();},
                     r=>{console.log(r.response)}
                 );
             }
@@ -60,22 +66,17 @@ export default {
             const files = $event.target.files || $event.dataTransfer.files;
             if (!files.length) return;
             var fd  = new FormData();
-            fd.append('file', files[0]); 
+            fd.append('file', files[0]);
             this.$http.post('/api/file/image', fd, { headers: {'Content-Type': 'multipart/form-data' }}).then(
                 r=>{this.logo = r.data;},
                 r=>{console.log(r.responce);}
             );
         },
-        ...mapActions({fetchProjects:'projects/fetchProjects'})
-    },
-    computed:{
-        dialog:{
-            get(){return this.opened},
-            set(value){
-                this.logo = "";
-                this.reset();
-                this.opened = false;  
-            }
+        ...mapActions({fetchProjects:'projects/fetchProjects'}),
+        close(){
+          this.logo = "";
+          this.reset();
+          this.opened = false;
         }
     }
 }

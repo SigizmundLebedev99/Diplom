@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar color="primary" dark>
+    <v-toolbar color="primary" dark app>
       <v-toolbar-title @click="$router.push('/')">
         <img src="/logos/TEcut.png" class="mr-2" :height="ofSize({xs:50,sm:46,md:55})"/>
         <span class="hidden-sm-and-down">TEAM EDGE</span>
@@ -21,9 +21,11 @@
           <side-menu/>
       </v-layout>
     </v-toolbar>
+    <v-content>
     <router-view class="view"></router-view>
+    </v-content>
     <login></login>
-    <v-footer height="auto" class="footer-keeper">
+    <v-footer height="auto" class="footer-keeper" app>
       <v-layout column class="grey darken-2 white--text text-xs-center">
           <v-container>
           <p>Контактные данные:</p>
@@ -71,9 +73,3 @@
       }
     }
 </script>
-
-<style scoped>
-.view{
-  min-height: 100%;
-}
-</style>
