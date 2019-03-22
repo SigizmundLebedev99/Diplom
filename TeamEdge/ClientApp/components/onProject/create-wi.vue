@@ -1,43 +1,73 @@
 <template>
-    <v-dialog v-model="dialog" :width="ofSize({xs:'95%', sm:'70%', md:'60%'})" scrollable>
+    <v-dialog v-model="dialog" :width="ofSize({xs:'95%', sm:'70%', md:'50%'})" scrollable persistent>
         <v-card>
-            <v-card-title class="primary white--text">
-                <span class="title">Создание единицы работы</span>
+            <v-card-title class="primary white--text pt-0 pb-0 pr-0">
+                <v-layout justify-space-between align-center>
+                    <span class="title">Создание единицы работы</span>
+                    <v-btn icon dark @click="setDialog(false)">
+                        <v-icon>
+                            close
+                        </v-icon>
+                    </v-btn>
+                </v-layout>
             </v-card-title>
             <v-card-text>
                 <v-form>
-                <v-text-field v-model="model.name"></v-text-field>
-                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+                    <v-subheader>Тип единицы работы</v-subheader>
+                    <v-select class="ml-3 pt-0 mt-0 mr-3"
+                        v-model="wiType"
+                        :items="workItems">
+                        <template v-slot:selection="data">
+                            <span>{{data.item.name}}</span>
+                        </template>
+                        <template v-slot:item="{ index, item }">
+                            <span>{{item.name}}</span>
+                        </template>
+                    </v-select>
+                    <v-subheader>Название</v-subheader>
+                    <v-text-field v-model="model.name" class="ml-3 pt-0 mt-0 mr-3"></v-text-field>
+                    <v-subheader>Описание</v-subheader>
+                    <div class="ml-3 mr-3">
+                        <ckeditor :editor="editor" v-model="model.descriptionText" :config="editorConfig"></ckeditor>
+                    </div>
                 </v-form>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="alert()">Alert</v-btn>
+                <v-btn icon @click="openFiles()">
+                    <v-icon>
+                        attach_file
+                    </v-icon>
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn class="primary" @click="submit()">Создать</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapActions, mapMutations} from 'vuex'
 import onResize from '../../mixins/on-resize'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import MyCustomUploadAdapterPlugin from '../../image-upload-adapter'
+import workItems from '../../data/work-items'
 export default {
     mixins:[onResize],
     data:()=>({
         model:{
-            name:null
+            name:null,
+            descriptionText:''
         },
         editor: ClassicEditor,
-        editorData: '',
         editorConfig: {
             extraPlugins: [ MyCustomUploadAdapterPlugin ]
-        }
+        },
+        wiType:null
     }),
     methods:{
-        ...mapMutations({setDialog:'createWorkItem/setDialog'}),
-        alert(){
-            console.log(this.editorData);
+        ...mapActions({setDialog:'createWorkItem/setDialog', openFiles:'fileSelector/open'}),
+        submit(){
+            
         }
     },
     computed:{
@@ -46,6 +76,9 @@ export default {
             set(value){
                 this.setDialog(value);
             }
+        },
+        workItems(){
+            return workItems;
         }
     }
 }

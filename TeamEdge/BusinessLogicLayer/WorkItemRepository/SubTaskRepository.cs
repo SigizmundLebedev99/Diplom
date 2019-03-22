@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
     {
         public SubTaskRepository(IServiceProvider provider) : base(provider) { }
 
-        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<SubTask>(model);
@@ -56,7 +56,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var query = _context.SubTasks
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
                 .Include(e => e.Description).ThenInclude(e => e.Tags)
-                .Include(e => e.Description).ThenInclude(e => e.Branches)
                 .Include(e => e.Parent);
 
             var entity = await query

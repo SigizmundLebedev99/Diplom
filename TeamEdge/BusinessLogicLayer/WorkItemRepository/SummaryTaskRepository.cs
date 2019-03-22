@@ -17,7 +17,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
         }
 
-        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<SummaryTask>(model);
@@ -68,7 +68,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var query = _context.SummaryTasks
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
-                .Include(e => e.Description).ThenInclude(e => e.Branches)
                 .Include(e=> e.Description).ThenInclude(e=>e.Tags)
                 .Include(e => e.Children)
                 .Include(e=>e.SummaryTaskChildren)

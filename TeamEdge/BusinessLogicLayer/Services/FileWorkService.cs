@@ -122,7 +122,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task DeleteFile(int userId, int fileId)
         {
             var file = await _context.Files.FirstOrDefaultAsync(e => e.Id == fileId);
-            await _validationService.ValidateProjectAccess(file.ProjectId, userId, e=>e.CanWrite);
+            await _validationService.ValidateProjectAccess(file.ProjectId, userId, e=>e.CanReview);
             _fileSystemService.RemoveFile(file.Path, file.IsPicture);
             _context.Files.Remove(file);
             await _context.SaveChangesAsync();

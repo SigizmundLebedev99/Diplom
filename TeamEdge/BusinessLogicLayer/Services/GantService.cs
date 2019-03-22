@@ -13,7 +13,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
     public class GantService
     {
         readonly TeamEdgeDbContext _context;
-        readonly IValidationService _validationService;
         public GantService(TeamEdgeDbContext context)
         {
             _context = context;

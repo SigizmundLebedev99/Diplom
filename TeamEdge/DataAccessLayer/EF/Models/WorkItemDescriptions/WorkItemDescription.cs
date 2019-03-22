@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,7 +20,6 @@ namespace TeamEdge.DAL.Models
         public User LastUpdater { get; set; }
         public DateTime? LastUpdate { get; set; }
 
-        public ICollection<BranchLink> Branches { get; set; }
         public ICollection<Comment> Comments { get; set; }
         [PropertyChanges(typeof(FileChangeFactory))]
         public ICollection<WorkItemFile> Files { get; set; }

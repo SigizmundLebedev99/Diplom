@@ -7,6 +7,6 @@ export default {
       next();
       return;
     }
-    store.dispatch('auth/reSign');
+    store.dispatch('auth/reSign', store.state.route.path);
   }
 };

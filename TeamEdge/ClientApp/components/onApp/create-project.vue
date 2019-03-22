@@ -16,7 +16,8 @@
             </v-toolbar>
             <v-card-text>
                 <v-form ref="form" v-model="valid">
-                    <v-text-field label="Название" :rules="nameRules" v-model="name" required/>
+                    <v-subheader>Название</v-subheader>
+                    <v-text-field :rules="nameRules" v-model="name" required/>
                     <v-layout column align-center>
                         <v-subheader>Логотип</v-subheader>
                         <img v-show="logo" :src="logo" height="124px"/>

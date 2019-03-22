@@ -5,7 +5,6 @@ import store from './store'
 import { sync } from 'vuex-router-sync'
 import App from 'components/app-root'
 import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import interceptionSetup from './interception/interceptors'
 import CKEditor from '@ckeditor/ckeditor5-vue';

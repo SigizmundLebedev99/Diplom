@@ -1,8 +1,6 @@
 const state = ()=>({
     dialog:false,
     predefinedCode:null,
-    fileIds:[],
-    tags:[]
 });
 
 const getters = {
@@ -10,35 +8,23 @@ const getters = {
 }
 
 const actions = {
-    preWICreating({commit, rootState}, predefinedCode){
-        commit('setDialog', {dialog:true, predefinedCode});
-        commit('setProject', rootState.getters['project/project'].id);
+    preWICreating({commit}, predefinedCode){
+        commit('setDialog', true);
+    },
+    setDialog({commit}, dialog){
+        commit('setDialog', dialog);
+        if(!dialog){
+            commit('clear');
+        }
     }
 }
 
 const mutations = {
-    setDialog(state, {dialog,predefinedCode}){
+    setDialog(state, dialog){
         state.dialog = dialog;
-        if(!dialog)
-            state.predefinedCode = null;
-        else
-        {
-            if(predefinedCode)
-                state.predefinedCode = predefinedCode;
-        }
     },
-    setProject(state, payload){
-        state.entity.projectId = payload;
-    },
-    addFileId(state, payload){
-        if(state.dialog)
-            state.fileIds.push(payload);
-    },
-    clear(state){
-        if(state.fileIds)
-            state.fileIds = [];
-        if(state.tags)
-            state.tags = [];
+    predefined(state,payload){
+        state.predefinedCode = payload;
     }
 }
 

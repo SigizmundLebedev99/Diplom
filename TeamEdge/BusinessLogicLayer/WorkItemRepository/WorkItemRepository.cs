@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -269,7 +269,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         }
 
         public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int project);
-        public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model);
+        public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null);
         public abstract IQueryable<ItemDTO> GetItems(GetItemsDTO model);
         public abstract Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model);
     }

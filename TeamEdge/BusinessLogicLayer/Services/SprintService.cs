@@ -28,7 +28,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<OperationResult<SprintDTO>> CreateSprint(CreateSprintDTO model)
         {
-            await _validationService.ValidateProjectAccess(model.ProjectId, model.CreatorId, e => e.CanWrite);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.CreatorId, e => e.CanReview);
 
             var entity = _mapper.Map<Sprint>(model);
             entity.DateOfCreation = DateTime.Now;

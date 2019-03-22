@@ -20,7 +20,7 @@ export const routes = [
     ]
   },
   {
-    path:'/project/:projId', component: Project,
+    path:'/project/:projId', component: Project, beforeEnter: ifAuthenticated,
     children:[
       {name:'project', path:'/', component: Home, beforeEnter: ifAuthenticated},
       {name:'dashboard', path:'dashboard', component: Dashboard, beforeEnter: ifAuthenticated}

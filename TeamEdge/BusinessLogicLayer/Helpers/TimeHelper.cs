@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,7 +53,7 @@ namespace TeamEdge.BusinessLogicLayer.Helpers
             return BitConverter.ToInt16(bytes);
         }
 
-        public static bool CheckTimeConstraints(ITimeConstraint obj)
+        public static bool CheckTimeConstraints(this ITimeConstraint obj)
         {
             if(obj.StartDate!=null && obj.EndDate != null && obj.Duration != null)
             {

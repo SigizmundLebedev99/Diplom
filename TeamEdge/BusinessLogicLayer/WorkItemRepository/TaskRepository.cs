@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .FirstOrDefaultAsync();
         }
 
-        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<_Task>(model);
@@ -69,7 +69,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var query = _context.Tasks
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
-                .Include(e => e.Description).ThenInclude(e => e.Branches)
                 .Include(e => e.Description).ThenInclude(e => e.Tags)
                 .Include(e=> e.AssignedTo)
                 .Include(e => e.Parent);

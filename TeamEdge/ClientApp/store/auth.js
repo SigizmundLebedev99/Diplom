@@ -23,7 +23,7 @@ const mutations = {
     }
     state.open = false;
     if(state.returnUrl){
-      router.push(returnUrl);
+      router.push(state.returnUrl);
       state.returnUrl = null;
     }
     else{

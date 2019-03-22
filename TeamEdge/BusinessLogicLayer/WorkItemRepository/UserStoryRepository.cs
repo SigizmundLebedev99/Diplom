@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,7 +19,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Select(SelectExpression).FirstOrDefaultAsync();
         }
 
-        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<UserStory>(model);
@@ -28,7 +28,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             operRes.Plus(checkResult);
 
             if (model.ParentId != null)
-                operRes.Plus(await CheckParent<Feature>(model.ProjectId, model.ParentId.Value));
+                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
             
             if (!operRes.Succeded)
                 return operRes;
@@ -40,7 +40,10 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (children != null)
             {
                 foreach (var t in children)
+                {
                     t.ParentId = entity.DescriptionId;
+                    t.EpickId = model.ParentId;
+                }
                 _context.Tasks.UpdateRange(children);
             }
             
@@ -66,7 +69,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var query = _context.UserStories
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
-                .Include(e => e.Description).ThenInclude(e => e.Branches)
                 .Include(e => e.Description).ThenInclude(e => e.Tags)
                 .Include(e => e.Children);
 
@@ -82,7 +84,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
             if (model.ParentId != null)
-                operRes.Plus(await CheckParent<Feature>(model.ProjectId, model.ParentId.Value));
+                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
 
             operRes.Plus(checkResult);
             operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
@@ -130,7 +132,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Parent = e.Parent == null? null : new ItemDTO
             {
                 DescriptionId = e.Parent.DescriptionId,
-                Code = WorkItemType.Feature.Code(),
+                Code = WorkItemType.Epick.Code(),
                 Name = e.Parent.Name,
                 Number = e.Parent.Number
             },

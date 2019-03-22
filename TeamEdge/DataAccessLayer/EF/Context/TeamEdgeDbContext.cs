@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,13 +18,9 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<Epick> Epicks { get; set; }
 
-        public virtual DbSet<Feature> Features { get; set; }
-
         public virtual DbSet<UserStory> UserStories { get; set; }
 
         public virtual DbSet<_Task> Tasks { get; set; }
-
-        public virtual DbSet<BranchLink> CodeLinks { get; set; }
 
         public virtual DbSet<WorkItemDescription> WorkItemDescriptions { get; set; }
 
@@ -53,8 +49,7 @@ namespace TeamEdge.DAL.Context
             return Tasks.Where(filter).Select(selector)
                 .Concat(UserStories.Where(filter).Select(selector))
                 .Concat(Epicks.Where(filter).Select(selector))
-                .Concat(SummaryTasks.Where(filter).Select(selector))
-                .Concat(Features.Where(filter).Select(selector));
+                .Concat(SummaryTasks.Where(filter).Select(selector));
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

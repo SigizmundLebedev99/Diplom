@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +14,9 @@ namespace TeamEdge.DAL.Models
         public DateTime? StartDate { get; set; }
         public short? Duration { get; set; }
         public DateTime? EndDate { get; set; }
+
+        public virtual ICollection<UserStory> UserStories { get; set; }
+        public virtual ICollection<_Task> Tasks { get; set; }
 
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]

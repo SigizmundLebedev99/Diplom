@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamEdge.DAL.Models
 {
@@ -16,12 +16,12 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }
 
-        public bool CanWrite
+        public bool CanReview
         {
             get
             {
                 return ProjRole == ProjectAccessLevel.Administer
-                    || ProjRole == ProjectAccessLevel.Write;
+                    || ProjRole == ProjectAccessLevel.Review;
             }
         }
 
@@ -80,8 +80,8 @@ namespace TeamEdge.DAL.Models
 
     public enum ProjectAccessLevel
     {
-        Read,
-        Write,     
+        Write,
+        Review,
         Administer
     }
 }

@@ -90,18 +90,21 @@
             <router-view v-show="!loading"></router-view>
         </v-content>
         <create-work-item></create-work-item>
+        <file-selector></file-selector>
     </div>
 </template>
 
 <script>
 import sideMenu from '../side-menu'
 import createWI from './create-wi.vue'
+import fileSelector from './file-selector'
 import {mapActions,mapGetters} from 'vuex'
 export default {
     components:
     {
         'side-menu':sideMenu,
-        'create-work-item':createWI
+        'create-work-item':createWI,
+        'file-selector':fileSelector
     },
     data:function(){
         return{

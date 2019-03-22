@@ -1,24 +1,24 @@
 <template>
     <div>
-        <v-layout row justify-space-between align-center :class="ofSize({xs:'mr-1 ml-1 mt-3', sm:'mr-5 mt-3 ml-5'})">
+        <v-layout row justify-space-between align-center :class="ofSize({xs:'mr-1 ml-1 mt-2 mb-2', sm:'mr-5 ml-5 mt-2 mb-2'})">
             <span class="title ml-3">
                 Ваши проекты
             </span>
             <create-project></create-project>
         </v-layout>
         <v-divider></v-divider>
-        <v-layout justify-center v-show="loading">
+        <v-layout justify-center v-show="loading" class="contsraint mt-4">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
         </v-layout>
         <div v-show="!loading">
             <v-layout v-if="projects.length === 0" justify-space-around align-center>
-                <span class="title ml-3 text-xs-center">
+                <span class="title ml-3 text-xs-center contsraint">
                     На данный момент у вы не принимаете участия ни в каком проекте.
                 </span>
             </v-layout>
             <v-container v-else>
                 <v-layout wrap :class="ofSize({xs:'column align-center', sm:'row justify-center'})">
-                    <v-card v-for="(p,i) in projects" :key="i" dark width="200px" class="m-2 elevation-12">
+                    <v-card v-for="(p,i) in projects" :key="i" dark width="200px" class="mr-4 elevation-12">
                         <v-toolbar dark dense color="primary" class="nopad" flat>
                                 <v-spacer></v-spacer>
                                 <v-btn flat small class="text-none" @click="goToProj(p.id)">
@@ -80,6 +80,12 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.contsraint{
+    min-height: 450px;
+}
+</style>
 
 
 

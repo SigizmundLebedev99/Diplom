@@ -26,7 +26,6 @@ namespace TeamEdge.Mapper
             CreateMap<CreateTaskDTO, _Task>();
             CreateMap<CreateTaskDTO, SubTask>();
             CreateMap<CreateUserStoryDTO, UserStory>();
-            CreateMap<CreateWorkItemDTO, Feature>();
             CreateMap<CreateWorkItemDTO, Epick>();
 
             CreateMap<CreateWorkItemDTO, WorkItemDescription>()
@@ -37,10 +36,6 @@ namespace TeamEdge.Mapper
                 .ForMember(e => e.Tags, c => c.MapFrom(e => e.Tags.Select(r => new WorkItemTag
                 {
                     Tag = r
-                })))
-                .ForMember(e=>e.Branches, c=>c.MapFrom(e=>e.Branches.Select(r=>new BranchLink
-                {
-                    Branch = r
                 })));
 
             CreateMap<CreateSprintDTO, Sprint>();
@@ -49,7 +44,6 @@ namespace TeamEdge.Mapper
 
             CreateMap<User, UserDTO>();
             CreateMap<WorkItemDescription, DescriptionDTO>();
-            CreateMap<Feature, WorkItemDTO>();
 
             CreateMap<CreateCommentDTO, Comment>()
                 .ForMember(e => e.CreatorId, c => c.MapFrom(e => e.From.Id))

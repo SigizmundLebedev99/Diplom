@@ -57,7 +57,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<OperationResult<WorkItemDTO>> CreateWorkItem(CreateWorkItemDTO model)
         {
-            var operRes = await ValidateItemDTO(model);
+            var (operRes, userProj) = await ValidateItemDTO(model);
             if (!operRes.Succeded)
                 return operRes; 
             var description = _mapper.Map<WorkItemDescription>(model);
@@ -65,12 +65,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
             description.DateOfCreation = DateTime.Now;
             _context.WorkItemDescriptions.Add(description);
             
-            return await GetRepository(model.Code).CreateWorkItem(description, model);
+            return await GetRepository(model.Code).CreateWorkItem(description, model, userProj);
         }
 
         public async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
-            var operRes = await ValidateItemDTO(model);
+            var (operRes,userProj) = await ValidateItemDTO(model);
             if (!operRes.Succeded)
                 return operRes;
             return await GetRepository(model.Code).UpdateWorkItem(number, model);
@@ -98,20 +98,18 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return attr;
         }
 
-        private async Task<OperationResult<WorkItemDTO>> ValidateItemDTO(CreateWorkItemDTO model)
+        private async Task<(OperationResult<WorkItemDTO> operRes, UserProject userProj)> ValidateItemDTO(CreateWorkItemDTO model)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
-            string project = await _context.Projects.Where(p => p.Id == model.ProjectId).Select(e => e.Name).FirstOrDefaultAsync();
-            if (string.IsNullOrEmpty(project))
+            var userProj = await _context.UserProjects.Where(p => p.ProjectId == model.ProjectId && p.UserId == model.CreatorId).FirstOrDefaultAsync();
+            if (!await _context.Projects.AnyAsync(e=>e.Id == model.ProjectId))
                 throw new NotFoundException("project_nf");
-            if (!await _context.UserProjects.AnyAsync(p => p.UserId == model.CreatorId && p.ProjectId == model.ProjectId))
+            if (userProj == null)
                 throw new UnauthorizedException();
 
-
-            operRes.Plus(await _validationService.ValidateBranches(model.Branches, project));
             operRes.Plus(await _validationService.ValidateFileIds(model.FileIds, model.ProjectId));
 
-            return operRes;
+            return (operRes,userProj);
         }
         #endregion
     }

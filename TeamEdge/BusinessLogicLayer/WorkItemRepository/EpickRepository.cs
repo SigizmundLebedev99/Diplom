@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -22,12 +22,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Select(SelectExpression).FirstOrDefaultAsync();
         }
 
-        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model)
+        public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<Epick>(model);
             
-            var checkResult = await CheckChildren<Feature>(model.ChildrenIds, model.ProjectId);
+            var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
             operRes.Plus(checkResult);
 
             if (!operRes.Succeded)
@@ -41,7 +41,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 foreach (var t in children)
                     t.ParentId = entity.DescriptionId;
-                _context.Features.UpdateRange(children);
+                _context.UserStories.UpdateRange(children);
             }
 
             _context.Epicks.Add(entity);
@@ -68,7 +68,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var query = _context.Epicks
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
-                .Include(e => e.Description).ThenInclude(e => e.Branches)
                 .Include(e=>e.Description).ThenInclude(e=>e.Tags)
                 .Include(e => e.Children);
 
@@ -82,7 +81,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             nextentity.Number = entity.Number;
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
-            var checkResult = await CheckChildren<Feature>(model.ChildrenIds, model.ProjectId);
+            var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
 
             operRes.Plus(checkResult);
             operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
@@ -98,7 +97,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren<Feature, Epick>(entity.Children, checkResult.Result, entity.DescriptionId);
+            UpdateChildren<UserStory, Epick>(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.Epicks.Update(nextentity);
 
             await _context.SaveChangesAsync();
@@ -118,7 +117,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Status = e.Status.ToString(),
             Children = e.Children.Select(a => new ItemDTO
             {
-                Code = WorkItemType.Feature.Code(),
+                Code = WorkItemType.UserStory.Code(),
                 Name = a.Name,
                 Number = a.Number,
                 DescriptionId = a.DescriptionId

@@ -1,9 +1,11 @@
 <template>
   <div>
-    <v-toolbar color="primary" dark app>
+    <v-toolbar color="primary" dark>
       <v-toolbar-title @click="$router.push('/')">
-        <img src="/logos/TEcut.png" class="mr-2" :height="ofSize({xs:50,sm:46,md:55})"/>
-        <span class="hidden-sm-and-down">TEAM EDGE</span>
+        <v-layout row align-center>
+          <img src="/logos/TEcut.png" class="mr-2" :height="ofSize({xs:50,sm:46,md:55})"/>
+          <span class="hidden-sm-and-down">TEAM EDGE</span>
+        </v-layout>
       </v-toolbar-title>
       <v-layout row align-center justify-end>
           <template v-if="!profile">
@@ -21,11 +23,9 @@
           <side-menu/>
       </v-layout>
     </v-toolbar>
-    <v-content>
     <router-view class="view"></router-view>
-    </v-content>
     <login></login>
-    <v-footer height="auto" class="footer-keeper" app>
+    <v-footer height="auto" class="footer-keeper">
       <v-layout column class="grey darken-2 white--text text-xs-center">
           <v-container>
           <p>Контактные данные:</p>
@@ -34,7 +34,7 @@
               <v-flex xs12 md4 class="text-no-wrap">Телефон: 8-(917)-264-38-50</v-flex>
           </v-layout>
           </v-container>
-          <v-divider></v-divider>
+          <v-divider class="mb-3"></v-divider>
           <p>&copy;2018 — Team Edge</p>
       </v-layout>
     </v-footer>

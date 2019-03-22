@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TeamEdge.BusinessLogicLayer;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.DAL.Models
 {
-    public class UserStory : BaseWorkItem, IBaseWorkItemWithParent<Feature>, IBaseWorkItemWithChild<_Task>
+    public class UserStory : BaseWorkItem, IBaseWorkItemWithParent<Epick>, IBaseWorkItemWithChild<_Task>
     {
         public ICollection<_Task> Children { get; set; }
 
@@ -13,7 +13,7 @@ namespace TeamEdge.DAL.Models
 
         [PropertyChanges(typeof(ParentChangeFactory))]
         [ForeignKey("ParentId")]
-        public Feature Parent { get; set; }
+        public Epick Parent { get; set; }
 
         [PropertyChanges(typeof(SimpleChangeFactory))]
         public Priority Priority { get; set; }

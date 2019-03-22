@@ -16,6 +16,9 @@ namespace TeamEdge.DAL.Models
         public int? AssignedToId { get; set; }
         public TaskType Type { get; set; }
 
+        public int? EpickId { get; set; }
+        public Epick Epick { get; set; }
+
         [PropertyChanges(typeof(AssignedToChangeFactory))]
         [ForeignKey("AssignedToId")]
         public User AssignedTo { get; set; }
@@ -37,6 +40,6 @@ namespace TeamEdge.DAL.Models
 
         public int? GantPreviousId { get; set; }
         [ForeignKey("GantPreviousId")]
-        WorkItemDescription GantPrevious { get; set; }
+        public WorkItemDescription GantPrevious { get; set; }
     }
 }

@@ -14,7 +14,7 @@ class ImageUploadAdapter {
                 axios.post(`/api/file/project/${store.getters['project/project'].id}`,data,
                 { headers: {'Content-Type': 'multipart/form-data' }})
                 .then(
-                    r=>{resolve( {default: r.data.path}); store.commit('createWorkItem/addFileId', r.data.id)},
+                    r=>{resolve( {default: r.data.path}); store.commit('fileSelector/addFile', r.data)},
                     r=>reject( `Couldn't upload file: ${ file.name }.` )
                 )
             } ) );
