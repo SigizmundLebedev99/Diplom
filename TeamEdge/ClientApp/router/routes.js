@@ -6,11 +6,12 @@ import Begin from '../components/onApp/begin'
 import Project from '../components/onProject/project'
 import Home from '../components/onProject/home'
 import Dashboard from '../components/onProject/dashboard'
+import Epick from '../components/onProject/workItems/epick'
 import { ifAuthenticated } from './hooks'
 
 export const routes = [
   {
-    path:'/', 
+    path:'/',
     component: Begin, 
     children:[
       {name:"title", path:'/',component:TitlePage},
@@ -23,7 +24,8 @@ export const routes = [
     path:'/project/:projId', component: Project, beforeEnter: ifAuthenticated,
     children:[
       {name:'project', path:'/', component: Home, beforeEnter: ifAuthenticated},
-      {name:'dashboard', path:'dashboard', component: Dashboard, beforeEnter: ifAuthenticated}
+      {name:'dashboard', path:'dashboard', component: Dashboard, beforeEnter: ifAuthenticated},
+      {name:'EPICK', path:'epick-:number', component: Epick, beforeEnter:ifAuthenticated}
     ]
   }
 ]

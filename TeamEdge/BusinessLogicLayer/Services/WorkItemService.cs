@@ -61,7 +61,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (!operRes.Succeded)
                 return operRes; 
             var description = _mapper.Map<WorkItemDescription>(model);
-            _context.Subscribes.Add(new Subscribe { WorkItemId = description.Id, SubscriberId = model.CreatorId });
+            description.Subscribers = new List<Subscribe>() { new Subscribe() { SubscriberId = model.CreatorId } };
             description.DateOfCreation = DateTime.Now;
             _context.WorkItemDescriptions.Add(description);
             

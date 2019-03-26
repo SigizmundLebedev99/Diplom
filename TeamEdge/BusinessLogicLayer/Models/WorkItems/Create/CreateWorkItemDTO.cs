@@ -11,7 +11,6 @@ namespace TeamEdge.Models
         public string Name { get; set; }
         public string DescriptionText { get; set; }
         public int[] FileIds { get; set; }
-        public string[] Branches { get; set; }
         public string[] Tags { get; set; }
         public int? ParentId { get; set; }
         public int[] ChildrenIds { get; set; }

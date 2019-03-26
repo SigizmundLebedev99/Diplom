@@ -119,13 +119,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return await _context.Files.Where(e => e.ProjectId == projectId).Select(Selector).ToArrayAsync();
         }   
 
-        public async Task DeleteFile(int userId, int fileId)
+        //public async Task DeleteFile(int userId, int fileId)
+        //{
+        //    var file = await _context.Files.FirstOrDefaultAsync(e => e.Id == fileId);
+        //    await _validationService.ValidateProjectAccess(file.ProjectId, userId);
+        //    _fileSystemService.RemoveFile(file.Path, file.IsPicture);
+        //    _context.Files.Remove(file);
+        //    await _context.SaveChangesAsync();
+        //}
+
+        public async Task<IEnumerable<FileDTO>> GetFilesForItem(int itemId, int userId, int projectId)
         {
-            var file = await _context.Files.FirstOrDefaultAsync(e => e.Id == fileId);
-            await _validationService.ValidateProjectAccess(file.ProjectId, userId, e=>e.CanReview);
-            _fileSystemService.RemoveFile(file.Path, file.IsPicture);
-            _context.Files.Remove(file);
-            await _context.SaveChangesAsync();
+            await _validationService.ValidateProjectAccess(projectId, userId);
+            var files = await _context.WorkItemFiles.Where(e => e.WorkItemId == itemId).Select(e => e.File).Select(Selector).ToListAsync();
+            return files;
         }
 
         private Expression<Func<_File, FileDTO>> Selector = e => 

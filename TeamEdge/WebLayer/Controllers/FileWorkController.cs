@@ -85,5 +85,12 @@ namespace TeamEdge.WebLayer.Controllers
             var result = await _fileWorkService.GetFilesForProject(User.Id(), projectId);
             return Ok(result);
         }
+
+        [HttpGet("project/{projectId}/item/{itemId}/files")]
+        public async Task<IActionResult> GetFilesForItem(int projectId, int itemId)
+        {
+            var result = await _fileWorkService.GetFilesForItem(itemId, User.Id(), projectId);
+            return Ok(result);
+        }
     } 
 }

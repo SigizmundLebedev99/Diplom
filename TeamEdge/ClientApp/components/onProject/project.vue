@@ -35,12 +35,12 @@
             </v-layout>
             </v-container>
  
-            <v-divider class="m-0"></v-divider>
-            <v-list class="p-0">
+            <v-divider class="my-0"></v-divider>
+            <v-list class="py-0">
                 <v-list-tile :class="routeSel('project')"
                     @click.stop="goTo('project')">
                     <v-list-tile-action>
-                    <v-icon :class="routeSel('project')">dashboard</v-icon>
+                        <v-icon class="trans" :class="routeSel('project')">dashboard</v-icon>
                     </v-list-tile-action>
 
                     <v-list-tile-content>
@@ -50,7 +50,7 @@
                 <v-list-tile :class="routeSel('dashboard')"
                     @click.stop="goTo('dashboard')">
                     <v-list-tile-action>
-                    <v-icon :class="routeSel('dashboard')">build</v-icon>
+                        <v-icon class="trans" :class="routeSel('dashboard')">build</v-icon>
                     </v-list-tile-action>
 
                     <v-list-tile-content>
@@ -58,12 +58,28 @@
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
-            <v-divider class="m-0"></v-divider>
-            <v-list>
-                <v-list-tile v-for="(wi,i) in workItems" :key="i">
-                    <v-list-title>
-                        {{wi.code}}
-                    </v-list-title>
+            <v-divider class="my-0"></v-divider>
+            <v-list class="py-0 px-0">
+                <v-list-tile v-for="(wi,i) in workItems" :key="i"
+                        class="px-0 my-0 mx-0"
+                        :class="routeWISel(wi.code, wi.number)"
+                        @click.stop="$router.push({name:wi.code,params:{number:wi.number}})">
+                    <v-layout row justify-end align-center>
+                        <v-spacer/>
+                            <span class="caption">
+                                {{wi.code}}{{wi.number}}
+                            </span>
+                        <v-spacer/>
+                        <v-btn small icon 
+                        v-show="!mini" 
+                        class="mx-0 my-0" 
+                        @click="dropWI(wi.descriptionId)" 
+                        :class="routeWISel(wi.code, wi.number)">
+                            <v-icon small>
+                                close
+                            </v-icon>
+                        </v-btn>
+                    </v-layout>
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
@@ -98,7 +114,7 @@
 import sideMenu from '../side-menu'
 import createWI from './create-wi.vue'
 import fileSelector from './file-selector'
-import {mapActions,mapGetters} from 'vuex'
+import {mapActions,mapGetters, mapMutations} from 'vuex'
 export default {
     components:
     {
@@ -113,8 +129,7 @@ export default {
             { title: 'Home', icon: 'dashboard' },
             { title: 'About', icon: 'question_answer' }
             ],
-            mini: true,
-            selected:1
+            mini: true
         }
     },
     mounted(){
@@ -125,16 +140,18 @@ export default {
         ...mapActions({
            fetchProj: 'project/fetchProject' 
         }),
+        ...mapMutations({dropWI:'project/dropWI'}),
         goTo(name, id){
             this.$router.push({name:name});
             this.mini = true;
             this.selected = id;
         },
         routeSel(name){
-            return this.$route.name === name?'selected':'notselected'
+            return this.$route.name === name?'selected':'notselected';
         },
-        select(id){
-            return this.selected == id?'selected':'notselected'
+        routeWISel(code,number){
+            var flag = this.$route.name == code && this.$route.params.number == number;
+            return flag?'selected':'notselected';
         }
     },
     computed:{
@@ -150,11 +167,16 @@ export default {
 <style scoped>
 .selected{
     background: #fafafa;
-    color: black;
+    color: #424242;
     transition:none;
 }
 .notselected{
+    background: #424242;
+    color: #fafafa;
     transition:none;
+}
+.trans{
+    background: transparent;
 }
 </style>
 

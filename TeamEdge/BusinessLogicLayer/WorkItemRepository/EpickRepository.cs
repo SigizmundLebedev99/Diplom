@@ -32,13 +32,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             if (!operRes.Succeded)
                 return operRes;
-            entity.Status = (WorkItemStatus)checkResult.Result.Select(e => (byte)e.Status).Max();
             var children = checkResult.Result;
             entity.Number = await GetNumber<Epick>(model.ProjectId);
             entity.DescriptionId = description.Id;
 
             if (children != null)
             {
+                entity.Status = (WorkItemStatus)checkResult.Result.Select(e => (byte)e.Status).Max();
                 foreach (var t in children)
                     t.ParentId = entity.DescriptionId;
                 _context.UserStories.UpdateRange(children);

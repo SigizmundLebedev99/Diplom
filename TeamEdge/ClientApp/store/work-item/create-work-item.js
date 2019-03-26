@@ -9,13 +9,12 @@ const getters = {
 
 const actions = {
     preWICreating({commit}, predefinedCode){
+        commit('predefined', predefinedCode);
         commit('setDialog', true);
     },
     setDialog({commit}, dialog){
         commit('setDialog', dialog);
-        if(!dialog){
-            commit('clear');
-        }
+        commit('fileSelector/clear',null,{root:true});
     }
 }
 

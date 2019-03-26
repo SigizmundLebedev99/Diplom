@@ -11,12 +11,14 @@
                     </v-btn>
                 </v-layout>
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="pt-0">
                 <v-form>
                     <v-subheader>Тип единицы работы</v-subheader>
                     <v-select class="ml-3 pt-0 mt-0 mr-3"
                         v-model="wiType"
-                        :items="workItems">
+                        :items="workItems"
+                        :rules="rules.typeRule"
+                        required>
                         <template v-slot:selection="data">
                             <span>{{data.item.name}}</span>
                         </template>
@@ -25,19 +27,38 @@
                         </template>
                     </v-select>
                     <v-subheader>Название</v-subheader>
-                    <v-text-field v-model="model.name" class="ml-3 pt-0 mt-0 mr-3"></v-text-field>
+                    <v-text-field required :rules="rules.nameRule" v-model="model.name" class="ml-3 pt-0 mt-0 mr-3"></v-text-field>
                     <v-subheader>Описание</v-subheader>
                     <div class="ml-3 mr-3">
                         <ckeditor :editor="editor" v-model="model.descriptionText" :config="editorConfig"></ckeditor>
                     </div>
                 </v-form>
+                <v-layout row class="mt-1">
+                    <v-subheader>Прикрепленные файлы</v-subheader>
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="openFiles()">
+                        <v-icon>
+                            attach_file
+                        </v-icon>
+                    </v-btn>
+                </v-layout>
+                <v-layout row wrap class="mr-3 ml-3 mb-1 mt-1">
+                    <v-chip label v-for="(f,i) in selectedFiles" :key="i" class="primary" dark @click="addFile(f)">
+                        <div class="mr-1 ml-1">
+                            <v-icon v-if="f.isPicture">
+                                image
+                            </v-icon>
+                            <v-icon v-else>
+                                insert_drive_file
+                            </v-icon>
+                        </div>
+                        <span>{{f.fileName}}</span>   
+                    </v-chip>
+                </v-layout>
+
             </v-card-text>
             <v-card-actions>
-                <v-btn icon @click="openFiles()">
-                    <v-icon>
-                        attach_file
-                    </v-icon>
-                </v-btn>
+                
                 <v-spacer></v-spacer>
                 <v-btn class="primary" @click="submit()">Создать</v-btn>
             </v-card-actions>
@@ -55,19 +76,36 @@ export default {
     mixins:[onResize],
     data:()=>({
         model:{
-            name:null,
+            name:'',
             descriptionText:''
         },
         editor: ClassicEditor,
         editorConfig: {
             extraPlugins: [ MyCustomUploadAdapterPlugin ]
         },
-        wiType:null
+        wiType:null,
+        rules:{
+            nameRule:[v=>!!v||'Введите имя'],
+            typeRule:[v=>!!v||'Выберите тип']
+        }
     }),
     methods:{
         ...mapActions({setDialog:'createWorkItem/setDialog', openFiles:'fileSelector/open'}),
+        ...mapMutations({
+            addWI:'project/addWI'
+        }),
         submit(){
-            
+            var model = Object.assign({
+                code:this.wiType.code,
+                projectId:this.project.id,
+                fileIds: this.selectedFiles.map(e=>e.id), 
+            }, this.model);
+            console.log(model);
+            this.$http.post(`/api/workitems`, model)
+            .then(
+                r=>{addWI(r.data); this.$router.push({name:r.data.code, params:{number:r.data.number}})},
+                r=>console.log('error', r.response)
+            )
         }
     },
     computed:{
@@ -79,7 +117,11 @@ export default {
         },
         workItems(){
             return workItems;
-        }
+        },
+        ...mapGetters({
+            selectedFiles:'fileSelector/selectedFiles',
+            project:'project/project'
+        })
     }
 }
 </script>

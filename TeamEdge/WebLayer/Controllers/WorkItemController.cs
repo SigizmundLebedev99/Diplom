@@ -22,8 +22,8 @@ namespace TeamEdge.WebLayer.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("project/{projectId}/item")]
-        public async Task<IActionResult> GetWorkItem(int projectId, [FromQuery]string code, [FromQuery]int number)
+        [HttpGet("project/{projectId}/item/{code}/{number}")]
+        public async Task<IActionResult> GetWorkItem(int projectId, string code, int number)
         {
             var result = await _workItemService.GetWorkItem(projectId, User.Id(), code, number);
             return Ok(result);

@@ -14,14 +14,38 @@
                 </v-icon>
             </v-btn>
         </v-toolbar>
+        <v-container>
+            <v-layout row wrap>
+                <v-flex md6 xs12>
+                    <v-list>
+                        <v-list-tile v-for="(w,i) in items" :key="i" @click="$router.push({name:w.code, params:{number:w.number}})">
+                            <v-list-tile-title>{{w.code}}-{{w.number}}</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
+                </v-flex>
+            </v-layout>
+        </v-container>
     </v-layout>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 export default {
+    mounted() {
+        this.fetchItems();
+    },
+    data:()=>({
+        items:[]
+    }),
     methods:{
-        ...mapActions({preWICreating:'createWorkItem/preWICreating'})
+        ...mapActions({preWICreating:'createWorkItem/preWICreating'}),
+        fetchItems(){
+            this.$http.get(`/api/workitems/project/${this.$route.params.projId}/items`)
+            .then(r=>this.items = r.data)
+        }
+    },
+    computed:{
+        ...mapGetters({project:'project/project'})
     }
 }
 </script>

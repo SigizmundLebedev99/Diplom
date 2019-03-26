@@ -17,6 +17,9 @@ const mutations = {
     },
     addWI(state, payload){
         state.workItems.push(payload);
+    },
+    dropWI(state, payload){
+        state.workItems = state.workItems.filter(e=>e.descriptionId !== payload);
     }
 };
 
