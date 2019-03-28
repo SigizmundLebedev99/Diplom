@@ -3,12 +3,12 @@
         <v-toolbar dense class="primary" dark>
             <v-toolbar-title class="title">Добавление файлов</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon @click="setOpened(false)">
+            <v-btn icon @click="close()">
                 <v-icon>close</v-icon>
             </v-btn>
         </v-toolbar>
         <div class="white">
-            <v-layout column class="mr-3 ml-3">
+            <v-layout column class="mr-3 ml-3 block">
                 <v-layout row align-center wrap justify-space-between>
                     <span class="subheading mt-1">Прикрепите имеющиеся в проекте файлы или загрузите новые</span>
                     <input type="file"/>
@@ -74,17 +74,17 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     data:()=>({
         filterText:''
     }),
     methods:{
         ...mapMutations({
-            setOpened:'fileSelector/setOpened',
             addFile:'fileSelector/addFile',
             removeFile:'fileSelector/removeFile'
-        })
+        }),
+        ...mapActions({close:'fileSelector/close'})
     },
     computed:{
         ...mapGetters({
@@ -109,8 +109,8 @@ export default {
     width: 200px;
 }
 
-.white{
-    background: white;
+.block{
+    min-width:200px;
 }
 </style>
 

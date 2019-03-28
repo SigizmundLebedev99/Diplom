@@ -45,8 +45,10 @@
                     <v-divider class="m-0"></v-divider>
                     <v-list>
                         <v-list-tile v-for="(p,i) in project.partisipants" :key="i">
-                            <v-list-tile-avatar color="primary">
-                                <v-icon v-if="!p.avatar" size="32" color="white">account_circle</v-icon>
+                            <v-list-tile-avatar color="primary" size="35">
+                                <span v-if="!p.avatar" class="white--text text-xs-center mt-1" medium>
+                                    {{`${p.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                                </span>
                                 <img v-else :src="p.avatar"/>
                             </v-list-tile-avatar>
                             <v-list-tile-title>

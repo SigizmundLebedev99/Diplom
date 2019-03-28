@@ -1,8 +1,16 @@
 import axios from 'axios'
 
+const state = ()=>({
+    selectedFiles:[],
+    files:[],
+    opened:false,
+    loading:false,
+    onClose:null,
+});
+
 const getters = {
     selectedFiles:(state)=>state.selectedFiles,
-    files:(state)=>state.files.filter(e=>state.selectedFiles.indexOf(e)<0),
+    files:(state)=>state.files.filter(e=>state.selectedFiles.map(f=>f.id).indexOf(e.id)<0),
     opened:(state)=>state.opened,
     loading:(state)=>state.loading
 };
@@ -12,9 +20,16 @@ const actions = {
         dispatch('fetchFiles');
         commit('setOpened', true);
         if(payload)
-            commit('setSelected',payload);
+            commit('setOnClose',payload);
     },
-    fetchFiles({commit, rootGetters}){
+    close({commit, state}){
+        commit('setOpened', false);
+        if(state.onClose){
+            state.onClose(state.selectedFiles);
+            commit('clear');
+        } 
+    },
+    fetchFiles({commit, rootGetters, getters}){
         commit('setLoading');
         axios.get(`/api/project/${rootGetters['project/project'].id}/files`)
         .then(
@@ -40,9 +55,6 @@ const mutations = {
     setFiles(state, payload){
         state.files = payload;
     },
-    setSelectedFiles(state, payload){
-        state.selectedFiles = payload;
-    },
     setOpened(state, payload){
         state.opened = payload;
     },
@@ -50,7 +62,7 @@ const mutations = {
         state.selectedFiles.push(payload);        
     },
     removeFile(state, payload){
-        state.selectedFiles.splice(state.selectedFiles.indexOf(state.selectedFiles.find(e=>e.id = payload)),1);
+        state.selectedFiles = state.selectedFiles.filter(e=>e.id != payload);
     },
     setLoading(state){
         state.loading = !state.loading;
@@ -58,15 +70,15 @@ const mutations = {
     clear(state){
         state.files = [];
         state.selectedFiles = [];
+        state.onClose = null;
+    },
+    setOnClose(state, payload){
+        state.selectedFiles = payload.selectedFiles;
+        state.onClose = payload.onClose;
     }
 };
 
-const state = ()=>({
-    selectedFiles:[],
-    files:[],
-    opened:false,
-    loading:false
-});
+
 
 export default {
     namespaced: true,

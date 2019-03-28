@@ -241,6 +241,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
             WorkItemStatus newStatus) where T : IBaseWorkItem
         {
             var operRes = new OperationResult(true);
+            if (children == null)
+                return operRes;
             switch (newStatus)
             {
                 case WorkItemStatus.New:

@@ -4,7 +4,7 @@
             <v-card-title class="primary white--text pt-0 pb-0 pr-0">
                 <v-layout justify-space-between align-center>
                     <span class="title">Создание единицы работы</span>
-                    <v-btn icon dark @click="setDialog(false)">
+                    <v-btn icon dark @click="close()">
                         <v-icon>
                             close
                         </v-icon>
@@ -12,7 +12,7 @@
                 </v-layout>
             </v-card-title>
             <v-card-text class="pt-0">
-                <v-form>
+                <v-form ref="form" v-model="valid">
                     <v-subheader>Тип единицы работы</v-subheader>
                     <v-select class="ml-3 pt-0 mt-0 mr-3"
                         v-model="wiType"
@@ -60,7 +60,7 @@
             <v-card-actions>
                 
                 <v-spacer></v-spacer>
-                <v-btn class="primary" @click="submit()">Создать</v-btn>
+                <v-btn class="primary" @click="submit()" :loading="loading">Создать</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -72,8 +72,9 @@ import onResize from '../../mixins/on-resize'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import MyCustomUploadAdapterPlugin from '../../image-upload-adapter'
 import workItems from '../../data/work-items'
+import formValidation from '../../mixins/form-validation'
 export default {
-    mixins:[onResize],
+    mixins:[onResize, formValidation],
     data:()=>({
         model:{
             name:'',
@@ -87,7 +88,9 @@ export default {
         rules:{
             nameRule:[v=>!!v||'Введите имя'],
             typeRule:[v=>!!v||'Выберите тип']
-        }
+        },
+        valid:true,
+        loading:false
     }),
     methods:{
         ...mapActions({setDialog:'createWorkItem/setDialog', openFiles:'fileSelector/open'}),
@@ -95,6 +98,10 @@ export default {
             addWI:'project/addWI'
         }),
         submit(){
+            this.validate()
+            if(!this.valid)
+                return;
+            this.loading = true;
             var model = Object.assign({
                 code:this.wiType.code,
                 projectId:this.project.id,
@@ -103,9 +110,19 @@ export default {
             console.log(model);
             this.$http.post(`/api/workitems`, model)
             .then(
-                r=>{addWI(r.data); this.$router.push({name:r.data.code, params:{number:r.data.number}})},
+                r=>{
+                    this.addWI(r.data); 
+                    this.$router.push({name:r.data.code, params:{number:r.data.number}})
+                    this.loading = false;
+                    this.close();
+                },
                 r=>console.log('error', r.response)
             )
+        },
+        close(){
+            this.setDialog(false);
+            this.resetValidation();
+            this.reset();
         }
     },
     computed:{

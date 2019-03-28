@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container v-if="loading">
+        <v-container v-if="loading && number">
             <v-layout column justify-center align-center fill-height>
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </v-layout>
@@ -9,7 +9,7 @@
             <v-toolbar class="yellow" flat dense>
                 <v-layout row align-center>
                     <v-toolbar-title>
-                        EPICK-{{wiSource.number}}
+                        Epick - {{currentWI.changed.number}}
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-flex md4>
@@ -35,9 +35,9 @@
                 <v-flex md8 xs12>
                     <v-container class="pt-0 divide">
                         <v-layout column>
-                            <v-text-field v-model="wiSource.name">
+                            <v-text-field v-model="currentWI.changed.name">
                             </v-text-field>
-                            <div v-html="wiSource.description.description"></div>
+                            <div v-html="currentWI.changed.description.description"></div>
                         </v-layout>  
                     </v-container>       
                 </v-flex>
@@ -67,7 +67,6 @@
 import {mapGetters, mapMutations} from 'vuex'
 import onResize from '../../../mixins/on-resize'
 import currentItem from '../../../mixins/work-item'
-import defaultWI from '../../../data/default-wi'
 import files from '../files'
 
 export default {
@@ -79,7 +78,6 @@ export default {
         this.enter();
     },
     data:()=>({
-        wiSource:null,
         loading:true,
         model:null
     }),
@@ -91,7 +89,6 @@ export default {
     methods:{
         enter(){
             if(this.currentWI){
-                this.wiSource = this.currentWI;
                 this.loading=false;
             }
             else{
@@ -99,12 +96,12 @@ export default {
                 this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/EPICK/${this.number}`)
                 .then(
                     r=>{
-                        r.data.changed = Object.assign({}, defaultWI);
-                        this.wiSource = r.data;
+                        r.data.changed = Object.assign({}, r.data);
                         this.addWI(r.data);
                         this.loading = false;
                     },
-                    r=>console.log(r.response));
+                    r=>console.log(r.response)
+                );
             }
         },
         ...mapMutations({addWI:'project/addWI'})

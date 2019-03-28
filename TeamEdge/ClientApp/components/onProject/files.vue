@@ -7,7 +7,7 @@
         </v-container>
         <div v-show="!loading">
             <v-layout justify-end >
-                <v-btn small icon @click="selectFiles">
+                <v-btn small icon @click="openFileSelector()">
                     <v-icon>
                         attach_file
                     </v-icon>
@@ -19,7 +19,7 @@
                 </v-btn>
             </v-layout>
             <v-layout row wrap justify-center>
-                <v-card v-for="(f,i) in currentWI.description.files" :key="i" class="mx-1 my-1">
+                <v-card v-for="(f,i) in localFiles" :key="i" class="mx-1 my-1">
                     <v-card-text class="mx-1 my-1">
                         <img height="128px" v-if="f.isPicture" :src="f.path"/>
                         <v-icon v-else>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 import currentItem from '../../mixins/work-item';
 export default {
     mixins:[currentItem],
@@ -41,7 +41,8 @@ export default {
         this.fetchFiles();
     },
     data:()=>({
-        loading:false
+        loading:false,
+        localFiles:[],
     }),
     methods:{
         fetchFiles(){
@@ -49,17 +50,27 @@ export default {
             this.$http.get(`/api/project/${this.$route.params.projId}/item/${this.currentWI.descriptionId}/files`)
             .then(
                 r=>{
-                    this.currentWI.description.files = r.data; 
-                    this.currentWI.changed.description.files = null;
+                    this.currentWI.description.files = r.data;
+                    this.currentWI.changed.description.files = r.data;
+                    this.localFiles = r.data
                     this.loading = false;
                 },
                 r=>console.log(r.response)
             );
         },
-        selectFiles(){
-
+        ...mapActions({
+            open:'fileSelector/open'
+        }),
+        openFileSelector(){
+            this.open({  
+                selectedFiles: this.currentWI.changed.description.files,
+                onClose:selFiles => this.setFiles(selFiles)
+            })
         },
-        ...mapMutations({open:'fileSelector/open'}),
+        setFiles(files){
+            this.currentWI.changed.description.files = files;
+            this.localFiles = files;
+        }
     },
     watch:{
         itemId(from, to){

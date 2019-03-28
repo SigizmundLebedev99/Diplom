@@ -25,7 +25,7 @@
     </v-toolbar>
     <router-view class="view"></router-view>
     <login></login>
-    <v-footer height="auto" class="footer-keeper">
+    <!--<v-footer height="auto" class="footer-keeper">
       <v-layout column class="grey darken-2 white--text text-xs-center">
           <v-container>
           <p>Контактные данные:</p>
@@ -37,7 +37,7 @@
           <v-divider class="mb-3"></v-divider>
           <p>&copy;2018 — Team Edge</p>
       </v-layout>
-    </v-footer>
+    </v-footer>-->
   </div>
 </template>
 
