@@ -12,7 +12,7 @@
         </v-layout>
         <div v-show="!loading">
             <v-layout v-if="projects.length === 0" justify-space-around align-center>
-                <span class="title ml-3 text-xs-center contsraint">
+                <span class="title text-xs-center contsraint mt-2">
                     На данный момент у вы не принимаете участия ни в каком проекте.
                 </span>
             </v-layout>

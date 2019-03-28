@@ -109,7 +109,8 @@ export default {
             }, this.model);
             this.$http.post(`/api/workitems`, model)
             .then(
-                r=>{
+              r => {
+                    r.data.changed = Object.assign({}, r.data);
                     this.addWI(r.data); 
                     this.$router.push({name:r.data.code, params:{number:r.data.number}})
                     this.loading = false;
