@@ -73,7 +73,7 @@
                         <v-btn small icon 
                         v-show="!mini" 
                         class="mx-0 my-0" 
-                        @click="dropWI(wi.descriptionId)" 
+                        @click.stop="dropWI(wi)" 
                         :class="routeWISel(wi.code, wi.number)">
                             <v-icon small>
                                 close
@@ -114,7 +114,7 @@
 import sideMenu from '../side-menu'
 import createWI from './create-wi.vue'
 import fileSelector from './file-selector'
-import {mapActions,mapGetters, mapMutations} from 'vuex'
+import {mapActions,mapGetters} from 'vuex'
 export default {
     components:
     {
@@ -138,9 +138,9 @@ export default {
     },
     methods:{
         ...mapActions({
-           fetchProj: 'project/fetchProject' 
+           fetchProj: 'project/fetchProject',
+           dropWI:'project/dropWI'
         }),
-        ...mapMutations({dropWI:'project/dropWI'}),
         goTo(name, id){
             this.$router.push({name:name});
             this.mini = true;

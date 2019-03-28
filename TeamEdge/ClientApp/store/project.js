@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '../router/index'
 
 const getters = {
     role:(state)=>state.currentProj.role,
@@ -18,8 +19,8 @@ const mutations = {
     addWI(state, payload){
         state.workItems.push(payload);
     },
-    dropWI(state, payload){
-        state.workItems = state.workItems.filter(e=>e.descriptionId !== payload);
+    setWorkItems(state, payload){
+        state.workItems = payload;
     }
 };
 
@@ -45,6 +46,18 @@ const actions = {
             r=>{
             }
         )
+    },
+    dropWI({state, rootState}, payload){  
+        var flag = rootState.route.name == payload.code && rootState.route.params.number == payload.number   
+        state.workItems = state.workItems.filter(e=>e !== payload);
+        if(flag){
+            if(state.workItems.length){
+                var item = state.workItems[0];
+                router.push({name:item.code, params:{number:item.number}});            
+            }
+            else
+                router.push({name:'dashboard'});
+        }
     }
 };
 

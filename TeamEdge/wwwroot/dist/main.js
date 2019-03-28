@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "99e3504ddd5aaaf2bc6b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4408df66e7fecb56b9a1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -14369,7 +14369,7 @@ exports = module.exports = __webpack_require__(14)();
 
 
 // module
-exports.push([module.i, "\n.selected[data-v-3f62cda5]{\r\n    background: #fafafa;\r\n    color: #424242;\r\n    transition:none;\n}\n.notselected[data-v-3f62cda5]{\r\n    background: #424242;\r\n    color: #fafafa;\r\n    transition:none;\n}\n.trans[data-v-3f62cda5]{\r\n    background: transparent;\n}\r\n", "", {"version":3,"sources":["C:/Users/hp/Desktop/TeamEdge/TeamEdge/ClientApp/components/onProject/ClientApp\\components\\onProject/project.vue"],"names":[],"mappings":";AAuKA;IACA,oBAAA;IACA,eAAA;IACA,gBAAA;CACA;AACA;IACA,oBAAA;IACA,eAAA;IACA,gBAAA;CACA;AACA;IACA,wBAAA;CACA","file":"project.vue","sourcesContent":["<template>\r\n    <div>\r\n        <v-navigation-drawer\r\n            dark\r\n            v-model=\"drawer\"\r\n            :mini-variant.sync=\"mini\"\r\n            hide-overlay\r\n            stateless\r\n            app>\r\n            <v-list class=\"pa-0\" v-show=\"mini\">\r\n                <v-list-tile avatar>\r\n                    <v-list-tile-avatar color=\"white\">\r\n                        <v-icon v-if=\"!project.logo\" size=\"32\" color=\"primary\">work</v-icon>\r\n                        <img v-else :src=\"project.logo\"/>\r\n                    </v-list-tile-avatar>\r\n                </v-list-tile>\r\n            </v-list>\r\n            <v-container v-show=\"!mini\" class=\"p-3\">\r\n            <v-layout row>\r\n                <v-flex xs2></v-flex>\r\n                <v-flex xs8>\r\n                    <v-layout column align-center>\r\n                        <v-avatar avatar color=\"white mt-2\" size=\"80\">\r\n                            <v-icon v-if=\"!project.logo\" size=\"60\" color=\"primary\">work</v-icon>\r\n                            <img v-else :src=\"project.logo\"/>\r\n                        </v-avatar>\r\n                        <span class=\"mt-3 title white--text\">{{project.name}}</span>\r\n                    </v-layout>\r\n                </v-flex>\r\n                <v-flex xs2>\r\n                    <v-btn class=\"mt-0\" icon flat>\r\n                        <v-icon>more_vert</v-icon>\r\n                    </v-btn>\r\n                </v-flex>\r\n            </v-layout>\r\n            </v-container>\r\n \r\n            <v-divider class=\"my-0\"></v-divider>\r\n            <v-list class=\"py-0\">\r\n                <v-list-tile :class=\"routeSel('project')\"\r\n                    @click.stop=\"goTo('project')\">\r\n                    <v-list-tile-action>\r\n                        <v-icon class=\"trans\" :class=\"routeSel('project')\">dashboard</v-icon>\r\n                    </v-list-tile-action>\r\n\r\n                    <v-list-tile-content>\r\n                    <v-list-tile-title>Доска</v-list-tile-title>\r\n                    </v-list-tile-content>\r\n                </v-list-tile>\r\n                <v-list-tile :class=\"routeSel('dashboard')\"\r\n                    @click.stop=\"goTo('dashboard')\">\r\n                    <v-list-tile-action>\r\n                        <v-icon class=\"trans\" :class=\"routeSel('dashboard')\">build</v-icon>\r\n                    </v-list-tile-action>\r\n\r\n                    <v-list-tile-content>\r\n                    <v-list-tile-title>Единицы работы</v-list-tile-title>\r\n                    </v-list-tile-content>\r\n                </v-list-tile>\r\n            </v-list>\r\n            <v-divider class=\"my-0\"></v-divider>\r\n            <v-list class=\"py-0 px-0\">\r\n                <v-list-tile v-for=\"(wi,i) in workItems\" :key=\"i\"\r\n                        class=\"px-0 my-0 mx-0\"\r\n                        :class=\"routeWISel(wi.code, wi.number)\"\r\n                        @click.stop=\"$router.push({name:wi.code,params:{number:wi.number}})\">\r\n                    <v-layout row justify-end align-center>\r\n                        <v-spacer/>\r\n                            <span class=\"caption\">\r\n                                {{wi.code}}{{wi.number}}\r\n                            </span>\r\n                        <v-spacer/>\r\n                        <v-btn small icon \r\n                        v-show=\"!mini\" \r\n                        class=\"mx-0 my-0\" \r\n                        @click=\"dropWI(wi.descriptionId)\" \r\n                        :class=\"routeWISel(wi.code, wi.number)\">\r\n                            <v-icon small>\r\n                                close\r\n                            </v-icon>\r\n                        </v-btn>\r\n                    </v-layout>\r\n                </v-list-tile>\r\n            </v-list>\r\n        </v-navigation-drawer>\r\n        <v-toolbar dense color=\"primary\" dark app>\r\n            <v-toolbar-side-icon @click.stop=\"mini = !mini\"></v-toolbar-side-icon>\r\n            <v-toolbar-title class=\"white--text hidden-sm-and-down\">TEAM EDGE</v-toolbar-title>\r\n            <v-spacer></v-spacer>\r\n            <span class=\"white--text\">{{profile.fullName}}</span>\r\n            <v-avatar size=\"36px\" class=\"ml-3\">\r\n                <img v-if=\"profile.avatar\"\r\n                :src=\"profile.avatar\"\r\n                alt=\"Avatar\">\r\n                <v-icon size=\"36px\" dark v-else>account_circle</v-icon>\r\n            </v-avatar>\r\n            <side-menu/>\r\n        </v-toolbar>\r\n        \r\n        <v-content>\r\n            <v-container v-show=\"loading\">\r\n                <v-layout column justify-center align-center fill-height>\r\n                    <v-progress-circular indeterminate color=\"primary\"></v-progress-circular>\r\n                </v-layout>\r\n            </v-container>\r\n            <router-view v-show=\"!loading\"></router-view>\r\n        </v-content>\r\n        <create-work-item></create-work-item>\r\n        <file-selector></file-selector>\r\n    </div>\r\n</template>\r\n\r\n<script>\r\nimport sideMenu from '../side-menu'\r\nimport createWI from './create-wi.vue'\r\nimport fileSelector from './file-selector'\r\nimport {mapActions,mapGetters, mapMutations} from 'vuex'\r\nexport default {\r\n    components:\r\n    {\r\n        'side-menu':sideMenu,\r\n        'create-work-item':createWI,\r\n        'file-selector':fileSelector\r\n    },\r\n    data:function(){\r\n        return{\r\n            drawer: true,\r\n            items: [\r\n            { title: 'Home', icon: 'dashboard' },\r\n            { title: 'About', icon: 'question_answer' }\r\n            ],\r\n            mini: true\r\n        }\r\n    },\r\n    mounted(){\r\n      var projId = this.$route.params.projId;\r\n      this.fetchProj(projId);\r\n    },\r\n    methods:{\r\n        ...mapActions({\r\n           fetchProj: 'project/fetchProject' \r\n        }),\r\n        ...mapMutations({dropWI:'project/dropWI'}),\r\n        goTo(name, id){\r\n            this.$router.push({name:name});\r\n            this.mini = true;\r\n            this.selected = id;\r\n        },\r\n        routeSel(name){\r\n            return this.$route.name === name?'selected':'notselected';\r\n        },\r\n        routeWISel(code,number){\r\n            var flag = this.$route.name == code && this.$route.params.number == number;\r\n            return flag?'selected':'notselected';\r\n        }\r\n    },\r\n    computed:{\r\n        ...mapGetters({\r\n            loading:'project/loading',\r\n            project:'project/project',\r\n            profile:'auth/profile',\r\n            workItems:'project/workItems'\r\n        })\r\n    }\r\n}\r\n</script>\r\n<style scoped>\r\n.selected{\r\n    background: #fafafa;\r\n    color: #424242;\r\n    transition:none;\r\n}\r\n.notselected{\r\n    background: #424242;\r\n    color: #fafafa;\r\n    transition:none;\r\n}\r\n.trans{\r\n    background: transparent;\r\n}\r\n</style>\r\n\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.selected[data-v-3f62cda5]{\r\n    background: #fafafa;\r\n    color: #424242;\r\n    transition:none;\n}\n.notselected[data-v-3f62cda5]{\r\n    background: #424242;\r\n    color: #fafafa;\r\n    transition:none;\n}\n.trans[data-v-3f62cda5]{\r\n    background: transparent;\n}\r\n", "", {"version":3,"sources":["C:/Users/hp/Desktop/TeamEdge/TeamEdge/ClientApp/components/onProject/ClientApp\\components\\onProject/project.vue"],"names":[],"mappings":";AAuKA;IACA,oBAAA;IACA,eAAA;IACA,gBAAA;CACA;AACA;IACA,oBAAA;IACA,eAAA;IACA,gBAAA;CACA;AACA;IACA,wBAAA;CACA","file":"project.vue","sourcesContent":["<template>\r\n    <div>\r\n        <v-navigation-drawer\r\n            dark\r\n            v-model=\"drawer\"\r\n            :mini-variant.sync=\"mini\"\r\n            hide-overlay\r\n            stateless\r\n            app>\r\n            <v-list class=\"pa-0\" v-show=\"mini\">\r\n                <v-list-tile avatar>\r\n                    <v-list-tile-avatar color=\"white\">\r\n                        <v-icon v-if=\"!project.logo\" size=\"32\" color=\"primary\">work</v-icon>\r\n                        <img v-else :src=\"project.logo\"/>\r\n                    </v-list-tile-avatar>\r\n                </v-list-tile>\r\n            </v-list>\r\n            <v-container v-show=\"!mini\" class=\"p-3\">\r\n            <v-layout row>\r\n                <v-flex xs2></v-flex>\r\n                <v-flex xs8>\r\n                    <v-layout column align-center>\r\n                        <v-avatar avatar color=\"white mt-2\" size=\"80\">\r\n                            <v-icon v-if=\"!project.logo\" size=\"60\" color=\"primary\">work</v-icon>\r\n                            <img v-else :src=\"project.logo\"/>\r\n                        </v-avatar>\r\n                        <span class=\"mt-3 title white--text\">{{project.name}}</span>\r\n                    </v-layout>\r\n                </v-flex>\r\n                <v-flex xs2>\r\n                    <v-btn class=\"mt-0\" icon flat>\r\n                        <v-icon>more_vert</v-icon>\r\n                    </v-btn>\r\n                </v-flex>\r\n            </v-layout>\r\n            </v-container>\r\n \r\n            <v-divider class=\"my-0\"></v-divider>\r\n            <v-list class=\"py-0\">\r\n                <v-list-tile :class=\"routeSel('project')\"\r\n                    @click.stop=\"goTo('project')\">\r\n                    <v-list-tile-action>\r\n                        <v-icon class=\"trans\" :class=\"routeSel('project')\">dashboard</v-icon>\r\n                    </v-list-tile-action>\r\n\r\n                    <v-list-tile-content>\r\n                    <v-list-tile-title>Доска</v-list-tile-title>\r\n                    </v-list-tile-content>\r\n                </v-list-tile>\r\n                <v-list-tile :class=\"routeSel('dashboard')\"\r\n                    @click.stop=\"goTo('dashboard')\">\r\n                    <v-list-tile-action>\r\n                        <v-icon class=\"trans\" :class=\"routeSel('dashboard')\">build</v-icon>\r\n                    </v-list-tile-action>\r\n\r\n                    <v-list-tile-content>\r\n                    <v-list-tile-title>Единицы работы</v-list-tile-title>\r\n                    </v-list-tile-content>\r\n                </v-list-tile>\r\n            </v-list>\r\n            <v-divider class=\"my-0\"></v-divider>\r\n            <v-list class=\"py-0 px-0\">\r\n                <v-list-tile v-for=\"(wi,i) in workItems\" :key=\"i\"\r\n                        class=\"px-0 my-0 mx-0\"\r\n                        :class=\"routeWISel(wi.code, wi.number)\"\r\n                        @click.stop=\"$router.push({name:wi.code,params:{number:wi.number}})\">\r\n                    <v-layout row justify-end align-center>\r\n                        <v-spacer/>\r\n                            <span class=\"caption\">\r\n                                {{wi.code}}{{wi.number}}\r\n                            </span>\r\n                        <v-spacer/>\r\n                        <v-btn small icon \r\n                        v-show=\"!mini\" \r\n                        class=\"mx-0 my-0\" \r\n                        @click.stop=\"dropWI(wi)\" \r\n                        :class=\"routeWISel(wi.code, wi.number)\">\r\n                            <v-icon small>\r\n                                close\r\n                            </v-icon>\r\n                        </v-btn>\r\n                    </v-layout>\r\n                </v-list-tile>\r\n            </v-list>\r\n        </v-navigation-drawer>\r\n        <v-toolbar dense color=\"primary\" dark app>\r\n            <v-toolbar-side-icon @click.stop=\"mini = !mini\"></v-toolbar-side-icon>\r\n            <v-toolbar-title class=\"white--text hidden-sm-and-down\">TEAM EDGE</v-toolbar-title>\r\n            <v-spacer></v-spacer>\r\n            <span class=\"white--text\">{{profile.fullName}}</span>\r\n            <v-avatar size=\"36px\" class=\"ml-3\">\r\n                <img v-if=\"profile.avatar\"\r\n                :src=\"profile.avatar\"\r\n                alt=\"Avatar\">\r\n                <v-icon size=\"36px\" dark v-else>account_circle</v-icon>\r\n            </v-avatar>\r\n            <side-menu/>\r\n        </v-toolbar>\r\n        \r\n        <v-content>\r\n            <v-container v-show=\"loading\">\r\n                <v-layout column justify-center align-center fill-height>\r\n                    <v-progress-circular indeterminate color=\"primary\"></v-progress-circular>\r\n                </v-layout>\r\n            </v-container>\r\n            <router-view v-show=\"!loading\"></router-view>\r\n        </v-content>\r\n        <create-work-item></create-work-item>\r\n        <file-selector></file-selector>\r\n    </div>\r\n</template>\r\n\r\n<script>\r\nimport sideMenu from '../side-menu'\r\nimport createWI from './create-wi.vue'\r\nimport fileSelector from './file-selector'\r\nimport {mapActions,mapGetters} from 'vuex'\r\nexport default {\r\n    components:\r\n    {\r\n        'side-menu':sideMenu,\r\n        'create-work-item':createWI,\r\n        'file-selector':fileSelector\r\n    },\r\n    data:function(){\r\n        return{\r\n            drawer: true,\r\n            items: [\r\n            { title: 'Home', icon: 'dashboard' },\r\n            { title: 'About', icon: 'question_answer' }\r\n            ],\r\n            mini: true\r\n        }\r\n    },\r\n    mounted(){\r\n      var projId = this.$route.params.projId;\r\n      this.fetchProj(projId);\r\n    },\r\n    methods:{\r\n        ...mapActions({\r\n           fetchProj: 'project/fetchProject',\r\n           dropWI:'project/dropWI'\r\n        }),\r\n        goTo(name, id){\r\n            this.$router.push({name:name});\r\n            this.mini = true;\r\n            this.selected = id;\r\n        },\r\n        routeSel(name){\r\n            return this.$route.name === name?'selected':'notselected';\r\n        },\r\n        routeWISel(code,number){\r\n            var flag = this.$route.name == code && this.$route.params.number == number;\r\n            return flag?'selected':'notselected';\r\n        }\r\n    },\r\n    computed:{\r\n        ...mapGetters({\r\n            loading:'project/loading',\r\n            project:'project/project',\r\n            profile:'auth/profile',\r\n            workItems:'project/workItems'\r\n        })\r\n    }\r\n}\r\n</script>\r\n<style scoped>\r\n.selected{\r\n    background: #fafafa;\r\n    color: #424242;\r\n    transition:none;\r\n}\r\n.notselected{\r\n    background: #424242;\r\n    color: #fafafa;\r\n    transition:none;\r\n}\r\n.trans{\r\n    background: transparent;\r\n}\r\n</style>\r\n\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -14958,7 +14958,6 @@ exports.default = {
                     return e.id;
                 })
             }, this.model);
-            console.log(model);
             this.$http.post('/api/workitems', model).then(function (r) {
                 _this.addWI(r.data);
                 _this.$router.push({ name: r.data.code, params: { number: r.data.number } });
@@ -15249,8 +15248,9 @@ exports.default = {
     },
 
     methods: (0, _extends3.default)({}, (0, _vuex.mapActions)({
-        fetchProj: 'project/fetchProject'
-    }), (0, _vuex.mapMutations)({ dropWI: 'project/dropWI' }), {
+        fetchProj: 'project/fetchProject',
+        dropWI: 'project/dropWI'
+    }), {
         goTo: function goTo(name, id) {
             this.$router.push({ name: name });
             this.mini = true;
@@ -17406,6 +17406,10 @@ var _userStory = __webpack_require__(267);
 
 var _userStory2 = _interopRequireDefault(_userStory);
 
+var _task = __webpack_require__(306);
+
+var _task2 = _interopRequireDefault(_task);
+
 var _hooks = __webpack_require__(141);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -17416,7 +17420,7 @@ var routes = exports.routes = [{
   children: [{ name: "title", path: '/', component: _titlePage2.default }, { name: "register", path: '/registration', component: _register2.default }, { name: "afterRegister", path: '/afterregistration', component: _afterRegistration2.default }, { name: "projects", path: '/projects', component: _projects2.default, beforeEnter: _hooks.ifAuthenticated }]
 }, {
   path: '/project/:projId', component: _project2.default, beforeEnter: _hooks.ifAuthenticated,
-  children: [{ name: 'project', path: '/', component: _home2.default, beforeEnter: _hooks.ifAuthenticated }, { name: 'dashboard', path: 'dashboard', component: _dashboard2.default, beforeEnter: _hooks.ifAuthenticated }, { name: 'EPICK', path: 'epick-:number', component: _epick2.default, beforeEnter: _hooks.ifAuthenticated }, { name: 'STORY', path: 'story-:number', component: _userStory2.default, beforeEnter: _hooks.ifAuthenticated }]
+  children: [{ name: 'project', path: '/', component: _home2.default, beforeEnter: _hooks.ifAuthenticated }, { name: 'dashboard', path: 'dashboard', component: _dashboard2.default, beforeEnter: _hooks.ifAuthenticated }, { name: 'EPICK', path: 'epick-:number', component: _epick2.default, beforeEnter: _hooks.ifAuthenticated }, { name: 'STORY', path: 'story-:number', component: _userStory2.default, beforeEnter: _hooks.ifAuthenticated }, { name: 'TASK', path: 'task-:number', component: _task2.default, beforeEnter: _hooks.ifAuthenticated }]
 }];
 
 /***/ }),
@@ -17551,6 +17555,10 @@ var _axios = __webpack_require__(30);
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _index = __webpack_require__(80);
+
+var _index2 = _interopRequireDefault(_index);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var getters = {
@@ -17581,10 +17589,8 @@ var mutations = {
     addWI: function addWI(state, payload) {
         state.workItems.push(payload);
     },
-    dropWI: function dropWI(state, payload) {
-        state.workItems = state.workItems.filter(function (e) {
-            return e.descriptionId !== payload;
-        });
+    setWorkItems: function setWorkItems(state, payload) {
+        state.workItems = payload;
     }
 };
 
@@ -17604,6 +17610,21 @@ var actions = {
             commit('addWI', r.data);
             commit('setLoading', false);
         }, function (r) {});
+    },
+    dropWI: function dropWI(_ref2, payload) {
+        var state = _ref2.state,
+            rootState = _ref2.rootState;
+
+        var flag = rootState.route.name == payload.code && rootState.route.params.number == payload.number;
+        state.workItems = state.workItems.filter(function (e) {
+            return e !== payload;
+        });
+        if (flag) {
+            if (state.workItems.length) {
+                var item = state.workItems[0];
+                _index2.default.push({ name: item.code, params: { number: item.number } });
+            } else _index2.default.push({ name: 'dashboard' });
+        }
     }
 };
 
@@ -23416,7 +23437,8 @@ var render = function() {
                           attrs: { small: "", icon: "" },
                           on: {
                             click: function($event) {
-                              return _vm.dropWI(wi.descriptionId)
+                              $event.stopPropagation()
+                              return _vm.dropWI(wi)
                             }
                           }
                         },
@@ -51766,6 +51788,421 @@ __webpack_require__(133);
 __webpack_require__(132);
 module.exports = __webpack_require__(131);
 
+
+/***/ }),
+/* 304 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(14)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.divide[data-v-b12af694]{\r\n    border-right: 1px solid gray;\n}\r\n", "", {"version":3,"sources":["C:/Users/hp/Desktop/TeamEdge/TeamEdge/ClientApp/components/onProject/workItems/ClientApp\\components\\onProject\\workItems/task.vue"],"names":[],"mappings":";AAuHA;IACA,6BAAA;CACA","file":"task.vue","sourcesContent":["<template>\r\n    <div>\r\n        <v-container v-if=\"loading && number\">\r\n            <v-layout column justify-center align-center fill-height>\r\n                <v-progress-circular indeterminate color=\"primary\"></v-progress-circular>\r\n            </v-layout>\r\n        </v-container>\r\n        <div v-else>\r\n            <v-toolbar class=\"green\" flat dense dark>\r\n                <v-layout row align-center>\r\n                    <v-toolbar-title>\r\n                        Task - {{currentWI.changed.number}}\r\n                    </v-toolbar-title>\r\n                    <v-spacer></v-spacer>\r\n                    <v-flex md4>\r\n                        <v-tabs\r\n                            color=\"green\"\r\n                            v-model=\"model\"\r\n                            centered\r\n                            slider-color=\"yellow\">\r\n                            <v-tab ripple>\r\n                                Комментарии\r\n                            </v-tab>\r\n                            <v-tab ripple>\r\n                                Вложения\r\n                            </v-tab>\r\n                            <v-tab ripple>\r\n                                История\r\n                            </v-tab>\r\n                        </v-tabs>\r\n                    </v-flex>\r\n                </v-layout>\r\n            </v-toolbar>\r\n            <v-layout row justify-end wrap fill-height>\r\n                <v-flex md8 xs12>\r\n                    <v-container class=\"pt-0 divide\">\r\n                        <v-layout column>\r\n                            <v-text-field v-model=\"currentWI.changed.name\">\r\n                            </v-text-field>\r\n                            <div v-html=\"currentWI.changed.description.description\"></div>\r\n                        </v-layout>  \r\n                    </v-container>       \r\n                </v-flex>\r\n                <v-flex md4 xs12>\r\n                    <v-tabs-items v-model=\"model\">\r\n                        <v-tab-item>\r\n                            <v-card flat>\r\n                            <v-card-text>Комментарии</v-card-text>\r\n                            </v-card>\r\n                        </v-tab-item>\r\n                        <v-tab-item>\r\n                            <files></files>\r\n                        </v-tab-item>\r\n                        <v-tab-item>\r\n                            <v-card flat>\r\n                            <v-card-text>История</v-card-text>\r\n                            </v-card>\r\n                        </v-tab-item>\r\n                    </v-tabs-items>\r\n                </v-flex>\r\n            </v-layout>\r\n        </div>\r\n    </div>\r\n</template>\r\n\r\n<script>\r\nimport {mapGetters, mapMutations} from 'vuex'\r\nimport onResize from '../../../mixins/on-resize'\r\nimport currentItem from '../../../mixins/work-item'\r\nimport files from '../files'\r\n\r\nexport default {\r\n    mixins:[onResize, currentItem],\r\n    components:{\r\n        'files':files\r\n    },\r\n    mounted(){\r\n        this.enter();\r\n    },\r\n    data:()=>({\r\n        loading:true,\r\n        model:null\r\n    }),\r\n    computed:{\r\n        number(){\r\n            return this.$route.params.number;\r\n        }\r\n    },\r\n    methods:{\r\n        enter(){\r\n            if(this.currentWI){\r\n                this.loading=false;\r\n            }\r\n            else{\r\n                this.loading = true;\r\n                this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/TASK/${this.number}`)\r\n                .then(\r\n                    r=>{\r\n                        r.data.changed = Object.assign({}, r.data);\r\n                        this.addWI(r.data);\r\n                        this.loading = false;\r\n                    },\r\n                    r=>console.log(r.response)\r\n                );\r\n            }\r\n        },\r\n        ...mapMutations({addWI:'project/addWI'})\r\n    },\r\n    watch:{\r\n        number(from, to){\r\n            if(!to)\r\n                return;\r\n            this.enter();\r\n        }\r\n    }\r\n}\r\n</script>\r\n\r\n<style scoped>\r\n.divide{\r\n    border-right: 1px solid gray;\r\n}\r\n</style>\r\n\r\n\r\n"],"sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 305 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _assign = __webpack_require__(43);
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _extends2 = __webpack_require__(4);
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _vuex = __webpack_require__(5);
+
+var _onResize = __webpack_require__(12);
+
+var _onResize2 = _interopRequireDefault(_onResize);
+
+var _workItem = __webpack_require__(52);
+
+var _workItem2 = _interopRequireDefault(_workItem);
+
+var _files = __webpack_require__(129);
+
+var _files2 = _interopRequireDefault(_files);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    mixins: [_onResize2.default, _workItem2.default],
+    components: {
+        'files': _files2.default
+    },
+    mounted: function mounted() {
+        this.enter();
+    },
+
+    data: function data() {
+        return {
+            loading: true,
+            model: null
+        };
+    },
+    computed: {
+        number: function number() {
+            return this.$route.params.number;
+        }
+    },
+    methods: (0, _extends3.default)({
+        enter: function enter() {
+            var _this = this;
+
+            if (this.currentWI) {
+                this.loading = false;
+            } else {
+                this.loading = true;
+                this.$http.get('/api/workitems/project/' + this.$route.params.projId + '/item/TASK/' + this.number).then(function (r) {
+                    r.data.changed = (0, _assign2.default)({}, r.data);
+                    _this.addWI(r.data);
+                    _this.loading = false;
+                }, function (r) {
+                    return console.log(r.response);
+                });
+            }
+        }
+    }, (0, _vuex.mapMutations)({ addWI: 'project/addWI' })),
+    watch: {
+        number: function number(from, to) {
+            if (!to) return;
+            this.enter();
+        }
+    }
+};
+
+/***/ }),
+/* 306 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_task_vue__ = __webpack_require__(305);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_task_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_task_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_task_vue__) if(["default","default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_task_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b12af694_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_task_vue__ = __webpack_require__(307);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__(3);
+var disposed = false
+function injectStyle (context) {
+  if (disposed) return
+  __webpack_require__(308)
+}
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-b12af694"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+
+var Component = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_task_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b12af694_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_task_vue__["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b12af694_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_task_vue__["b" /* staticRenderFns */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "ClientApp\\components\\onProject\\workItems\\task.vue"
+
+/* hot reload */
+if (true) {(function () {
+  var hotAPI = __webpack_require__(0)
+  hotAPI.install(__webpack_require__(2), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-b12af694", Component.options)
+  } else {
+    hotAPI.reload("data-v-b12af694", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 307 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm.loading && _vm.number
+        ? _c(
+            "v-container",
+            [
+              _c(
+                "v-layout",
+                {
+                  attrs: {
+                    column: "",
+                    "justify-center": "",
+                    "align-center": "",
+                    "fill-height": ""
+                  }
+                },
+                [
+                  _c("v-progress-circular", {
+                    attrs: { indeterminate: "", color: "primary" }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        : _c(
+            "div",
+            [
+              _c(
+                "v-toolbar",
+                {
+                  staticClass: "green",
+                  attrs: { flat: "", dense: "", dark: "" }
+                },
+                [
+                  _c(
+                    "v-layout",
+                    { attrs: { row: "", "align-center": "" } },
+                    [
+                      _c("v-toolbar-title", [
+                        _vm._v(
+                          "\n                    Task - " +
+                            _vm._s(_vm.currentWI.changed.number) +
+                            "\n                "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-flex",
+                        { attrs: { md4: "" } },
+                        [
+                          _c(
+                            "v-tabs",
+                            {
+                              attrs: {
+                                color: "green",
+                                centered: "",
+                                "slider-color": "yellow"
+                              },
+                              model: {
+                                value: _vm.model,
+                                callback: function($$v) {
+                                  _vm.model = $$v
+                                },
+                                expression: "model"
+                              }
+                            },
+                            [
+                              _c("v-tab", { attrs: { ripple: "" } }, [
+                                _vm._v(
+                                  "\n                            Комментарии\n                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-tab", { attrs: { ripple: "" } }, [
+                                _vm._v(
+                                  "\n                            Вложения\n                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("v-tab", { attrs: { ripple: "" } }, [
+                                _vm._v(
+                                  "\n                            История\n                        "
+                                )
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-layout",
+                {
+                  attrs: {
+                    row: "",
+                    "justify-end": "",
+                    wrap: "",
+                    "fill-height": ""
+                  }
+                },
+                [
+                  _c(
+                    "v-flex",
+                    { attrs: { md8: "", xs12: "" } },
+                    [
+                      _c(
+                        "v-container",
+                        { staticClass: "pt-0 divide" },
+                        [
+                          _c(
+                            "v-layout",
+                            { attrs: { column: "" } },
+                            [
+                              _c("v-text-field", {
+                                model: {
+                                  value: _vm.currentWI.changed.name,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.currentWI.changed, "name", $$v)
+                                  },
+                                  expression: "currentWI.changed.name"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("div", {
+                                domProps: {
+                                  innerHTML: _vm._s(
+                                    _vm.currentWI.changed.description
+                                      .description
+                                  )
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-flex",
+                    { attrs: { md4: "", xs12: "" } },
+                    [
+                      _c(
+                        "v-tabs-items",
+                        {
+                          model: {
+                            value: _vm.model,
+                            callback: function($$v) {
+                              _vm.model = $$v
+                            },
+                            expression: "model"
+                          }
+                        },
+                        [
+                          _c(
+                            "v-tab-item",
+                            [
+                              _c(
+                                "v-card",
+                                { attrs: { flat: "" } },
+                                [_c("v-card-text", [_vm._v("Комментарии")])],
+                                1
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("v-tab-item", [_c("files")], 1),
+                          _vm._v(" "),
+                          _c(
+                            "v-tab-item",
+                            [
+                              _c(
+                                "v-card",
+                                { attrs: { flat: "" } },
+                                [_c("v-card-text", [_vm._v("История")])],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+if (true) {
+  module.hot.accept()
+  if (module.hot.data) {
+    __webpack_require__(0)      .rerender("data-v-b12af694", { render: render, staticRenderFns: staticRenderFns })
+  }
+}
+
+/***/ }),
+/* 308 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(304);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var add = __webpack_require__(20).default
+var update = add("23475b00", content, false, {});
+// Hot Module Replacement
+if(true) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept(304, function() {
+     var newContent = __webpack_require__(304);
+     if(typeof newContent === 'string') newContent = [[module.i, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);

@@ -8,6 +8,8 @@ import Home from '../components/onProject/home'
 import Dashboard from '../components/onProject/dashboard'
 import Epick from '../components/onProject/workItems/epick'
 import UserStory from '../components/onProject/workItems/user-story'
+import Task from '../components/onProject/workItems/task'
+
 import { ifAuthenticated } from './hooks'
 
 export const routes = [
@@ -27,7 +29,8 @@ export const routes = [
       {name:'project', path:'/', component: Home, beforeEnter: ifAuthenticated},
       {name:'dashboard', path:'dashboard', component: Dashboard, beforeEnter: ifAuthenticated},
       {name:'EPICK', path:'epick-:number', component: Epick, beforeEnter:ifAuthenticated},
-      {name:'STORY', path:'story-:number', component: UserStory, beforeEnter:ifAuthenticated}
+      {name:'STORY', path:'story-:number', component: UserStory, beforeEnter:ifAuthenticated},
+      {name:'TASK', path:'task-:number', component: Task, beforeEnter:ifAuthenticated}
     ]
   }
 ]

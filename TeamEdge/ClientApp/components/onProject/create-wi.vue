@@ -107,7 +107,6 @@ export default {
                 projectId:this.project.id,
                 fileIds: this.selectedFiles.map(e=>e.id), 
             }, this.model);
-            console.log(model);
             this.$http.post(`/api/workitems`, model)
             .then(
                 r=>{
