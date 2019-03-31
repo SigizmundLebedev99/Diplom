@@ -22,11 +22,11 @@
             <v-text-field 
             v-model="model.email" 
             label="Email"
-            :rules="[...defaultRule('email'),emailRule]"></v-text-field>
+            :rules="[...defaultRule('email'),emailRule, uniqueEmailRule]"></v-text-field>
             <v-text-field 
             v-model="model.userName"
             label="Логин" 
-            :rules="defaultRule('login')"
+            :rules="[...defaultRule('login'), uniqueLoginRule]"
             required></v-text-field>
             <v-text-field
             v-model="model.password"
@@ -56,28 +56,31 @@
   export default {
     mixins:[onResize, formValidation],
     data(){
-        return{
-          valid:false,
-          model:{
-            email:"",
-            password:"",
-            firstname:"",
-            lastname:"",
-            userName:"",
-            patronymic:""
-          },
-          rules:{
-            login:{first:"Необходимо ввести логин",second:"Логин не должен содержать пробелов"},
-            pass:{first:"Необходимо ввести пароль",second:"Пароль не должен содержать пробелов"},
-            fname:{first:"Необходимо ввести имя",second:"Имя не должно содержать пробелов"},
-            lname:{first:"Необходимо ввести фамилию",second:"Фамилия не должена содержать пробелов"},
-            email:{first:"Необходимо ввести email",second:"Email не должен содержать пробелов"},
-          },
-          confirmPassRule:[v=> v === this.model.password || "Пароли не совпадают"],
-          emailRule:v => /.+@.+/.test(v) || 'Неверный email',
-          passRule:v => (v || '').length >= 6 ||
-              `Пароль должен быть длиннее 6 символов`
-        }
+      return{
+        errorsModel:{},
+        valid:false,
+        model:{
+          email:"",
+          password:"",
+          firstname:"",
+          lastname:"",
+          userName:"",
+          patronymic:""
+        },
+        rules:{
+          login:{first:"Необходимо ввести логин",second:"Логин не должен содержать пробелов"},
+          pass:{first:"Необходимо ввести пароль",second:"Пароль не должен содержать пробелов"},
+          fname:{first:"Необходимо ввести имя",second:"Имя не должно содержать пробелов"},
+          lname:{first:"Необходимо ввести фамилию",second:"Фамилия не должена содержать пробелов"},
+          email:{first:"Необходимо ввести email",second:"Email не должен содержать пробелов"},
+        },
+        confirmPassRule:[v=> v === this.model.password || "Пароли не совпадают"],
+        emailRule:v => /.+@.+/.test(v) || 'Неверный email',
+        passRule:v => (v || '').length >= 6 ||
+            `Пароль должен быть длиннее 6 символов`,
+        uniqueEmailRule:v => !(this.errorsModel.DuplicateEmail == this.model.email) || 'Этот email занят',
+        uniqueLoginRule:v=> !(this.errorsModel.DuplicateUserName == this.model.userName) || 'Этот login занят'
+      }
     },
     methods:{
       defaultRule(label){
@@ -87,11 +90,18 @@
       sendData(){
         if(!this.valid)
           return;
+        this.errorsModel = {};
         this.$http.post(`/api/account/register`, this.model).then(
-          response=>{
+          r=>{
             this.$router.push({name:"afterRegister"});
           },
-          response=>{
+          r=>{
+            var errors = r.response.data;
+            if(errors.some(e=>e.code == 'DuplicateEmail'))
+              this.errorsModel.DuplicateEmail = this.model.email;
+            if(errors.some(e=>e.code == 'DuplicateUserName'))
+              this.errorsModel.DuplicateUserName = this.model.userName
+            this.validate();
           }
         )
       }

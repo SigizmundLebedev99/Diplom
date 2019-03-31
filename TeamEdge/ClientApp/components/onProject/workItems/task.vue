@@ -6,15 +6,15 @@
             </v-layout>
         </v-container>
         <div v-else>
-            <v-toolbar class="green" flat dense dark>
+            <v-toolbar :class="$route.meta.color" flat dense dark>
                 <v-layout row align-center>
                     <v-toolbar-title>
-                        Task - {{currentWI.changed.number}}
+                        {{$route.meta.name}} - {{currentWI.changed.number}}
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-flex md4>
                         <v-tabs
-                            color="green"
+                            :color="$route.meta.color"
                             v-model="model"
                             centered
                             slider-color="yellow">
@@ -67,6 +67,7 @@
 import {mapGetters, mapMutations} from 'vuex'
 import onResize from '../../../mixins/on-resize'
 import currentItem from '../../../mixins/work-item'
+import workItems from '../../../data/work-items'
 import files from '../files'
 
 export default {
@@ -93,7 +94,7 @@ export default {
             }
             else{
                 this.loading = true;
-                this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/TASK/${this.number}`)
+                this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/${this.$route.name}/${this.number}`)
                 .then(
                     r=>{
                         r.data.changed = Object.assign({}, r.data);

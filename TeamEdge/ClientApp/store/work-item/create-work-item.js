@@ -1,10 +1,12 @@
 const state = ()=>({
     dialog:false,
     predefinedCode:null,
+    additionalInfo:{}
 });
 
 const getters = {
-    dialog:(state)=>state.dialog
+    dialog:(state)=>state.dialog,
+    additionalInfo:(state)=>state.additionalInfo
 }
 
 const actions = {
@@ -24,6 +26,9 @@ const mutations = {
     },
     predefined(state,payload){
         state.predefinedCode = payload;
+    },
+    setAdditionalInfo(state, payload){
+        state.additionalInfo = payload;
     }
 }
 

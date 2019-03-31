@@ -1,15 +1,13 @@
 export default{
     methods:{
         validate () {
-            if (this.$refs.form.validate()) {
-              this.snackbar = true
-            }
-          },
-          reset () {
-            this.$refs.form.reset()
-          },
-          resetValidation () {
-            this.$refs.form.resetValidation()
-          }
+          return this.$refs.form.validate();
+        },
+        reset () {
+          this.$refs.form.reset()
+        },
+        resetValidation () {
+          this.$refs.form.resetValidation()
+        }
     }
 }

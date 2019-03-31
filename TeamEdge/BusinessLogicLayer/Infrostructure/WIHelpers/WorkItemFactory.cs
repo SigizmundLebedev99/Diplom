@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +23,7 @@ namespace TeamEdge
 
         public static WorkItemAttribute GetAttributeInstanse(string code)
         {
-            return EnumElements.Select(e=>e.Attribute).FirstOrDefault(e => e.Code == code);
+            return EnumElements.Select(e=>e.Attribute).FirstOrDefault(e => code.StartsWith(e.Code));
         }
 
         public static string GetEnumElement(string code)

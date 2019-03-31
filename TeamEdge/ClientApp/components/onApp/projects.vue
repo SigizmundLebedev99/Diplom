@@ -19,7 +19,7 @@
             <v-container v-else>
                 <v-layout wrap :class="ofSize({xs:'column align-center', sm:'row justify-center'})">
                     <v-card v-for="(p,i) in projects" :key="i" dark width="200px" class="mr-4 elevation-12">
-                        <v-toolbar dark dense color="primary" class="nopad" flat>
+                        <v-toolbar dark dense color="primary" flat>
                                 <v-spacer></v-spacer>
                                 <v-btn flat small class="text-none" @click="goToProj(p.id)">
                                     Перейти

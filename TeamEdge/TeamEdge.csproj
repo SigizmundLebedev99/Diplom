@@ -10,6 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190330083146_epickLink.cs" />
+    <Compile Remove="Migrations\20190330083146_epickLink.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\Images\Avatars\" />
     <Folder Include="wwwroot\Images\wiImages\" />

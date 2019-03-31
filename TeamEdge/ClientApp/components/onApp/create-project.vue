@@ -17,7 +17,11 @@
             <v-card-text>
                 <v-form ref="form" v-model="valid">
                     <v-subheader>Название</v-subheader>
-                    <v-text-field class="mx-3" :rules="nameRules" v-model="name" required/>
+                    <v-text-field class="mx-3" 
+                    :rules="nameRules" 
+                    v-model="name" 
+                    required
+                    counter="30"/>
                     <v-layout column align-center>
                         <v-subheader>Логотип</v-subheader>
                         <img v-show="logo" :src="logo" height="124px"/>
@@ -50,7 +54,7 @@ export default {
             valid:true,
             logo:"",
             opened:false,
-            nameRules:[v=>!!v||"Введите название", v=>v.length>2||"Длина названия от 3х символов", v=>v.length<20||"Длина названия до 20ти символов"]
+            nameRules:[v=>v?v.length>2||"Длина названия от 3х символов":"Введите название"]
         }
     },
     methods: {

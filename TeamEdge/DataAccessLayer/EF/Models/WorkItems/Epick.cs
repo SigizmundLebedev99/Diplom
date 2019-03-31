@@ -8,7 +8,7 @@ namespace TeamEdge.DAL.Models
     {
         [PropertyChanges(typeof(ChildrenChangeFactory))]
         public ICollection<UserStory> Children { get; set; }
-
+        public ICollection<_Task> Links { get; set; }
         public override string Code => WorkItemType.Epick.Code(); 
     }
 }

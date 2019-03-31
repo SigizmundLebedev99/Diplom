@@ -1,6 +1,8 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -26,7 +28,10 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
             var entity = _mapper.Map<Epick>(model);
-            
+
+            var epickDto = model as CreateEpickDTO;
+            var checkLinksResult = await CheckChildren<_Task>(epickDto.LinkIds, model.ProjectId);
+            operRes.Plus(checkLinksResult);
             var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
             operRes.Plus(checkResult);
 
@@ -40,8 +45,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 entity.Status = (WorkItemStatus)checkResult.Result.Select(e => (byte)e.Status).Max();
                 foreach (var t in children)
-                    t.ParentId = entity.DescriptionId;
+                    t.ParentId = description.Id;
                 _context.UserStories.UpdateRange(children);
+            }
+            if (checkLinksResult.Result != null)
+            {
+                foreach (var t in checkLinksResult.Result)
+                    t.EpickId = description.Id;
+                _context.Tasks.UpdateRange(checkLinksResult.Result);
             }
 
             _context.Epicks.Add(entity);
@@ -53,6 +64,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public override IQueryable<ItemDTO> GetItems(GetItemsDTO model)
         {
+            if (model.Code.EndsWith('!'))
+            {
+                return _context.UserStories.Select(WorkItemHelper.ItemDTOSelector).Concat(
+                    _context.Tasks.Select(WorkItemHelper.ItemDTOSelector));
+            }
             model.HasNoParent = false;
             model.ParentId = null;
             var filter = WorkItemHelper.GetFilter<Epick>(model);
@@ -121,7 +137,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Name = a.Name,
                 Number = a.Number,
                 DescriptionId = a.DescriptionId
-            }),
+            }).Concat(e.Links.Select(a => new ItemDTO
+            {
+                Code = WorkItemType.UserStory.Code(),
+                Name = a.Name,
+                Number = a.Number,
+                DescriptionId = a.DescriptionId
+            })),
             Description = new DescriptionDTO
             {
                 CreatedBy = e.Description.Creator == null ? null : new UserLightDTO

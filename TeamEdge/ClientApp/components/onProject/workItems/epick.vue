@@ -15,7 +15,7 @@
                     <v-flex md4>
                         <v-tabs
                             color="yellow"
-                            v-model="model"
+                            v-model="tabModel"
                             centered
                             slider-color="black">
                             <v-tab ripple>
@@ -38,11 +38,11 @@
                             <v-text-field v-model="currentWI.changed.name">
                             </v-text-field>
                             <div v-html="currentWI.changed.description.description"></div>
-                        </v-layout>  
-                    </v-container>       
+                        </v-layout> 
+                    </v-container>      
                 </v-flex>
                 <v-flex md4 xs12>
-                    <v-tabs-items v-model="model">
+                    <v-tabs-items v-model="tabModel">
                         <v-tab-item>
                             <v-card flat>
                             <v-card-text>Комментарии</v-card-text>
@@ -79,7 +79,7 @@ export default {
     },
     data:()=>({
         loading:true,
-        model:null
+        tabModel:null
     }),
     computed:{
         number(){

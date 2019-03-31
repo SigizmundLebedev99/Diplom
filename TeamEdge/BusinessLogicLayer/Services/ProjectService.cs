@@ -105,6 +105,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                         FromEmail = i.Creator.Email,
                         FromFullName = i.Creator.FullName,
                         FromId = i.CreatorId,
+                        FromAvatar = i.Creator.Avatar,
                         InviteId = i.Id,
                         Logo = i.Project.Logo,
                         ProjectName = i.Project.Name,

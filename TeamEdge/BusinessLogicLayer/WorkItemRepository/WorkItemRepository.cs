@@ -202,9 +202,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
-        protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem
+        protected Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId) where T : BaseWorkItem
         {
-            return await CheckChildrenTemplate(childrenIds, projectId, _context.Set<T>());
+            return CheckChildrenTemplate(childrenIds, projectId, _context.Set<T>());
         }
 
         protected async Task<OperationResult<IEnumerable<T>>> CheckChildren<T>(int[] childrenIds, int projectId, IQueryable<T> context) where T : IBaseWorkItem

@@ -26,7 +26,7 @@ namespace TeamEdge.Mapper
             CreateMap<CreateTaskDTO, _Task>();
             CreateMap<CreateTaskDTO, SubTask>();
             CreateMap<CreateUserStoryDTO, UserStory>();
-            CreateMap<CreateWorkItemDTO, Epick>();
+            CreateMap<CreateEpickDTO, Epick>();
 
             CreateMap<CreateWorkItemDTO, WorkItemDescription>()
                 .ForMember(e => e.Files, c => c.MapFrom(e => e.FileIds.Select(x => new WorkItemFile
