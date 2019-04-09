@@ -72,9 +72,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }
         }
 
-        protected void AddChildren<TChild, TPar>(IEnumerable<TChild> children, int parentId)
-            where TChild : IBaseWorkItemWithParent<TPar>
-            where TPar : IBaseWorkItem
+        protected void AddChildren<TChild>(IEnumerable<TChild> children, int parentId) where TChild : IBaseWorkItemWithParent
         {
             if (children != null)
             {
@@ -84,9 +82,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }
         }
 
-        protected void UpdateChildren<TChild, TPar>(IEnumerable<TChild> previous, IEnumerable<TChild> next, int parentId) 
-            where TChild : IBaseWorkItemWithParent<TPar> 
-            where TPar: IBaseWorkItem
+        protected void UpdateChildren<TChild>(IEnumerable<TChild> previous, IEnumerable<TChild> next, int parentId) where TChild:IBaseWorkItemWithParent
         {
             IEnumerable<TChild> resultSeq;
 
@@ -270,7 +266,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _httpContext = ((IHttpContextAccessor)provider.GetService(typeof(IHttpContextAccessor))).HttpContext;
         }
 
-        public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int project);
+        public abstract Task<WorkItemDTO> GetWorkItem(string code, int number, int projectId);
+        public abstract Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId);
         public abstract Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null);
         public abstract IQueryable<ItemDTO> GetItems(GetItemsDTO model);
         public abstract Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model);

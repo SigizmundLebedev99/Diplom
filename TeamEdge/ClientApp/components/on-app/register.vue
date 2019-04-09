@@ -7,12 +7,12 @@
           <v-card-text>
           <v-form ref="form" v-model="valid">
             <v-text-field
-            v-model="model.firstname" 
+            v-model="model.firstName" 
             label="Имя" 
             :rules="defaultRule('login')"
             required></v-text-field>
             <v-text-field
-            v-model="model.lastname" 
+            v-model="model.lastName" 
             label="Фамилия" 
             :rules="defaultRule('lname')"
             required></v-text-field>
@@ -40,9 +40,8 @@
           </v-form>
           </v-card-text>
           <v-card-actions>
-            <v-layout row justify-end>
-              <v-btn @click="sendData()" color="primary">OK</v-btn>
-            </v-layout>
+            <v-spacer/>
+            <v-btn @click="sendData()" color="primary" :loading="loading" small>Регистрация</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -57,12 +56,13 @@
     mixins:[onResize, formValidation],
     data(){
       return{
+        loading:false,
         errorsModel:{},
         valid:false,
         model:{
           email:"",
           password:"",
-          firstname:"",
+          firstName:"",
           lastname:"",
           userName:"",
           patronymic:""
@@ -75,7 +75,7 @@
           email:{first:"Необходимо ввести email",second:"Email не должен содержать пробелов"},
         },
         confirmPassRule:[v=> v === this.model.password || "Пароли не совпадают"],
-        emailRule:v => /.+@.+/.test(v) || 'Неверный email',
+        emailRule:v => /.+@.+/.test(v) || 'Неправильный email',
         passRule:v => (v || '').length >= 6 ||
             `Пароль должен быть длиннее 6 символов`,
         uniqueEmailRule:v => !(this.errorsModel.DuplicateEmail == this.model.email) || 'Этот email занят',
@@ -91,17 +91,25 @@
         if(!this.valid)
           return;
         this.errorsModel = {};
+        this.loading = true;
         this.$http.post(`/api/account/register`, this.model).then(
           r=>{
             this.$router.push({name:"afterRegister"});
+            this.loading = false;
           },
           r=>{
+            if(r.response.status == 500){
+              console.log(r.response);
+              this.loading = false;
+              return;
+            }
             var errors = r.response.data;
             if(errors.some(e=>e.code == 'DuplicateEmail'))
               this.errorsModel.DuplicateEmail = this.model.email;
             if(errors.some(e=>e.code == 'DuplicateUserName'))
               this.errorsModel.DuplicateUserName = this.model.userName
             this.validate();
+            this.loading = false;
           }
         )
       }

@@ -14,7 +14,7 @@
                 </v-list-tile-avatar>            
                 <v-list-tile-title>Проекты</v-list-tile-title>
             </v-list-tile>
-            <v-list-tile @click="signOut()">    
+            <v-list-tile @click="$router.push({name:'invites'})">    
                 <v-list-tile-avatar>
                     <v-icon>
                         mail
@@ -22,7 +22,7 @@
                 </v-list-tile-avatar>        
                 <v-list-tile-title>Приглашения</v-list-tile-title>
             </v-list-tile>
-            <v-list-tile @click="signOut()">    
+            <v-list-tile @click="goToProfile()">    
                 <v-list-tile-avatar>
                     <v-icon>
                         face
@@ -43,16 +43,20 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from 'vuex';
+import { mapMutations, mapActions, mapGetters } from 'vuex';
 export default {
     methods:{
         ...mapMutations({
             signOut:'auth/signOut'
+        }),
+        ...mapActions({
+            goToProfile:'profile/open'
         })
     },
     computed:{
         ...mapGetters({
-            profile:'auth/profile'
+            profile:'auth/profile',
+            invites:'projects/invites'
         })
     }
 }

@@ -19,6 +19,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Select(SelectExpression).FirstOrDefaultAsync();
         }
 
+        public override Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId)
+        {
+            return _context.UserStories.Where(e => e.Description.ProjectId == projectId && e.Number == number)
+               .Select(WorkItemHelper.ItemDTOSelector).FirstOrDefaultAsync();
+        }
+
         public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
@@ -57,7 +63,18 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public override IQueryable<ItemDTO> GetItems(GetItemsDTO model)
         {
             var filter = WorkItemHelper.GetFilter<UserStory>(model);
-            return _context.UserStories.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+            return _context.UserStories.Where(filter).Select(e =>
+            new ItemWithParentDTO {
+                Code = WorkItemType.UserStory.Code(),
+                DescriptionId = e.DescriptionId,
+                Name = e.Name,
+                Number = e.Number,
+                Parent = e.Parent != null ? new WorkItemIdentifier
+                {
+                    Code = e.Parent.Code,
+                    Number = e.Parent.Number
+                } : null
+            });
         }
 
         public override async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
@@ -100,7 +117,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren<_Task, UserStory>(entity.Children, checkResult.Result, entity.DescriptionId);
+            UpdateChildren(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.UserStories.Update(nextentity);
 
             await _context.SaveChangesAsync();

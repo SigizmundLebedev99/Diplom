@@ -13,10 +13,10 @@
           </template>
           <template v-else>
             <span class="white--text">{{profile.fullName}}</span>
-            <v-avatar size="36px" class="ml-3">
-                <img v-if="profile.avatar"
+            <v-avatar size="40px" class="ml-3">
+                <v-img v-if="profile.avatar"
                 :src="profile.avatar"
-                alt="Avatar">
+                alt="Avatar"/>
                 <v-icon size="36px" dark v-else>account_circle</v-icon>
             </v-avatar>
           </template>

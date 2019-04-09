@@ -18,9 +18,11 @@ const mutations = {
   signIn(state, payload){
     state.profile = payload.profile;
     if(payload.remember)
-    {
+    
       localStorage.setItem('user', JSON.stringify(payload.profile));
-    }
+    
+    else
+      localStorage.removeItem('user');
     state.open = false;
     if(state.returnUrl){
       router.push(state.returnUrl);

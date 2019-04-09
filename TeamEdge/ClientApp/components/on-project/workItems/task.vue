@@ -37,7 +37,36 @@
                         <v-layout column>
                             <v-text-field v-model="currentWI.changed.name">
                             </v-text-field>
-                            <div v-html="currentWI.changed.description.description"></div>
+                            <ckeditor :editor="editor" v-model="currentWI.changed.description.description" :config="editorConfig"></ckeditor>
+                            <v-layout row wrap>
+                                <v-flex xs12 sm6>
+                                    <v-layout align-center>
+                                        <v-subheader class="pl-0">Предок</v-subheader>
+                                        <wi-selector code="STORY" @selected="parentSelected" icon="edit"/>
+                                        <v-btn small icon class="ml-0" @click="dropParent()">
+                                            <v-icon small>close</v-icon>
+                                        </v-btn> 
+                                    </v-layout>
+                                    <v-divider class="mr-3 mt-0 mb-2"></v-divider>
+                                    <router-link v-if="currentWI.changed.parent" :to="{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}">
+                                        <span>{{`${currentWI.changed.parent.code}${currentWI.changed.parent.number} - ${currentWI.changed.parent.name}`}}</span>
+                                    </router-link><span v-else>Предок не выбран</span>
+                                </v-flex>
+                                <v-flex xs12 sm6>
+                                    <v-layout align-center>
+                                        <v-subheader class="pl-0">Epick link</v-subheader>
+                                        <wi-selector code="EPICK" @selected="epickSelected" icon="edit"/>
+                                        <v-btn small icon class="ml-0" @click="dropEpick()">
+                                            <v-icon small>close</v-icon>
+                                        </v-btn> 
+                                    </v-layout>
+                                    <v-divider class="mr-3 mt-0 mb-2"></v-divider>
+                                    <router-link v-if="currentWI.changed.epick" :to="{name:currentWI.changed.epick.code, params:{number:currentWI.changed.epick.number}}">
+                                        <span>{{`${currentWI.changed.epick.code}${currentWI.changed.epick.number} - ${currentWI.changed.epick.name}`}}</span>
+                                    </router-link>
+                                    <span v-else>Epick не выбран</span>
+                                </v-flex>
+                            </v-layout>
                         </v-layout>  
                     </v-container>       
                 </v-flex>
@@ -66,26 +95,33 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import onResize from '../../../mixins/on-resize'
-import currentItem from '../../../mixins/work-item'
-import workItems from '../../../data/work-items'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import adapters from '../../../image-upload-adapter'
 import files from '../files'
+import wiSelector from '../wi-selector'
 
 export default {
-    mixins:[onResize, currentItem],
+    mixins:[onResize],
     components:{
-        'files':files
+        'files':files,
+        'wi-selector': wiSelector
     },
     mounted(){
         this.enter();
     },
     data:()=>({
         loading:true,
-        model:null
+        model:null,
+        editor: ClassicEditor,
+        editorConfig: {
+            extraPlugins: [ adapters.updateWIAdapter ]
+        }
     }),
     computed:{
         number(){
             return this.$route.params.number;
-        }
+        },
+        ...mapGetters({currentWI:'project/currentWI'})
     },
     methods:{
         enter(){
@@ -104,6 +140,18 @@ export default {
                     r=>console.log(r.response)
                 );
             }
+        },
+        parentSelected(item){
+            this.currentWI.changed.parent = item;
+        },
+        dropParent(){
+            this.currentWI.changed.parent = null;
+        },
+        epickSelected(item){
+            this.currentWI.changed.epick = item;
+        },
+        dropEpick(){
+            this.currentWI.changed.epick = null;
         },
         ...mapMutations({addWI:'project/addWI'})
     },

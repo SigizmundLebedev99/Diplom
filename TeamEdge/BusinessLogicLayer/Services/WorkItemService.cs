@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
@@ -53,6 +54,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 throw new NotFoundException("number_nf");
 
             return result;
+        }
+
+        public async Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId,  int userId)
+        {
+            await _validationService.ValidateProjectAccess(projectId, userId);
+            return await GetRepository(code).GetDenseWorkItem(code, number, projectId);
         }
 
         public async Task<OperationResult<WorkItemDTO>> CreateWorkItem(CreateWorkItemDTO model)
@@ -110,6 +117,22 @@ namespace TeamEdge.BusinessLogicLayer.Services
             operRes.Plus(await _validationService.ValidateFileIds(model.FileIds, model.ProjectId));
 
             return (operRes,userProj);
+        }
+
+        public async Task<IEnumerable<ItemDTO>> GetBacklog(int projectId)
+        {
+            Expression<Func<IBaseWorkItemWithParent, bool>> filter = e => e.Description.ProjectId == projectId;
+            return await _context.Tasks.Where(e=>e.Description.ProjectId == projectId).Select(item => new ItemForBacklogDTO
+                {
+                    Code = item.Code,
+                    DescriptionId = item.DescriptionId,
+                    Name = item.Name,
+                    Number = item.Number,
+                    Status = item.Status,
+                    ParentId = item.ParentId??item.EpickId
+                })
+                .Concat(_context.UserStories.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector))
+                .Concat(_context.Epicks.Where(e=>e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector)).ToListAsync();
         }
         #endregion
     }

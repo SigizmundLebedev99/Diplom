@@ -11,7 +11,7 @@
             <v-layout column class="mr-3 ml-3 block">
                 <v-layout row align-center wrap justify-space-between>
                     <span class="subheading mt-1">Прикрепите имеющиеся в проекте файлы или загрузите новые</span>
-                    <input type="file"/>
+                    <input type="file" class="my-2"/>
                     <div class="constraint">
                         <v-text-field prepend-icon="search" v-model="filterText"></v-text-field>
                     </div>

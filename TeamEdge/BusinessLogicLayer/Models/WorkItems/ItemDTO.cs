@@ -1,4 +1,4 @@
-﻿namespace TeamEdge.Models
+namespace TeamEdge.Models
 {
     public class ItemDTO
     {

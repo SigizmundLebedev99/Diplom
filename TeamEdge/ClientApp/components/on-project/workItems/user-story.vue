@@ -6,16 +6,16 @@
             </v-layout>
         </v-container>
         <div v-else>
-            <v-toolbar class="yellow" flat dense>
+            <v-toolbar class="blue" flat dense dark>
                 <v-layout row align-center>
                     <v-toolbar-title>
-                        Epick - {{currentWI.changed.number}}
+                        User Story - {{currentWI.changed.number}}
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-flex md4>
                         <v-tabs
-                            color="yellow"
-                            v-model="tabModel"
+                            color="blue"
+                            v-model="model"
                             centered
                             slider-color="black">
                             <v-tab ripple>
@@ -37,12 +37,12 @@
                         <v-layout column>
                             <v-text-field v-model="currentWI.changed.name">
                             </v-text-field>
-                            <div v-html="currentWI.changed.description.description"></div>
-                        </v-layout> 
-                    </v-container>      
+                            <ckeditor :editor="editor" v-model="currentWI.changed.description.description" :config="editorConfig"></ckeditor>
+                        </v-layout>  
+                    </v-container>       
                 </v-flex>
                 <v-flex md4 xs12>
-                    <v-tabs-items v-model="tabModel">
+                    <v-tabs-items v-model="model">
                         <v-tab-item>
                             <v-card flat>
                             <v-card-text>Комментарии</v-card-text>
@@ -66,11 +66,12 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import onResize from '../../../mixins/on-resize'
-import currentItem from '../../../mixins/work-item'
 import files from '../files'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import adapters from '../../../image-upload-adapter'
 
 export default {
-    mixins:[onResize, currentItem],
+    mixins:[onResize],
     components:{
         'files':files
     },
@@ -79,12 +80,17 @@ export default {
     },
     data:()=>({
         loading:true,
-        tabModel:null
+        model:null,
+        editor: ClassicEditor,
+        editorConfig: {
+            extraPlugins: [ adapters.updateWIAdapter ]
+        }
     }),
     computed:{
         number(){
             return this.$route.params.number;
-        }
+        },
+        ...mapGetters({currentWI:'project/currentWI'})
     },
     methods:{
         enter(){
@@ -93,7 +99,7 @@ export default {
             }
             else{
                 this.loading = true;
-                this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/EPICK/${this.number}`)
+                this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/STORY/${this.number}`)
                 .then(
                     r=>{
                         r.data.changed = Object.assign({}, r.data);

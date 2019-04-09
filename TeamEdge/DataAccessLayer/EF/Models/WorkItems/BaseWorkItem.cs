@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
@@ -39,9 +39,13 @@ namespace TeamEdge.DAL.Models
         ICollection<TChild> Children { get; set; }
     }
 
-    public interface IBaseWorkItemWithParent<TParent> : IBaseWorkItem where TParent : IBaseWorkItem
+    public interface IBaseWorkItemWithParent : IBaseWorkItem
     {
         int? ParentId { get; set; }
+    }
+
+    public interface IBaseWorkItemWithParent<TParent> : IBaseWorkItemWithParent where TParent : IBaseWorkItem
+    {
         TParent Parent { get; set; } 
     }
 }

@@ -47,10 +47,10 @@
                     <v-list-tile-title>Доска</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
-                <v-list-tile :class="routeSel('dashboard')"
-                    @click.stop="goTo('dashboard')">
+                <v-list-tile :class="routeSel('backlog')"
+                    @click.stop="goTo('backlog')">
                     <v-list-tile-action>
-                        <v-icon class="trans" :class="routeSel('dashboard')">build</v-icon>
+                        <v-icon class="trans" :class="routeSel('backlog')">build</v-icon>
                     </v-list-tile-action>
 
                     <v-list-tile-content>
@@ -89,9 +89,9 @@
             <v-spacer></v-spacer>
             <span class="white--text">{{profile.fullName}}</span>
             <v-avatar size="36px" class="ml-3">
-                <img v-if="profile.avatar"
+                <v-img v-if="profile.avatar"
                 :src="profile.avatar"
-                alt="Avatar">
+                alt="Avatar"/>
                 <v-icon size="36px" dark v-else>account_circle</v-icon>
             </v-avatar>
             <side-menu/>
@@ -126,7 +126,7 @@ export default {
         return{
             drawer: true,
             items: [
-            { title: 'Home', icon: 'dashboard' },
+            { title: 'dashboard', icon: 'backlog' },
             { title: 'About', icon: 'question_answer' }
             ],
             mini: true

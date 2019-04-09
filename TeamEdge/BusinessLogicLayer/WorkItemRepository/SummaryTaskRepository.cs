@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -20,29 +19,29 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
-            var entity = _mapper.Map<SummaryTask>(model);
+            //var entity = _mapper.Map<SummaryTask>(model);
 
-            var checkResult = await CheckChildren(model.ChildrenIds, model.ProjectId, 
-                _context.Tasks.Concat((IQueryable<IBaseWorkItemWithParent<SummaryTask>>)_context.SummaryTasks));
-            operRes.Plus(checkResult);
+            ////var checkResult = await CheckChildren(model.ChildrenIds, model.ProjectId, 
+            ////    _context.Tasks.Concat((IQueryable<IBaseWorkItemWithParent<SummaryTask>>)_context.SummaryTasks));
+            ////operRes.Plus(checkResult);
 
-            if (model.ParentId != null)
-                operRes.Plus(await CheckParent<SummaryTask>(model.ProjectId, model.ParentId.Value));
+            //if (model.ParentId != null)
+            //    operRes.Plus(await CheckParent<SummaryTask>(model.ProjectId, model.ParentId.Value));
 
-            if (!operRes.Succeded)
-                return operRes;
+            //if (!operRes.Succeded)
+            //    return operRes;
 
-            var children = checkResult.Result;
-            entity.Number = await GetNumber<SummaryTask>(model.ProjectId);
-            entity.DescriptionId = description.Id;
+            ////var children = checkResult.Result;
+            //entity.Number = await GetNumber<SummaryTask>(model.ProjectId);
+            //entity.DescriptionId = description.Id;
 
-            AddChildren<IBaseWorkItemWithParent<SummaryTask>, SummaryTask>(checkResult.Result, 
-                description.Id);
+            //AddChildren(checkResult.Result, 
+            //    description.Id);
 
-            _context.SummaryTasks.Add(entity);
+            //_context.SummaryTasks.Add(entity);
 
-            await _context.SaveChangesAsync();
-            operRes.Result = await _context.SummaryTasks.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
+            //await _context.SaveChangesAsync();
+            //operRes.Result = await _context.SummaryTasks.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
             return operRes;
         }
 
@@ -63,54 +62,59 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
 
-            var nextentity = _mapper.Map<SummaryTask>(model);
-            var nextdesc = _mapper.Map<WorkItemDescription>(model);
+            //var nextentity = _mapper.Map<SummaryTask>(model);
+            //var nextdesc = _mapper.Map<WorkItemDescription>(model);
 
-            var query = _context.SummaryTasks
-                .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
-                .Include(e=> e.Description).ThenInclude(e=>e.Tags)
-                .Include(e => e.Children)
-                .Include(e=>e.SummaryTaskChildren)
-                .Include(e => e.Parent);
+            //var query = _context.SummaryTasks
+            //    .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
+            //    .Include(e=> e.Description).ThenInclude(e=>e.Tags)
+            //    .Include(e => e.Children)
+            //    .Include(e=>e.SummaryTaskChildren)
+            //    .Include(e => e.Parent);
 
-            var entity = await query
-                .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number);
+            //var entity = await query
+            //    .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number);
 
-            if (entity == null)
-                throw new NotFoundException("item_nf");
+            //if (entity == null)
+            //    throw new NotFoundException("item_nf");
 
-            nextentity.DescriptionId = entity.DescriptionId;
-            nextentity.Number = entity.Number;
-            WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
+            //nextentity.DescriptionId = entity.DescriptionId;
+            //nextentity.Number = entity.Number;
+            //WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
-            var checkResult = await CheckChildren(model.ChildrenIds, model.ProjectId,
-               _context.Tasks.Concat((IQueryable<IBaseWorkItemWithParent<SummaryTask>>)_context.SummaryTasks));
-            operRes.Plus(checkResult);
-            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
+            //var checkResult = await CheckChildren(model.ChildrenIds, model.ProjectId,
+            //   _context.Tasks.Concat((IQueryable<IBaseWorkItemWithParent<SummaryTask>>)_context.SummaryTasks));
+            //operRes.Plus(checkResult);
+            //operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
 
-            if (model.ParentId != null)
-                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
+            //if (model.ParentId != null)
+            //    operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
 
-            if (!operRes.Succeded)
-                return operRes;
+            //if (!operRes.Succeded)
+            //    return operRes;
 
-            var files = nextdesc.Files;
-            var tags = nextdesc.Tags;
-            nextdesc.Files = null;
-            nextdesc.Tags = null;
-            DetachAllEntities(entity);
-            _context.WorkItemDescriptions.Update(nextdesc);
-            UpdateFiles(entity.Description.Files, files, nextdesc.Id);
-            UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren<IBaseWorkItemWithParent<SummaryTask>, SummaryTask>(entity.AllChildren, checkResult.Result, entity.DescriptionId);
-            _context.SummaryTasks.Update(nextentity);
+            //var files = nextdesc.Files;
+            //var tags = nextdesc.Tags;
+            //nextdesc.Files = null;
+            //nextdesc.Tags = null;
+            //DetachAllEntities(entity);
+            //_context.WorkItemDescriptions.Update(nextdesc);
+            //UpdateFiles(entity.Description.Files, files, nextdesc.Id);
+            //UpdateTags(entity.Description.Tags, tags);
+            //UpdateChildren(entity.AllChildren, checkResult.Result, entity.DescriptionId);
+            //_context.SummaryTasks.Update(nextentity);
 
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
 
-            var result = await query.Where(e => e.DescriptionId == entity.DescriptionId).ToListAsync();
-            operRes.Result = result.Select(SelectExpression.Compile()).First();
-            _historyService.CompareForChanges(entity, result.First(), _httpContext.User);
+            //var result = await query.Where(e => e.DescriptionId == entity.DescriptionId).ToListAsync();
+            //operRes.Result = result.Select(SelectExpression.Compile()).First();
+            //_historyService.CompareForChanges(entity, result.First(), _httpContext.User);
             return operRes;
+        }
+
+        public override Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId)
+        {
+            throw new NotImplementedException();
         }
 
         private Expression<Func<SummaryTask, WorkItemDTO>> SelectExpression = e => new SummaryTaskInfoDTO
@@ -142,15 +146,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Name = e.Description.LastUpdater.FullName
                 }
             },
-            Children = e.AllChildren.Select(a =>
-                new ItemDTO
-                {
-                    Code = a.Code,
-                    DescriptionId = a.DescriptionId,
-                    Name = a.Name,
-                    Number = a.Number,
-                    Status = a.Status
-                }),
             Parent = e.Parent == null? null:new ItemDTO
             {
                 Code = e.Parent.Code,

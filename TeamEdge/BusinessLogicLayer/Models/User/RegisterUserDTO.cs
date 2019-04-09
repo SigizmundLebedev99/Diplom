@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace TeamEdge.Models
@@ -14,10 +14,10 @@ namespace TeamEdge.Models
         public string Password { get; set; }
 
         [Required]
-        public string Firstname { get; set; }
+        public string FirstName { get; set; }
 
         [Required]
-        public string Lastname { get; set; }
+        public string LastName { get; set; }
 
         [Required]
         public string UserName { get; set; }

@@ -48,8 +48,7 @@ namespace TeamEdge.DAL.Context
         {
             return Tasks.Where(filter).Select(selector)
                 .Concat(UserStories.Where(filter).Select(selector))
-                .Concat(Epicks.Where(filter).Select(selector))
-                .Concat(SummaryTasks.Where(filter).Select(selector));
+                .Concat(Epicks.Where(filter).Select(selector));
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

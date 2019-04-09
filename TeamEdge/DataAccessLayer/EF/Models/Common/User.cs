@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,9 +7,9 @@ namespace TeamEdge.DAL.Models
     public class User : IdentityUser<int>
     {
         [StringLength(64, MinimumLength =3)]
-        public string Firstname { get; set; }
+        public string FirstName { get; set; }
         [StringLength(64, MinimumLength = 3)]
-        public string Lastname { get; set; }
+        public string LastName { get; set; }
         [StringLength(64, MinimumLength =3)]
         public string Patrinymic { get; set; }
 
@@ -22,7 +22,7 @@ namespace TeamEdge.DAL.Models
         {
             get
             {
-                return $"{Lastname} {Firstname}";
+                return $"{LastName} {FirstName}";
             }
         }
     }

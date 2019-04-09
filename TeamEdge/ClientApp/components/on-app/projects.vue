@@ -1,11 +1,12 @@
 <template>
     <div>
-        <v-layout row justify-space-between align-center :class="ofSize({xs:'mr-1 ml-1 mt-2 mb-2', sm:'mr-5 ml-5 mt-2 mb-2'})">
-            <span class="title ml-3">
+        <v-toolbar class="transparent" flat>
+            <v-toolbar-title>
                 Ваши проекты
-            </span>
+            </v-toolbar-title>
+            <v-spacer/>
             <create-project></create-project>
-        </v-layout>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-layout justify-center v-show="loading" class="contsraint mt-4">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>

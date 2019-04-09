@@ -92,6 +92,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
+        public override Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId)
+        {
+            return _context.SubTasks.Where(e => e.Description.ProjectId == projectId && e.Number == number)
+               .Select(WorkItemHelper.ItemDTOSelector).FirstOrDefaultAsync();
+        }
+
         private static readonly Expression<Func<SubTask, WorkItemDTO>> SelectExpression = e => new TaskInfoDTO
         {
             Code = WorkItemType.SubTask.Code(),

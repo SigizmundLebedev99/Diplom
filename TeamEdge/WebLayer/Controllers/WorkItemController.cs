@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer;
 using TeamEdge.BusinessLogicLayer.Interfaces;
@@ -47,6 +48,13 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        [HttpGet("project/{projectId}/backlog")]
+        public async Task<IActionResult> GetBacklog(int projectId)
+        {
+            var result = await _workItemService.GetBacklog(projectId);
+            return Ok(result);
+        }
+
         [HttpPut("number/{number}")]
         public async Task<IActionResult> UpdateWorkItem(int number, [FromBody]CreateWorkItemDTO model)
         {
@@ -59,6 +67,13 @@ namespace TeamEdge.WebLayer.Controllers
         public async Task<IActionResult> GetTasksForUser(int projectId, int userId)
         {
             var res = await _workItemService.GetTasksForUser(projectId, userId);
+            return Ok(res);
+        }
+
+        [HttpGet("project/{projectId}/itemdense/{code}/{number}")]
+        public async Task<IActionResult> GetDenseWorkItem(int projectId, string code, int number)
+        {
+            var res = await _workItemService.GetDenseWorkItem(code, number, projectId, User.Id());
             return Ok(res);
         }
     }

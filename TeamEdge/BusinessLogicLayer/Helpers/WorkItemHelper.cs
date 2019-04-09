@@ -45,6 +45,16 @@ namespace TeamEdge.BusinessLogicLayer
             Status = item.Status
         };
 
+        public static Expression<Func<IBaseWorkItemWithParent, ItemForBacklogDTO>> ItemBacklogDTOSelector = item => new ItemForBacklogDTO
+        {
+            Code = item.Code,
+            DescriptionId = item.DescriptionId,
+            Name = item.Name,
+            Number = item.Number,
+            Status = item.Status,
+            ParentId = item.ParentId
+        };
+
         public static void RestoreDescriptionData(WorkItemDescription previous, WorkItemDescription nextdesc)
         {
             nextdesc.Id = previous.Id;

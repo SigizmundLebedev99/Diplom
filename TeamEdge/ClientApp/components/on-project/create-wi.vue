@@ -91,7 +91,7 @@
 import {mapGetters, mapActions, mapMutations} from 'vuex'
 import onResize from '../../mixins/on-resize'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import MyCustomUploadAdapterPlugin from '../../image-upload-adapter'
+import adapters from '../../image-upload-adapter'
 import workItems from '../../data/work-items'
 import formValidation from '../../mixins/form-validation'
 import additionalInfo from './additional-info'
@@ -107,7 +107,7 @@ export default {
         },
         editor: ClassicEditor,
         editorConfig: {
-            extraPlugins: [ MyCustomUploadAdapterPlugin ]
+            extraPlugins: [ adapters.createWIAdapter ]
         },
         wiType:null,
         rules:{

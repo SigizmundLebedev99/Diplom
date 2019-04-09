@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -82,6 +82,13 @@ namespace TeamEdge.WebLayer.Controllers
         public async Task<IActionResult> GetFilesForProject(int projectId)
         {
             var res = await _projectService.GetFilesForProject(projectId, User.Id());
+            return Ok(res);
+        }
+
+        [HttpGet("invites/{projectId}")]
+        public async Task<IActionResult> GetInvitesForProject(int projectId)
+        {
+            var res = await _projectService.GetInvitesToProject(User.Id(), projectId);
             return Ok(res);
         }
     }

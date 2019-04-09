@@ -6,7 +6,7 @@ using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.DAL.Models
 {
-    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithParent<SummaryTask>, IBaseWorkItemWithChild<SubTask>, ITimeConstraint
+    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithChild<SubTask>, ITimeConstraint
     {
         public ICollection<SubTask> Children { get; set; }
         public int? ParentId { get; set; }
@@ -32,11 +32,6 @@ namespace TeamEdge.DAL.Models
         public int? ParentSummaryTaskId { get; set; }
         [ForeignKey("ParentSummaryTaskId")]
         public SummaryTask ParentSummaryTask { get; set; }
-
-        [NotMapped]
-        int? IBaseWorkItemWithParent<SummaryTask>.ParentId { get => ParentSummaryTaskId; set { ParentSummaryTaskId = value; } }
-        [NotMapped]
-        SummaryTask IBaseWorkItemWithParent<SummaryTask>.Parent { get => ParentSummaryTask; set => ParentSummaryTask = value; }
 
         public int? GantPreviousId { get; set; }
         [ForeignKey("GantPreviousId")]

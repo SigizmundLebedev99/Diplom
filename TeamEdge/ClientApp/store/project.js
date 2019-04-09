@@ -2,11 +2,12 @@ import axios from 'axios'
 import router from '../router/index'
 
 const getters = {
-    role:(state)=>state.currentProj.role,
+    role:(state)=>state.currentProj.accessLevel,
     participants:(state)=>state.currentProj.participants,
     project:(state)=>state.currentProj,
     loading:(state)=>state.loading,
-    workItems:(state)=>state.workItems
+    workItems:(state)=>state.workItems,
+    currentWI:(state, getters, rootState)=>state.workItems.find(e=>e.code===rootState.route.name && e.number == rootState.route.params.number)
 };
 
 const mutations = {
@@ -56,7 +57,7 @@ const actions = {
                 router.push({name:item.code, params:{number:item.number}});            
             }
             else
-                router.push({name:'dashboard'});
+                router.push({name:'backlog'});
         }
     }
 };

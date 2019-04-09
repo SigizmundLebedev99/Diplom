@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
+using TeamEdge.BusinessLogicLayer.Services;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
 using TeamEdge.JWT;
@@ -19,11 +21,15 @@ namespace TeamEdge
     {
         readonly TeamEdgeDbContext _context;
         readonly UserManager<User> _userManager;
+        readonly FileSystemService _fileSystemService;
+        readonly IMapper _mapper;
 
-        public AccountService(TeamEdgeDbContext context, UserManager<User> userManager)
+        public AccountService(TeamEdgeDbContext context, UserManager<User> userManager, IMapper mapper, FileSystemService fileSystemService)
         {
             _context = context;
             _userManager = userManager;
+            _mapper = mapper;
+            _fileSystemService = fileSystemService;
         }
 
         public async Task<TokenResultDTO> RegisterWithInvite(RegisterWithInviteVM model)
@@ -44,8 +50,8 @@ namespace TeamEdge
             var result = await _userManager.ConfirmEmailAsync(user, model.Code);
             if (!result.Succeeded)
                 throw new Exception(result.Errors.Select(e => e.Description).Aggregate((s1, s2) => $"{s1}/n{s2}"));
-            user.Firstname = model.Firstname;
-            user.Lastname = model.Lastname;
+            user.FirstName = model.Firstname;
+            user.LastName = model.Lastname;
             user.Patrinymic = model.Patronymic;
             user.UserName = model.UserName;
 
@@ -75,8 +81,8 @@ namespace TeamEdge
 
             if (!string.IsNullOrEmpty(user.Email))
                 claims.Add(new Claim("Email", user.Email));
-            if (!string.IsNullOrEmpty(user.Lastname) || !string.IsNullOrEmpty(user.Firstname))
-                claims.Add(new Claim("GivenName", user.Firstname + " " + user.Lastname));
+            if (!string.IsNullOrEmpty(user.LastName) || !string.IsNullOrEmpty(user.FirstName))
+                claims.Add(new Claim("GivenName", user.FirstName + " " + user.LastName));
             if (!string.IsNullOrEmpty(user.UserName))
                 claims.Add(new Claim("UserName", user.UserName));
             if (!string.IsNullOrEmpty(user.Avatar))
@@ -103,10 +109,37 @@ namespace TeamEdge
                 Access_token = token,
                 Avatar = user.Avatar,
                 Email = user.Email,
-                FullName = user.Firstname + " " + user.Lastname,
+                FullName = user.FirstName + " " + user.LastName,
                 Start = now,
                 Finish = now.Add(TimeSpan.FromMinutes(AuthTokenOptions.LIFETIME))
             };
+        }
+
+        public Task<UserFullDTO> GetUserInfo(int userId)
+        {
+            return _context.Users.Where(u => u.Id == userId).Select(e => new UserFullDTO
+            {
+                Avatar = e.Avatar,
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                Patronimic = e.Patrinymic,
+                Email = e.Email
+            }).FirstOrDefaultAsync();
+        }
+
+        public async Task<TokenResultDTO> UpdateUserInfo(UpdateUserDTO model, int userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(e => e.Id == userId);
+
+            if (user == null)
+                throw new NotFoundException("user_nf");
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Patrinymic = model.Patronymic;
+            user.Avatar = model.Avatar;
+            _fileSystemService.Commit(userId, model.Avatar);
+            await _userManager.UpdateAsync(user);
+            return CreateToken(user);
         }
     }
 }

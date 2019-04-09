@@ -9,9 +9,6 @@ namespace TeamEdge
         [WorkItem("EPICK", typeof(EpickRepository), typeof(CreateEpickDTO))]
         Epick,
 
-        //[WorkItem("FEATURE", typeof(FeatureRepository), typeof(CreateWorkItemDTO))]
-        //Feature,
-
         [WorkItem("STORY", typeof(UserStoryRepository), typeof(CreateUserStoryDTO))]
         UserStory,
 

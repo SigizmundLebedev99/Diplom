@@ -1,4 +1,4 @@
-﻿@model TeamEdge.Models.ConfirmEmailBM
+@model TeamEdge.Models.ConfirmEmailBM
 @{
 }
 <html>
@@ -8,14 +8,19 @@
 	<link href="~/css/viewStyle.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-	<div class="card">
-		<img class="header" src="~/logos/TEcut.png"/>
-		<p class="primary">@Model.FullName, ваш адрес електронной почты успешно подтвержден</p>
-		<div>
-			<a href="@Model.Url" class="button">
-				Перейти на сайт
-			</a>
-		</div>
-	</div>
+    <div class="container">
+        <div class="card">
+            <img class="header" src="~/logos/TE.png" height="200"/>
+            <p class="primary">@Model.FullName, ваш адрес електронной почты успешно подтвержден</p>
+            <div>
+                <a href="@Model.Url" class="referense">
+                    <div class="button">
+                        Перейти на сайт
+                    </div>
+
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

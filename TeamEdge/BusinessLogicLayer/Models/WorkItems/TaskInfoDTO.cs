@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,5 +12,6 @@ namespace TeamEdge.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public short? Duration { get; set; }
+        public ItemDTO Epick { get; set; }
     }
 }

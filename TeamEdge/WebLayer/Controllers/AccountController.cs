@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
 using TeamEdge.DAL.Models;
 using TeamEdge.Models;
+using TeamEdge.WebLayer;
 
 namespace TeamEdge.Controllers
 {
@@ -60,12 +62,15 @@ namespace TeamEdge.Controllers
                 "Account",
                 new { userId = user.Id, code },
                 protocol: HttpContext.Request.Scheme);
-            
+
             await _emailService.SendConfirmationAsync(new ConfirmEmailBM
             {
                 FullName = user.FullName,
                 Url = callbackUrl,
                 Email = user.Email,
+                Host = Request.Host.Host,
+                Port = Request.Host.Port?.ToString(),
+                Schema = Request.Scheme
             });
             return Ok();
         }
@@ -84,7 +89,7 @@ namespace TeamEdge.Controllers
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
-                return View(new ConfirmEmailBM { FullName = user.Firstname, Url = Url.Action("Index", "Home")});
+                return View(new ConfirmEmailBM { FullName = user.FirstName, Url = Url.Action("Index", "Home")});
             return View("Error");
         }
 
@@ -97,6 +102,20 @@ namespace TeamEdge.Controllers
             return View("Error");
         }
 
-       
+        [Authorize]
+        [HttpGet("info/{userId}")]
+        public async Task<IActionResult> GetUserInfo(int userId)
+        {
+            var res = await _accountService.GetUserInfo(userId);
+            return Ok(res);
+        }
+
+        [Authorize]
+        [HttpPut("info")]
+        public async Task<IActionResult> UpdateUserInfo([FromBody]UpdateUserDTO model)
+        {
+            var res = await _accountService.UpdateUserInfo(model, User.Id());
+            return Ok(res);
+        }
     }
 }

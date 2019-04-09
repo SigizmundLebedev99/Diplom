@@ -113,7 +113,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren<UserStory, Epick>(entity.Children, checkResult.Result, entity.DescriptionId);
+            UpdateChildren(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.Epicks.Update(nextentity);
 
             await _context.SaveChangesAsync();
@@ -122,6 +122,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
             operRes.Result = result.Select(SelectExpression.Compile()).First();
             _historyService.CompareForChanges(entity, result.First(), _httpContext.User);
             return operRes;
+        }
+
+        public override Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId)
+        {
+            return _context.Epicks.Where(e => e.Description.ProjectId == projectId && e.Number == number)
+                .Select(WorkItemHelper.ItemDTOSelector)
+                .FirstOrDefaultAsync();
         }
 
         private static readonly Expression<Func<Epick, WorkItemDTO>> SelectExpression = e => new WorkItemDTO

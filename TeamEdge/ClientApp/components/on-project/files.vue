@@ -33,10 +33,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import currentItem from '../../mixins/work-item';
+import { mapActions, mapGetters } from 'vuex';
 export default {
-    mixins:[currentItem],
     mounted(){
         this.fetchFiles();
     },
@@ -44,6 +42,9 @@ export default {
         loading:false,
         localFiles:[],
     }),
+    computed:{
+        ...mapGetters({currentWI:'project/currentWI'})
+    },
     methods:{
         fetchFiles(){
             this.loading = true;

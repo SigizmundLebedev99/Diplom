@@ -82,13 +82,15 @@ namespace TeamEdge.BusinessLogicLayer.Services
             string hash = GetHashFromFile(file.OpenReadStream());
             string ext = file.FileName.Split('.').Last();
             string result = Path.Combine(_environment.WebRootPath, "Images","Avatars",$"{hash}.{ext}");
+            var res = result.Replace(_environment.WebRootPath, "");
+            if (File.Exists(result))
+                return res;
 
-            using(var fs = new FileStream(result, FileMode.Create))
+            using (var fs = new FileStream(result, FileMode.Create))
             {
                 await file.CopyToAsync(fs);
             }
 
-            var res = result.Replace(_environment.WebRootPath, "");
             if (!_cache.TryGetValue(userId, out var value))
             {
                 var options = new MemoryCacheEntryOptions();

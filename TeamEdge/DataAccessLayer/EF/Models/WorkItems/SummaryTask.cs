@@ -6,7 +6,7 @@ using TeamEdge.BusinessLogicLayer;
 
 namespace TeamEdge.DAL.Models
 {
-    public class SummaryTask : BaseWorkItem, IBaseWorkItemWithChild<_Task>, IBaseWorkItemWithChild<SummaryTask>, IBaseWorkItemWithParent<SummaryTask>, ITimeConstraint
+    public class SummaryTask : BaseWorkItem, ITimeConstraint
     {
         public override string Code => WorkItemType.SummaryTask.Code();
         public int? ParentId { get; set; }
@@ -21,16 +21,6 @@ namespace TeamEdge.DAL.Models
         public int? GauntPreviousId { get; set; }
         [ForeignKey("GauntPreviousId")]
         public WorkItemDescription GauntPrevious { get; set; }
-
-        ICollection<SummaryTask> IBaseWorkItemWithChild<SummaryTask>.Children { get => SummaryTaskChildren; set => SummaryTaskChildren = value; }
-
-        public IEnumerable<IBaseWorkItemWithParent<SummaryTask>> AllChildren
-        {
-            get
-            {
-                return Children.Concat((IEnumerable<IBaseWorkItemWithParent<SummaryTask>>)SummaryTaskChildren);
-            }
-        }
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

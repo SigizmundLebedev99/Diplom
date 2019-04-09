@@ -31,6 +31,11 @@ namespace TeamEdge
             return EnumElements.FirstOrDefault(e => e.Attribute.Code == code).EnumElement;
         }
 
+        public static string GetCode(Enum element)
+        {
+            return EnumElements.FirstOrDefault(e => e.EnumElement == element.ToString()).Attribute.Code;
+        }
+
         private static IEnumerable<WorkItemSlot> EnumElements;
     }
 

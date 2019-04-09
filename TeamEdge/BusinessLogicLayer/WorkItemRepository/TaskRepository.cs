@@ -22,6 +22,15 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .FirstOrDefaultAsync();
         }
 
+        public override Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId)
+        {
+            TaskType type = Enum.Parse<TaskType>(WorkItemFactory.GetEnumElement(code));
+            return _context.Tasks
+                .Where(e => e.Type == type && e.Number == number && e.Description.ProjectId == projectId)
+                .Select(WorkItemHelper.ItemDTOSelector)
+                .FirstOrDefaultAsync();
+        }
+
         public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
@@ -65,7 +74,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
                 .Include(e => e.Description).ThenInclude(e => e.Tags)
                 .Include(e=> e.AssignedTo)
-                .Include(e => e.Parent);
+                .Include(e => e.Parent)
+                .Include(e=>e.Epick);
 
             var entity = await query
                 .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number && e.Type == type);
@@ -99,7 +109,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren<SubTask, _Task>(entity.Children, checkResult.Result, entity.DescriptionId);
+            UpdateChildren(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.Tasks.Update(nextentity);
 
             await _context.SaveChangesAsync();
@@ -150,13 +160,26 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 DateOfCreation = e.Description.DateOfCreation,
                 Description = e.Description.DescriptionText,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserLightDTO
+                LastUpdateBy = e.Description.LastUpdater == null ? null : new UserLightDTO
                 {
                     Avatar = e.Description.Creator.Avatar,
                     Id = e.Description.CreatorId,
                     Name = e.Description.Creator.FullName
                 }
-            }
+            },
+            Epick = e.Epick!=null?new ItemDTO
+            {
+                Code = WorkItemType.Epick.Code(),
+                Name = e.Epick.Name,
+                Number = e.Epick.Number,
+                DescriptionId = e.Epick.DescriptionId
+            }:(e.Parent!=null?(e.Parent.Parent!=null? new ItemDTO
+            {
+                Code = WorkItemType.Epick.Code(),
+                Name = e.Parent.Parent.Name,
+                Number = e.Parent.Parent.Number,
+                DescriptionId = e.Parent.Parent.DescriptionId
+            } : null):null)
         };
     }
 }

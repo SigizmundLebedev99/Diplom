@@ -81,6 +81,24 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }).FirstOrDefaultAsync(e=>e.Id == projectId);
         }
 
+        public async Task<IEnumerable<InviteDTO>> GetInvitesToProject(int userId, int projectId)
+        {
+            await _validationService.ValidateProjectAccess(projectId, userId, u => u.IsAdmin);
+            var result = await _context.Invites.Where(e => e.ProjectId == projectId && !e.IsAccepted).Select(i => new InviteDTO
+            {
+                FromEmail = i.Creator.Email,
+                FromFullName = i.Creator.FullName,
+                FromId = i.CreatorId,
+                FromAvatar = i.Creator.Avatar,
+                InviteId = i.Id,
+                Logo = i.Project.Logo,
+                ProjectName = i.Project.Name,
+                ProjectId = i.ProjectId
+            }).ToListAsync();
+
+            return result;
+        }
+
         public async Task<ProjectsForUserDTO> GetProjectsForUserAsync(int userId)
         {
             if (!await _context.Users.AnyAsync(u => u.Id == userId))

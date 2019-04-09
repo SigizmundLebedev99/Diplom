@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import auth from './auth'
 import projects from './projects'
 import project from './project'
+import profile from './profile'
 import createWorkItem from './work-item/create-work-item'
 import fileSelector from './work-item/file-selector'
 Vue.use(Vuex)
@@ -13,6 +14,7 @@ modules:{
   projects,
   project,
   createWorkItem,
-  fileSelector
+  fileSelector,
+  profile
 }
 })

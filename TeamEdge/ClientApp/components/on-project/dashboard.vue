@@ -49,7 +49,7 @@
                                 <span v-if="!p.avatar" class="white--text text-xs-center mt-1" medium>
                                     {{`${p.fullName.split(' ').map(s=>s[0]).join('')}`}}
                                 </span>
-                                <img v-else :src="p.avatar"/>
+                                <v-img v-else :src="p.avatar"/>
                             </v-list-tile-avatar>
                             <v-list-tile-title>
                                 <span>{{p.fullName}}</span>
@@ -58,9 +58,7 @@
                     </v-list>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn small class="text-none">
-                            Пригласить участника
-                        </v-btn>
+                        <create-invite></create-invite>
                     </v-card-actions>
                 </v-card>
             </v-flex>
@@ -72,7 +70,11 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import createInvite from './create-invite'
 export default {
+    components:{
+        'create-invite': createInvite
+    },
     mounted(){
         this.fetchUserTasks(this.user.userId);
     },
