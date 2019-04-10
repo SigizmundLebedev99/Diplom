@@ -40,7 +40,7 @@ export default {
     methods:{
         ...mapActions({preWICreating:'createWorkItem/preWICreating'}),
         fetchItems(){
-            this.$http.get(`/api/workitems/project/${this.$route.params.projId}/items`)
+            this.$http.get(`/api/workitems/project/${this.$route.params.projId}/backlog`)
             .then(r=>this.items = r.data)
         }
     },

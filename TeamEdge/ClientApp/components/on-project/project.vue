@@ -36,7 +36,7 @@
             </v-container>
  
             <v-divider class="my-0"></v-divider>
-            <v-list class="py-0">
+            <v-list class="py-0" dense>
                 <v-list-tile :class="routeSel('project')"
                     @click.stop="goTo('project')">
                     <v-list-tile-action>
@@ -59,15 +59,15 @@
                 </v-list-tile>
             </v-list>
             <v-divider class="my-0"></v-divider>
-            <v-list class="py-0 px-0">
+            <v-list class="py-0 px-0" dense>
                 <v-list-tile v-for="(wi,i) in workItems" :key="i"
-                        class="px-0 my-0 mx-0"
+                        class="my-0 mx-0"
                         :class="routeWISel(wi.code, wi.number)"
                         @click.stop="$router.push({name:wi.code,params:{number:wi.number}})">
                     <v-layout row justify-end align-center>
                         <v-spacer/>
-                            <span class="caption">
-                                {{wi.code}}{{wi.number}}
+                            <span :class="{'smalltext':mini, 'regular':!mini}">
+                                {{wi.code}}-{{wi.number}}
                             </span>
                         <v-spacer/>
                         <v-btn small icon 
@@ -177,6 +177,12 @@ export default {
 }
 .trans{
     background: transparent;
+}
+
+.smalltext{
+    font-size: 10px;
+    margin-right: -4px;
+    margin-left: -4px;
 }
 </style>
 

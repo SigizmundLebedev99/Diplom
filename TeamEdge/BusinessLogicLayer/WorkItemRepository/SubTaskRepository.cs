@@ -107,7 +107,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Status = e.Status.ToString(),
             Parent = e.Parent == null ? null : new ItemDTO
             {
-                Code = e.Parent.Type.Code(),
+                Code = e.Parent.Code,
                 Name = e.Parent.Name,
                 Number = e.Parent.Number,
                 DescriptionId = e.Parent.DescriptionId

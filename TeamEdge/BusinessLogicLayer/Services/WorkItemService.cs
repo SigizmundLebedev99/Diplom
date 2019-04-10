@@ -132,7 +132,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     ParentId = item.ParentId??item.EpickId
                 })
                 .Concat(_context.UserStories.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector))
-                .Concat(_context.Epicks.Where(e=>e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector)).ToListAsync();
+                .Concat(_context.Epicks.Where(e=>e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector))
+                .Concat(_context.SubTasks.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector)).ToListAsync();
         }
         #endregion
     }

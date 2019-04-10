@@ -92,7 +92,7 @@ import {mapGetters, mapActions, mapMutations} from 'vuex'
 import onResize from '../../mixins/on-resize'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import adapters from '../../image-upload-adapter'
-import workItems from '../../data/work-items'
+import workItems from '../../data/work-items-array'
 import formValidation from '../../mixins/form-validation'
 import additionalInfo from './additional-info'
 export default {

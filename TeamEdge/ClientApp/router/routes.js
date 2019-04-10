@@ -6,9 +6,7 @@ import Begin from '../components/on-app/begin'
 import Project from '../components/on-project/project'
 import dashboard from '../components/on-project/dashboard'
 import Backlog from '../components/on-project/backlog'
-import Epick from '../components/on-project/workItems/epick'
-import UserStory from '../components/on-project/workItems/user-story'
-import Task from '../components/on-project/workItems/task'
+import WorkItem from '../components/on-project/work-item'
 import Invites from '../components/on-app/invites'
 import Profile from '../components/on-app/profile'
 import { ifAuthenticated } from './hooks'
@@ -31,19 +29,23 @@ export const routes = [
     children:[
       {name:'project', path:'/', component: dashboard, beforeEnter: ifAuthenticated},
       {name:'backlog', path:'backlog', component: Backlog, beforeEnter: ifAuthenticated},
-      {name:'EPICK', path:'epick-:number', component: Epick, beforeEnter:ifAuthenticated},
-      {name:'STORY', path:'story-:number', component: UserStory, beforeEnter:ifAuthenticated},
       {
-        name:'TASK', path:'task-:number', component: Task, beforeEnter:ifAuthenticated,
-        meta:{color:'green', name:'Task'}
+        name:'EPICK', path:'epick-:number', component: WorkItem, beforeEnter:ifAuthenticated
       },
       {
-        name:'BUG', path:'bug-:number', component: Task, beforeEnter:ifAuthenticated,
-        meta:{color:'red', name:'Bug'}
+        name:'STORY', path:'story-:number', component: WorkItem, beforeEnter:ifAuthenticated
       },
       {
-        name:'ISSUE', path:'issue-:number', component: Task, beforeEnter:ifAuthenticated,
-        meta:{color:'orange', name:'Issue'}
+        name:'TASK', path:'task-:number', component: WorkItem, beforeEnter:ifAuthenticated
+      },
+      {
+        name:'BUG', path:'bug-:number', component: WorkItem, beforeEnter:ifAuthenticated
+      },
+      {
+        name:'ISSUE', path:'issue-:number', component: WorkItem, beforeEnter:ifAuthenticated
+      },
+      {
+        name:'SUBTASK', path:'subtask-:number', component: WorkItem, beforeEnter:ifAuthenticated
       }
     ]
   }

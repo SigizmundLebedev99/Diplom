@@ -6,7 +6,9 @@
             </v-layout>
         </v-container>
         <div v-show="!loading">
-            <v-layout justify-end >
+            <v-layout>
+                <span class="mt-2 ml-3 subheading">Пока нет вложений</span>
+                <v-spacer/>
                 <v-btn small icon @click="openFileSelector()">
                     <v-icon>
                         attach_file
