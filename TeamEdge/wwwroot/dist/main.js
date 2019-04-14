@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "2ede49d4c13b93b9afe6"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e7b887fb5631d1583f5c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -14429,7 +14429,7 @@ exports = module.exports = __webpack_require__(9)();
 
 
 // module
-exports.push([module.i, "\n.divide[data-v-730e95a0]{\r\n    border-right: 1px solid gray;\n}\r\n", "", {"version":3,"sources":["C:/Users/hp/Desktop/TeamEdge/TeamEdge/ClientApp/components/on-project/ClientApp\\components\\on-project/work-item.vue"],"names":[],"mappings":";AA4KA;IACA,6BAAA;CACA","file":"work-item.vue","sourcesContent":["<template>\r\n    <div>\r\n        <v-container v-if=\"loading && number\">\r\n            <v-layout column justify-center align-center fill-height>\r\n                <v-progress-circular indeterminate color=\"primary\"></v-progress-circular>\r\n            </v-layout>\r\n        </v-container>\r\n        <div v-else>\r\n            <v-toolbar :class=\"currentWiType.color\" flat dense dark>\r\n                <v-layout row align-center>\r\n                    <v-toolbar-title>\r\n                        {{currentWiType.name}} - {{currentWI.changed.number}}\r\n                    </v-toolbar-title>\r\n                    <v-spacer></v-spacer>\r\n                    <v-flex md4>\r\n                        <v-tabs\r\n                            :color=\"currentWiType.color\"\r\n                            v-model=\"model\"\r\n                            centered\r\n                            slider-color=\"yellow\">\r\n                            <v-tab ripple>\r\n                                Комментарии\r\n                            </v-tab>\r\n                            <v-tab ripple>\r\n                                Вложения\r\n                            </v-tab>\r\n                            <v-tab ripple>\r\n                                История\r\n                            </v-tab>\r\n                        </v-tabs>\r\n                    </v-flex>\r\n                </v-layout>\r\n            </v-toolbar>\r\n            <v-layout row justify-end wrap fill-height>\r\n                <v-flex md8 xs12>\r\n                    <v-container class=\"pt-0 divide\">\r\n                        <v-layout column>\r\n                            <v-text-field v-model=\"currentWI.changed.name\">\r\n                            </v-text-field>\r\n                            <ckeditor :editor=\"editor\" v-model=\"currentWI.changed.description.description\" :config=\"editorConfig\"></ckeditor>\r\n                            <v-layout row wrap>\r\n                                <v-flex xs12 sm6 v-if=\"currentWiType.parent\">\r\n                                    <v-layout align-center>\r\n                                        <v-subheader class=\"pl-0\">Предок</v-subheader>\r\n                                        <wi-selector :code=\"currentWiType.parent\" @selected=\"parentSelected\" icon=\"edit\"/>\r\n                                        <v-btn small icon class=\"ml-0\" @click=\"dropParent()\">\r\n                                            <v-icon small>close</v-icon>\r\n                                        </v-btn> \r\n                                    </v-layout>\r\n                                    <v-divider class=\"mr-3 mt-0 mb-2\"></v-divider>\r\n                                    <router-link v-if=\"currentWI.changed.parent\" :to=\"{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}\">\r\n                                        <span>{{`${currentWI.changed.parent.code}${currentWI.changed.parent.number} - ${currentWI.changed.parent.name}`}}</span>\r\n                                    </router-link><span v-else>Предок не выбран</span>\r\n                                </v-flex>\r\n                                <v-flex xs12 sm6 v-if=\"currentWiType.epickLink\">\r\n                                    <v-layout align-center>\r\n                                        <v-subheader class=\"pl-0\">Epick link</v-subheader>\r\n                                        <wi-selector code=\"EPICK\" @selected=\"epickSelected\" icon=\"edit\"/>\r\n                                        <v-btn small icon class=\"ml-0\" @click=\"dropEpick()\">\r\n                                            <v-icon small>close</v-icon>\r\n                                        </v-btn> \r\n                                    </v-layout>\r\n                                    <v-divider class=\"mr-3 mt-0 mb-2\"></v-divider>\r\n                                    <router-link v-if=\"currentWI.changed.epick\" :to=\"{name:currentWI.changed.epick.code, params:{number:currentWI.changed.epick.number}}\">\r\n                                        <span>{{`${currentWI.changed.epick.code}${currentWI.changed.epick.number} - ${currentWI.changed.epick.name}`}}</span>\r\n                                    </router-link>\r\n                                    <span v-else>Epick не выбран</span>\r\n                                </v-flex>\r\n                            </v-layout>\r\n                        </v-layout>  \r\n                    </v-container>       \r\n                </v-flex>\r\n                <v-flex md4 xs12>\r\n                    <v-tabs-items v-model=\"model\">\r\n                        <v-tab-item>\r\n                            <v-card flat>\r\n                            <v-card-text>Комментарии</v-card-text>\r\n                            </v-card>\r\n                        </v-tab-item>\r\n                        <v-tab-item>\r\n                            <files></files>\r\n                        </v-tab-item>\r\n                        <v-tab-item>\r\n                            <v-card flat>\r\n                            <v-card-text>История</v-card-text>\r\n                            </v-card>\r\n                        </v-tab-item>\r\n                    </v-tabs-items>\r\n                </v-flex>\r\n            </v-layout>\r\n        </div>\r\n    </div>\r\n</template>\r\n\r\n<script>\r\nimport {mapGetters, mapMutations} from 'vuex'\r\nimport onResize from '../../mixins/on-resize'\r\nimport ClassicEditor from '@ckeditor/ckeditor5-build-classic'\r\nimport adapters from '../../image-upload-adapter'\r\nimport files from './files'\r\nimport workItems from '../../data/work-items-object'\r\nimport wiSelector from './wi-selector'\r\n\r\nexport default {\r\n    mixins:[onResize],\r\n    components:{\r\n        'files':files,\r\n        'wi-selector': wiSelector\r\n    },\r\n    mounted(){\r\n        this.enter();\r\n    },\r\n    data:()=>({\r\n        loading:true,\r\n        model:null,\r\n        editor: ClassicEditor,\r\n        editorConfig: {\r\n            extraPlugins: [ adapters.updateWIAdapter ]\r\n        }\r\n    }),\r\n    computed:{\r\n        number(){\r\n            return this.$route.params.number;\r\n        },\r\n        currentWiType(){\r\n            return workItems[this.$route.name];\r\n        },\r\n        ...mapGetters({currentWI:'project/currentWI'})\r\n    },\r\n    methods:{\r\n        enter(){\r\n            if(this.currentWI){\r\n                this.loading=false;\r\n            }\r\n            else{\r\n                this.loading = true;\r\n                this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/${this.$route.name}/${this.number}`)\r\n                .then(\r\n                    r=>{\r\n                        r.data.changed = Object.assign({}, r.data);\r\n                        this.addWI(r.data);\r\n                        this.loading = false;\r\n                    },\r\n                    r=>console.log(r.response)\r\n                );\r\n            }\r\n        },\r\n        parentSelected(item){\r\n            this.currentWI.changed.parent = item;\r\n        },\r\n        dropParent(){\r\n            this.currentWI.changed.parent = null;\r\n        },\r\n        epickSelected(item){\r\n            this.currentWI.changed.epick = item;\r\n        },\r\n        dropEpick(){\r\n            this.currentWI.changed.epick = null;\r\n        },\r\n        ...mapMutations({addWI:'project/addWI'})\r\n    },\r\n    watch:{\r\n        number(from, to){\r\n            if(!to)\r\n                return;\r\n            this.enter();\r\n        }\r\n    }\r\n}\r\n</script>\r\n\r\n<style scoped>\r\n.divide{\r\n    border-right: 1px solid gray;\r\n}\r\n</style>\r\n\r\n\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.divide[data-v-730e95a0]{\r\n    border-right: 1px solid gray;\n}\n.subtitle[data-v-730e95a0]{\r\n    height: 30px;\n}\r\n", "", {"version":3,"sources":["C:/Users/hp/Desktop/TeamEdge/TeamEdge/ClientApp/components/on-project/ClientApp\\components\\on-project/work-item.vue"],"names":[],"mappings":";AAyKA;IACA,6BAAA;CACA;AACA;IACA,aAAA;CACA","file":"work-item.vue","sourcesContent":["<template>\r\n    <div>\r\n        <v-container v-if=\"loading && number\">\r\n            <v-layout column justify-center align-center fill-height>\r\n                <v-progress-circular indeterminate color=\"primary\"></v-progress-circular>\r\n            </v-layout>\r\n        </v-container>\r\n        <div v-else>\r\n            <v-layout row justify-end wrap fill-height>\r\n                <v-flex md8 xs12>\r\n                    <v-toolbar dark :class=\"currentWiType.color\" dense flat>\r\n                        <v-toolbar-title>\r\n                            {{currentWiType.name}} - {{currentWI.changed.number}}\r\n                        </v-toolbar-title>\r\n                    </v-toolbar>\r\n                    <v-container class=\"pt-0 divide\">\r\n                        <v-layout column>\r\n                            <v-subheader class=\"pl-0 mt-1 subtitle\">Название</v-subheader>\r\n                            <v-text-field v-model=\"currentWI.changed.name\" class=\"pt-0 mt-0\">\r\n                            </v-text-field>\r\n                            <v-subheader class=\"pl-0 subtitle\">Описание</v-subheader>\r\n                            <ckeditor :editor=\"editor\" v-model=\"currentWI.changed.description.description\" :config=\"editorConfig\"></ckeditor>\r\n                            <v-layout row wrap>\r\n                                <v-flex xs12 sm6 v-if=\"currentWiType.parent\">\r\n                                    <v-layout align-center>\r\n                                        <v-subheader class=\"pl-0\">Предок</v-subheader>\r\n                                        <wi-selector :code=\"currentWiType.parent\" @selected=\"parentSelected\" icon=\"edit\"/>\r\n                                        <v-btn small icon class=\"ml-0\" @click=\"dropParent()\">\r\n                                            <v-icon small>close</v-icon>\r\n                                        </v-btn> \r\n                                    </v-layout>\r\n                                    <v-divider class=\"mr-3 mt-0 mb-2\"></v-divider>\r\n                                    <router-link v-if=\"currentWI.changed.parent\" :to=\"{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}\">\r\n                                        <span>{{`${currentWI.changed.parent.code}${currentWI.changed.parent.number} - ${currentWI.changed.parent.name}`}}</span>\r\n                                    </router-link><span v-else>Предок не выбран</span>\r\n                                </v-flex>\r\n                                <v-flex xs12 sm6 v-if=\"currentWiType.epickLink\">\r\n                                    <v-layout align-center>\r\n                                        <v-subheader class=\"pl-0\">Epick link</v-subheader>\r\n                                        <wi-selector code=\"EPICK\" @selected=\"epickSelected\" icon=\"edit\"/>\r\n                                        <v-btn small icon class=\"ml-0\" @click=\"dropEpick()\">\r\n                                            <v-icon small>close</v-icon>\r\n                                        </v-btn> \r\n                                    </v-layout>\r\n                                    <v-divider class=\"mr-3 mt-0 mb-2\"></v-divider>\r\n                                    <router-link v-if=\"currentWI.changed.epick\" :to=\"{name:currentWI.changed.epick.code, params:{number:currentWI.changed.epick.number}}\">\r\n                                        <span>{{`${currentWI.changed.epick.code}${currentWI.changed.epick.number} - ${currentWI.changed.epick.name}`}}</span>\r\n                                    </router-link>\r\n                                    <span v-else>Epick не выбран</span>\r\n                                </v-flex>\r\n                            </v-layout>\r\n                        </v-layout>  \r\n                    </v-container>       \r\n                </v-flex>\r\n                <v-flex md4 xs12>\r\n                    <v-tabs dark\r\n                        :color=\"currentWiType.color\"\r\n                        v-model=\"model\"\r\n                        centered\r\n                        slider-color=\"yellow\">\r\n                        <v-tab ripple>\r\n                            Комментарии\r\n                        </v-tab>\r\n                        <v-tab ripple>\r\n                            Вложения\r\n                        </v-tab>\r\n                        <v-tab ripple>\r\n                            История\r\n                        </v-tab>\r\n                    </v-tabs>\r\n                    <v-tabs-items v-model=\"model\">\r\n                        <v-tab-item>\r\n                            <v-card flat>\r\n                            <v-card-text>Комментарии</v-card-text>\r\n                            </v-card>\r\n                        </v-tab-item>\r\n                        <v-tab-item>\r\n                            <files></files>\r\n                        </v-tab-item>\r\n                        <v-tab-item>\r\n                            <v-card flat>\r\n                            <v-card-text>История</v-card-text>\r\n                            </v-card>\r\n                        </v-tab-item>\r\n                    </v-tabs-items>\r\n                </v-flex>\r\n            </v-layout>\r\n        </div>\r\n    </div>\r\n</template>\r\n\r\n<script>\r\nimport {mapGetters, mapMutations} from 'vuex'\r\nimport onResize from '../../mixins/on-resize'\r\nimport ClassicEditor from '@ckeditor/ckeditor5-build-classic'\r\nimport adapters from '../../image-upload-adapter'\r\nimport files from './files'\r\nimport workItems from '../../data/work-items-object'\r\nimport wiSelector from './wi-selector'\r\n\r\nexport default {\r\n    mixins:[onResize],\r\n    components:{\r\n        'files':files,\r\n        'wi-selector': wiSelector\r\n    },\r\n    mounted(){\r\n        this.enter();\r\n    },\r\n    data:()=>({\r\n        loading:true,\r\n        model:null,\r\n        editor: ClassicEditor,\r\n        editorConfig: {\r\n            extraPlugins: [ adapters.updateWIAdapter ]\r\n        }\r\n    }),\r\n    computed:{\r\n        number(){\r\n            return this.$route.params.number;\r\n        },\r\n        currentWiType(){\r\n            return workItems[this.$route.name];\r\n        },\r\n        ...mapGetters({currentWI:'project/currentWI'})\r\n    },\r\n    methods:{\r\n        enter(){\r\n            if(this.currentWI){\r\n                this.loading=false;\r\n            }\r\n            else{\r\n                this.loading = true;\r\n                this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/${this.$route.name}/${this.number}`)\r\n                .then(\r\n                    r=>{\r\n                        r.data.changed = Object.assign({}, r.data);\r\n                        this.addWI(r.data);\r\n                        this.loading = false;\r\n                    },\r\n                    r=>console.log(r.response)\r\n                );\r\n            }\r\n        },\r\n        parentSelected(item){\r\n            this.currentWI.changed.parent = item;\r\n        },\r\n        dropParent(){\r\n            this.currentWI.changed.parent = null;\r\n        },\r\n        epickSelected(item){\r\n            this.currentWI.changed.epick = item;\r\n        },\r\n        dropEpick(){\r\n            this.currentWI.changed.epick = null;\r\n        },\r\n        ...mapMutations({addWI:'project/addWI'})\r\n    },\r\n    watch:{\r\n        number(from, to){\r\n            if(!to)\r\n                return;\r\n            this.enter();\r\n        }\r\n    }\r\n}\r\n</script>\r\n\r\n<style scoped>\r\n.divide{\r\n    border-right: 1px solid gray;\r\n}\r\n.subtitle{\r\n    height: 30px;\r\n}\r\n</style>\r\n\r\n\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -14491,20 +14491,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ }),
-/* 83 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(9)();
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"files.vue","sourceRoot":""}]);
-
-// exports
-
-
-/***/ }),
+/* 83 */,
 /* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15630,8 +15617,8 @@ exports.default = {
         }
     }),
     watch: {
-        itemId: function itemId(from, to) {
-            this.fetchFiles();
+        currentWI: function currentWI(from, to) {
+            if (to.changed.description.files) this.localFiles = to.changed.description.files;else this.fetchFiles();
         }
     }
 };
@@ -18283,6 +18270,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _toConsumableArray2 = __webpack_require__(329);
+
+var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
 var _axios = __webpack_require__(21);
 
 var _axios2 = _interopRequireDefault(_axios);
@@ -18388,7 +18379,7 @@ var mutations = {
         state.onClose = null;
     },
     setOnClose: function setOnClose(state, payload) {
-        state.selectedFiles = payload.selectedFiles;
+        state.selectedFiles = [].concat((0, _toConsumableArray3.default)(payload.selectedFiles));
         state.onClose = payload.onClose;
     }
 };
@@ -22643,10 +22634,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1e7d6848_hasScoped_false_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_files_vue__ = __webpack_require__(289);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__(2);
 var disposed = false
-function injectStyle (context) {
-  if (disposed) return
-  __webpack_require__(316)
-}
 /* script */
 
 
@@ -22655,7 +22642,7 @@ function injectStyle (context) {
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -24281,9 +24268,11 @@ var render = function() {
           _c(
             "v-layout",
             [
-              _c("span", { staticClass: "mt-2 ml-3 subheading" }, [
-                _vm._v("Пока нет вложений")
-              ]),
+              !_vm.localFiles.length
+                ? _c("span", { staticClass: "mt-2 ml-3 subheading" }, [
+                    _vm._v("Пока нет вложений")
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c("v-spacer"),
               _vm._v(" "),
@@ -24345,7 +24334,11 @@ var render = function() {
                           ])
                     ],
                     1
-                  )
+                  ),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "pl-3 caption" }, [
+                    _vm._v(_vm._s(f.fileName))
+                  ])
                 ],
                 1
               )
@@ -25390,80 +25383,6 @@ var render = function() {
             "div",
             [
               _c(
-                "v-toolbar",
-                {
-                  class: _vm.currentWiType.color,
-                  attrs: { flat: "", dense: "", dark: "" }
-                },
-                [
-                  _c(
-                    "v-layout",
-                    { attrs: { row: "", "align-center": "" } },
-                    [
-                      _c("v-toolbar-title", [
-                        _vm._v(
-                          "\n                    " +
-                            _vm._s(_vm.currentWiType.name) +
-                            " - " +
-                            _vm._s(_vm.currentWI.changed.number) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("v-spacer"),
-                      _vm._v(" "),
-                      _c(
-                        "v-flex",
-                        { attrs: { md4: "" } },
-                        [
-                          _c(
-                            "v-tabs",
-                            {
-                              attrs: {
-                                color: _vm.currentWiType.color,
-                                centered: "",
-                                "slider-color": "yellow"
-                              },
-                              model: {
-                                value: _vm.model,
-                                callback: function($$v) {
-                                  _vm.model = $$v
-                                },
-                                expression: "model"
-                              }
-                            },
-                            [
-                              _c("v-tab", { attrs: { ripple: "" } }, [
-                                _vm._v(
-                                  "\n                            Комментарии\n                        "
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("v-tab", { attrs: { ripple: "" } }, [
-                                _vm._v(
-                                  "\n                            Вложения\n                        "
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("v-tab", { attrs: { ripple: "" } }, [
-                                _vm._v(
-                                  "\n                            История\n                        "
-                                )
-                              ])
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
                 "v-layout",
                 {
                   attrs: {
@@ -25479,6 +25398,26 @@ var render = function() {
                     { attrs: { md8: "", xs12: "" } },
                     [
                       _c(
+                        "v-toolbar",
+                        {
+                          class: _vm.currentWiType.color,
+                          attrs: { dark: "", dense: "", flat: "" }
+                        },
+                        [
+                          _c("v-toolbar-title", [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(_vm.currentWiType.name) +
+                                " - " +
+                                _vm._s(_vm.currentWI.changed.number) +
+                                "\n                    "
+                            )
+                          ])
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
                         "v-container",
                         { staticClass: "pt-0 divide" },
                         [
@@ -25486,7 +25425,14 @@ var render = function() {
                             "v-layout",
                             { attrs: { column: "" } },
                             [
+                              _c(
+                                "v-subheader",
+                                { staticClass: "pl-0 mt-1 subtitle" },
+                                [_vm._v("Название")]
+                              ),
+                              _vm._v(" "),
                               _c("v-text-field", {
+                                staticClass: "pt-0 mt-0",
                                 model: {
                                   value: _vm.currentWI.changed.name,
                                   callback: function($$v) {
@@ -25495,6 +25441,12 @@ var render = function() {
                                   expression: "currentWI.changed.name"
                                 }
                               }),
+                              _vm._v(" "),
+                              _c(
+                                "v-subheader",
+                                { staticClass: "pl-0 subtitle" },
+                                [_vm._v("Описание")]
+                              ),
                               _vm._v(" "),
                               _c("ckeditor", {
                                 attrs: {
@@ -25734,6 +25686,45 @@ var render = function() {
                     "v-flex",
                     { attrs: { md4: "", xs12: "" } },
                     [
+                      _c(
+                        "v-tabs",
+                        {
+                          attrs: {
+                            dark: "",
+                            color: _vm.currentWiType.color,
+                            centered: "",
+                            "slider-color": "yellow"
+                          },
+                          model: {
+                            value: _vm.model,
+                            callback: function($$v) {
+                              _vm.model = $$v
+                            },
+                            expression: "model"
+                          }
+                        },
+                        [
+                          _c("v-tab", { attrs: { ripple: "" } }, [
+                            _vm._v(
+                              "\n                        Комментарии\n                    "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("v-tab", { attrs: { ripple: "" } }, [
+                            _vm._v(
+                              "\n                        Вложения\n                    "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("v-tab", { attrs: { ripple: "" } }, [
+                            _vm._v(
+                              "\n                        История\n                    "
+                            )
+                          ])
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
                       _c(
                         "v-tabs-items",
                         {
@@ -27349,33 +27340,7 @@ if(true) {
 }
 
 /***/ }),
-/* 316 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(83);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__(12).default
-var update = add("b78acfb6", content, false, {});
-// Hot Module Replacement
-if(true) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept(83, function() {
-     var newContent = __webpack_require__(83);
-     if(typeof newContent === 'string') newContent = [[module.i, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
+/* 316 */,
 /* 317 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -53713,6 +53678,107 @@ module.exports = (__webpack_require__(31))(33);
 __webpack_require__(143);
 __webpack_require__(142);
 module.exports = __webpack_require__(141);
+
+
+/***/ }),
+/* 328 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(330), __esModule: true };
+
+/***/ }),
+/* 329 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+
+var _from = __webpack_require__(328);
+
+var _from2 = _interopRequireDefault(_from);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+      arr2[i] = arr[i];
+    }
+
+    return arr2;
+  } else {
+    return (0, _from2.default)(arr);
+  }
+};
+
+/***/ }),
+/* 330 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(201);
+__webpack_require__(332);
+module.exports = __webpack_require__(13).Array.from;
+
+
+/***/ }),
+/* 331 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $defineProperty = __webpack_require__(35);
+var createDesc = __webpack_require__(114);
+
+module.exports = function (object, index, value) {
+  if (index in object) $defineProperty.f(object, index, createDesc(0, value));
+  else object[index] = value;
+};
+
+
+/***/ }),
+/* 332 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var ctx = __webpack_require__(47);
+var $export = __webpack_require__(23);
+var toObject = __webpack_require__(119);
+var call = __webpack_require__(176);
+var isArrayIter = __webpack_require__(175);
+var toLength = __webpack_require__(118);
+var createProperty = __webpack_require__(331);
+var getIterFn = __webpack_require__(195);
+
+$export($export.S + $export.F * !__webpack_require__(178)(function (iter) { Array.from(iter); }), 'Array', {
+  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
+  from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
+    var O = toObject(arrayLike);
+    var C = typeof this == 'function' ? this : Array;
+    var aLen = arguments.length;
+    var mapfn = aLen > 1 ? arguments[1] : undefined;
+    var mapping = mapfn !== undefined;
+    var index = 0;
+    var iterFn = getIterFn(O);
+    var length, result, step, iterator;
+    if (mapping) mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+    // if object isn't iterable or it's array with default iterator - use simple case
+    if (iterFn != undefined && !(C == Array && isArrayIter(iterFn))) {
+      for (iterator = iterFn.call(O), result = new C(); !(step = iterator.next()).done; index++) {
+        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
+      }
+    } else {
+      length = toLength(O.length);
+      for (result = new C(length); length > index; index++) {
+        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+      }
+    }
+    result.length = index;
+    return result;
+  }
+});
 
 
 /***/ })

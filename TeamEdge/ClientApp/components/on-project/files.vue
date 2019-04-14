@@ -7,7 +7,7 @@
         </v-container>
         <div v-show="!loading">
             <v-layout>
-                <span class="mt-2 ml-3 subheading">Пока нет вложений</span>
+                <span class="mt-2 ml-3 subheading" v-if="!localFiles.length">Пока нет вложений</span>
                 <v-spacer/>
                 <v-btn small icon @click="openFileSelector()">
                     <v-icon>
@@ -28,6 +28,7 @@
                             insert_drive_file
                         </v-icon>
                     </v-card-text>
+                    <span class="pl-3 caption">{{f.fileName}}</span>
                 </v-card>
             </v-layout>
         </div>
@@ -76,13 +77,12 @@ export default {
         }
     },
     watch:{
-        itemId(from, to){
-            this.fetchFiles();
+        currentWI(from, to){
+            if(to.changed.description.files)
+                this.localFiles = to.changed.description.files;
+            else
+                this.fetchFiles();
         }
     }
 }
 </script>
-
-<style>
-
-</style>

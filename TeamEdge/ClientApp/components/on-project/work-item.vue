@@ -6,37 +6,19 @@
             </v-layout>
         </v-container>
         <div v-else>
-            <v-toolbar :class="currentWiType.color" flat dense dark>
-                <v-layout row align-center>
-                    <v-toolbar-title>
-                        {{currentWiType.name}} - {{currentWI.changed.number}}
-                    </v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-flex md4>
-                        <v-tabs
-                            :color="currentWiType.color"
-                            v-model="model"
-                            centered
-                            slider-color="yellow">
-                            <v-tab ripple>
-                                Комментарии
-                            </v-tab>
-                            <v-tab ripple>
-                                Вложения
-                            </v-tab>
-                            <v-tab ripple>
-                                История
-                            </v-tab>
-                        </v-tabs>
-                    </v-flex>
-                </v-layout>
-            </v-toolbar>
             <v-layout row justify-end wrap fill-height>
                 <v-flex md8 xs12>
+                    <v-toolbar dark :class="currentWiType.color" dense flat>
+                        <v-toolbar-title>
+                            {{currentWiType.name}} - {{currentWI.changed.number}}
+                        </v-toolbar-title>
+                    </v-toolbar>
                     <v-container class="pt-0 divide">
                         <v-layout column>
-                            <v-text-field v-model="currentWI.changed.name">
+                            <v-subheader class="pl-0 mt-1 subtitle">Название</v-subheader>
+                            <v-text-field v-model="currentWI.changed.name" class="pt-0 mt-0">
                             </v-text-field>
+                            <v-subheader class="pl-0 subtitle">Описание</v-subheader>
                             <ckeditor :editor="editor" v-model="currentWI.changed.description.description" :config="editorConfig"></ckeditor>
                             <v-layout row wrap>
                                 <v-flex xs12 sm6 v-if="currentWiType.parent">
@@ -71,6 +53,21 @@
                     </v-container>       
                 </v-flex>
                 <v-flex md4 xs12>
+                    <v-tabs dark
+                        :color="currentWiType.color"
+                        v-model="model"
+                        centered
+                        slider-color="yellow">
+                        <v-tab ripple>
+                            Комментарии
+                        </v-tab>
+                        <v-tab ripple>
+                            Вложения
+                        </v-tab>
+                        <v-tab ripple>
+                            История
+                        </v-tab>
+                    </v-tabs>
                     <v-tabs-items v-model="model">
                         <v-tab-item>
                             <v-card flat>
@@ -172,6 +169,9 @@ export default {
 <style scoped>
 .divide{
     border-right: 1px solid gray;
+}
+.subtitle{
+    height: 30px;
 }
 </style>
 

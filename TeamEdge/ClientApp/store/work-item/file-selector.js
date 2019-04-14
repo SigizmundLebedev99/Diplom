@@ -73,7 +73,7 @@ const mutations = {
         state.onClose = null;
     },
     setOnClose(state, payload){
-        state.selectedFiles = payload.selectedFiles;
+        state.selectedFiles = [...payload.selectedFiles];
         state.onClose = payload.onClose;
     }
 };
