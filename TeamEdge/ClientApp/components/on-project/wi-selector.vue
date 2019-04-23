@@ -10,7 +10,7 @@
                 <v-text-field prepend-icon="search" class="mx-2 my-0 pt-1 pb-0" v-model="filterText"></v-text-field>
             </div>
             <v-list dense class="pt-0">
-                <v-list-tile v-for="(item, i) in items" :key="i" @click="select(item)">
+                <v-list-tile v-for="(item, i) in filteredItems" :key="i" @click="select(item)">
                     <span>{{`${item.code}${item.number} - ${item.name}`}}</span>
                 </v-list-tile>
             </v-list>
@@ -23,7 +23,9 @@ export default {
     props:[
         'icon',
         'code',
-        'hasNoParent'
+        'hasNoParent',
+        'filter',
+        'forSprint'
     ],
     data:()=>({
         items:[],
@@ -37,6 +39,9 @@ export default {
                 string = string + `code=${this.code}`
             if(this.hasNoParent != null)
                 string = string + `hasNoParent=${this.hasNoParent}`
+            if(this.forSprint){
+                string = `/api/workitems/project/${this.$route.params.projId}/for-sprint`
+            }
             this.$http.get(string).then(
                 r=>{this.items = r.data},
                 r=>{console.log(r.response)}
@@ -45,6 +50,16 @@ export default {
         select(item){
             this.$emit('selected', item);
             this.model = false;
+        }
+    },
+    computed:{
+        filteredItems(){
+            var items = this.items;
+            if(this.filter)
+                items = items.filter(this.filter);
+            if(this.filterText)
+                items = items.filter(i=>i.name.startsWith(this.filterText))
+            return items;
         }
     }
 }

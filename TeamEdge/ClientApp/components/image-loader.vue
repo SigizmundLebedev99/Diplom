@@ -1,11 +1,11 @@
 <template>
     <div class="block">
-        <a href="#" @click="onFocus">
-            <v-avatar size="90">
-                <v-icon v-if="!image" size="90">account_circle</v-icon>
-                <v-img v-else :src="image"/>
-            </v-avatar>
-        </a>
+
+        <v-avatar size="90" class="pointer" @click="onFocus">
+            <v-icon v-if="!image" size="90">account_circle</v-icon>
+            <v-img v-else :src="image"/>
+        </v-avatar>
+        
         <slot>
         </slot>
         <input type="file" accept="image/x-png,image/gif,image/jpeg,image/png" v-show="false"
@@ -44,5 +44,11 @@ export default {
 <style scoped>
 .block{
     display: flex;
+}
+.close{
+    margin-left:-9px;
+}
+.pointer{
+    cursor: pointer;
 }
 </style>

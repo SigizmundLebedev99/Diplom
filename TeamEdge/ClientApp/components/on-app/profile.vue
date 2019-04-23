@@ -13,7 +13,7 @@
                 <v-form ref="form">
                     <v-layout justify-center>
                         <image-loader class="pl-4" @fotoLoaded="avatarChanged" :image="profile.avatar">
-                            <v-btn icon small class="close-btn" title="Удалить фото" @click="profile.avatar = null">
+                            <v-btn icon small class="close" @click="profile.avatar = null">
                                 <v-icon small>close</v-icon>
                             </v-btn>
                         </image-loader>
@@ -80,10 +80,4 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.close-btn{
-    margin-left: -9px;
-}
-</style>
 

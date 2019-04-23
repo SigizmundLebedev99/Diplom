@@ -32,7 +32,7 @@
                             <v-layout align-center column>
                                 <v-avatar size="100" class="mb-3" color="white">
                                     <v-icon v-if="!p.logo" size="80" light color="primary">work</v-icon>
-                                    <img v-else :src="p.logo"/>
+                                    <v-img v-else :src="p.logo"/>
                                 </v-avatar>
                                 <span>Вы {{partRoles[p.accessStatus]}}</span>
                                 <v-layout row class="mt-3">

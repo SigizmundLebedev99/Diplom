@@ -76,5 +76,12 @@ namespace TeamEdge.WebLayer.Controllers
             var res = await _workItemService.GetDenseWorkItem(code, number, projectId, User.Id());
             return Ok(res);
         }
+
+        [HttpGet("project/{projectId}/for-sprint")]
+        public async Task<IActionResult> GetWorkItemsForSprint(int projectId)
+        {
+            var res = await _workItemService.GetWorkItemsForSprint(projectId, User.Id());
+            return Ok(res);
+        }
     }
 }

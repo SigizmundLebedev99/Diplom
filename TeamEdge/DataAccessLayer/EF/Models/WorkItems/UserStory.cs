@@ -20,7 +20,6 @@ namespace TeamEdge.DAL.Models
 
         public string AcceptenceCriteria { get; set; }
 
-        [PropertyChanges(typeof(SimpleChangeFactory))]
         public int? SprintId { get; set; }
 
         [ForeignKey("SprintId")]

@@ -7,10 +7,10 @@
         </v-container>
         <div v-else>
             <v-layout row justify-end wrap fill-height>
-                <v-flex md8 xs12>
-                    <v-toolbar dark :class="currentWiType.color" dense flat>
+                <v-flex md8 sm12>
+                    <v-toolbar dark :class="currentWiType.color" class="mainheader" dense flat>
                         <v-toolbar-title>
-                            {{currentWiType.name}} - {{currentWI.changed.number}}
+                            {{currentWiType.name}}-{{currentWI.number}} "{{currentWI.name}}"
                         </v-toolbar-title>
                     </v-toolbar>
                     <v-container class="pt-0 divide">
@@ -52,7 +52,7 @@
                         </v-layout>  
                     </v-container>       
                 </v-flex>
-                <v-flex md4 xs12>
+                <v-flex md4 sm12>
                     <v-tabs dark
                         :color="currentWiType.color"
                         v-model="model"
@@ -168,10 +168,13 @@ export default {
 
 <style scoped>
 .divide{
-    border-right: 1px solid gray;
+    border-right: 1px solid #bbbbbb;
 }
 .subtitle{
     height: 30px;
+}
+.mainheader{
+    transition: none;
 }
 </style>
 

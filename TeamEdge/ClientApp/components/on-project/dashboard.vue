@@ -4,7 +4,7 @@
             <v-flex md1>
             </v-flex>
             <v-flex xs12 md5>
-                <v-card  class="mb-2">
+                <v-card class="mb-2">
                     <v-toolbar color="transparent" flat dense>
                         <v-toolbar-title>Ваши задачи</v-toolbar-title>
                         <v-spacer></v-spacer>

@@ -5,7 +5,7 @@
             <span class="text-none">Создать проект</span>
         </v-btn>
         <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
+            <v-toolbar dark color="primary" dense>
                 <v-toolbar-title>Новый проект</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="close()">
@@ -22,15 +22,16 @@
                     v-model="name" 
                     required
                     counter="30"/>
-                    <v-layout column align-center>
-                        <v-subheader>Логотип</v-subheader>
-                        <img v-show="logo" :src="logo" height="124px"/>
-                        <v-icon v-show="!logo" size=124px>
-                            work
-                        </v-icon>
-                        <input class="mt-2" type="file" @change="onFilePhotoChange"/>
-                    </v-layout>
                 </v-form>
+                <v-layout column align-center>
+                    <v-subheader>Логотип</v-subheader>
+                    <image-loader class="pl-4" @fotoLoaded="logoLoaded" :image="logo" icon='work'>
+                        <v-btn icon small class="close" @click="logo = null">
+                            <v-icon small>close</v-icon>
+                        </v-btn>
+                    </image-loader>
+                </v-layout>
+                
             </v-card-text>
             <v-card-actions>
                 <v-layout row justify-end>
@@ -44,8 +45,12 @@
 <script>
 import onResize from '../../mixins/on-resize'
 import formValidation from '../../mixins/form-validation'
+import imageLoader from '../image-loader'
 import { mapActions } from 'vuex'
 export default {
+    components:{
+        'image-loader':imageLoader
+    },
     mixins:[onResize, formValidation],
     data(){
         return {
@@ -67,15 +72,8 @@ export default {
                 );
             }
         },
-        onFilePhotoChange($event) {
-            const files = $event.target.files || $event.dataTransfer.files;
-            if (!files.length) return;
-            var fd  = new FormData();
-            fd.append('file', files[0]);
-            this.$http.post('/api/file/image', fd, { headers: {'Content-Type': 'multipart/form-data' }}).then(
-                r=>{this.logo = r.data;},
-                r=>{console.log(r.responce);}
-            );
+        logoLoaded(logo) {
+            this.logo = logo;
         },
         ...mapActions({fetchProjects:'projects/fetchProjects'}),
         close(){

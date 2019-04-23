@@ -90,6 +90,31 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Concat(_context.SubTasks.Where(e => e.AssignedToId == userId && e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector)).ToListAsync();
         }
 
+        public async Task<IEnumerable<ItemDTO>> GetBacklog(int projectId)
+        {
+            Expression<Func<IBaseWorkItemWithParent, bool>> filter = e => e.Description.ProjectId == projectId;
+            return await _context.Tasks.Where(e=>e.Description.ProjectId == projectId).Select(item => new ItemForBacklogDTO
+                {
+                    Code = item.Code,
+                    DescriptionId = item.DescriptionId,
+                    Name = item.Name,
+                    Number = item.Number,
+                    Status = item.Status,
+                    ParentId = item.ParentId??item.EpickId
+                })
+                .Concat(_context.UserStories.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector))
+                .Concat(_context.Epicks.Where(e=>e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector))
+                .Concat(_context.SubTasks.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ItemDTO>> GetWorkItemsForSprint(int projectId, int userId)
+        {
+            await _validationService.ValidateProjectAccess(projectId, userId);
+            return await _context.UserStories.Where(e => e.Description.ProjectId == projectId && e.SprintId == null).Select(WorkItemHelper.ItemDTOSelector)
+                .Concat(_context.Tasks.Where(e => e.Description.ProjectId == projectId && e.ParentId == null && e.SprintId == null)
+                .Select(WorkItemHelper.ItemDTOSelector)).ToListAsync();
+        }
+
         #region Privates
         private WorkItemRepository GetRepository(string code)
         {
@@ -119,22 +144,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return (operRes,userProj);
         }
 
-        public async Task<IEnumerable<ItemDTO>> GetBacklog(int projectId)
-        {
-            Expression<Func<IBaseWorkItemWithParent, bool>> filter = e => e.Description.ProjectId == projectId;
-            return await _context.Tasks.Where(e=>e.Description.ProjectId == projectId).Select(item => new ItemForBacklogDTO
-                {
-                    Code = item.Code,
-                    DescriptionId = item.DescriptionId,
-                    Name = item.Name,
-                    Number = item.Number,
-                    Status = item.Status,
-                    ParentId = item.ParentId??item.EpickId
-                })
-                .Concat(_context.UserStories.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector))
-                .Concat(_context.Epicks.Where(e=>e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector))
-                .Concat(_context.SubTasks.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector)).ToListAsync();
-        }
+        
         #endregion
     }
 }

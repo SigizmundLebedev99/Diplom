@@ -29,6 +29,11 @@ namespace TeamEdge.DAL.Models
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
+        public int? SprintId { get; set; }
+
+        [ForeignKey("SprintId")]
+        public Sprint Sprint { get; set; }
+
         public int? ParentSummaryTaskId { get; set; }
         [ForeignKey("ParentSummaryTaskId")]
         public SummaryTask ParentSummaryTask { get; set; }

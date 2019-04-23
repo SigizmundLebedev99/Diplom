@@ -14,5 +14,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
         Task<IEnumerable<ItemDTO>> GetTasksForUser(int projectId, int userId);
         Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId, int userId);
         Task<IEnumerable<ItemDTO>> GetBacklog(int projectId);
+        Task<IEnumerable<ItemDTO>> GetWorkItemsForSprint(int projectId, int userId);
     }
 }
