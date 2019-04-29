@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +10,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
     public interface ICommentService
     {
         Task<OperationResult<int>> CreateComment(CreateCommentDTO model);
-        Task<IEnumerable<CommentDTO>> GetComments(int userId, int workItemId, int skip, int take);
+        Task<IEnumerable<CommentDTO>> GetComments(int userId, int workItemId);
     }
 }

@@ -4,7 +4,11 @@
         <v-layout justify-center class="mt-3" v-if="!loading && !sprints.length">
             <span class="title">Пока в проекте не создано ни одного спринта</span>
         </v-layout>
-        <v-treeview :items="sprints"></v-treeview>
+        <v-treeview :items="sprints" item-key="id">
+            <template v-slot:label="{ item }">
+                <span>Спринт {{item.number}}</span>
+            </template>
+        </v-treeview>
     </v-container>
 </template>
 
@@ -24,7 +28,10 @@ export default {
     methods:{
         fetchSprints(){
             this.$http.get(`/api/sprints/project/${this.$route.params.projId}`)
-            .then(r=>this.sprints = r.data,
+            .then(r=>{
+                r.data.forEach(e=>e.children=[])
+                this.sprints = r.data
+                },
             r=>console.log(r.response));
         }
     }

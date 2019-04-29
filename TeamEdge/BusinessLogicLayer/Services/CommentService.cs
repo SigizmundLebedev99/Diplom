@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -39,16 +39,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (!operRes.Succeded)
                 return operRes;
             var comment = _mapper.Map<Comment>(model);
+            comment.Files = new List<CommentFile>();
             if (model.Files != null && model.Files.Count() > 0)
             {
                 var wiFiles = await _context.WorkItemFiles
-                    .Where(e => model.Files.Contains(e.FileId) && e.WorkItemId == model.WorkItemId)
+                    .Where(e => e.WorkItemId == model.WorkItemId && model.Files.Contains(e.FileId))
                     .Select(e=>e.FileId)
                     .ToListAsync();
-                foreach(int f in model.Files.Where(e => !wiFiles.Contains(e)))
-                    comment.Files.Add(new CommentFile { WorkItemFile = new WorkItemFile { WorkItemId = model.WorkItemId, FileId = f} });
+                foreach (int f in model.Files.Where(e => !wiFiles.Contains(e)))
+                {
+                    comment.Files.Add(new CommentFile { FileId = f });
+                    _context.WorkItemFiles.Add(new WorkItemFile { FileId = f, WorkItemId = model.WorkItemId });
+                }
                 foreach (int f in wiFiles)
-                    comment.Files.Add(new CommentFile { FileId = f, WorkItemId = model.WorkItemId });
+                    comment.Files.Add(new CommentFile { FileId = f });
             }
             comment.DateOfCreation = DateTime.Now;
             _context.Comments.Add(comment);
@@ -57,13 +61,13 @@ namespace TeamEdge.BusinessLogicLayer.Services
             return operRes;
         }
 
-        public async Task<IEnumerable<CommentDTO>> GetComments(int userId, int workItemId, int skip = 0, int take = 20)
+        public async Task<IEnumerable<CommentDTO>> GetComments(int userId, int workItemId)
         {
             var project = await _context.WorkItemDescriptions.Where(e => e.Id == workItemId).Select(e => e.ProjectId).FirstOrDefaultAsync();
             if (project == 0)
                 throw new NotFoundException("item_nf");
             await _validationService.ValidateProjectAccess(project, userId);
-            var result = await _context.Comments
+            return await _context.Comments
                 .Where(e => e.WorkItemId == workItemId)
                 .Select(e => new CommentDTO
                 {
@@ -71,14 +75,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Files = e.Files.Select(f=>new FileLightDTO
                     {
                         Id = f.FileId,
-                        isPicture = f.WorkItemFile.File.IsPicture,
-                        Name = f.WorkItemFile.File.FileName,
-                        ImageBase64 = f.WorkItemFile.File.Path
+                        isPicture = f.File.IsPicture,
+                        Name = f.File.FileName,
+                        ImageBase64 = f.File.Path
                     }),
                     Text = e.Text,
                     User = new UserLightDTO { Avatar = e.Creator.Avatar,Id = e.CreatorId, Name = e.Creator.FullName }
                 }).ToListAsync();
-            throw new NotImplementedException();
+            
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,5 +14,6 @@ namespace TeamEdge.Models
         public string AcceptenceCriteriaCode { get; set; }
         public int? SprintId { get; set; }
         public string SprintName { get; set; }
+        public int? SprintNumber { get; internal set; }
     }
 }

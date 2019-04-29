@@ -30,7 +30,7 @@
             </summary>
             <returns>id of created entity</returns>
         </member>
-        <member name="M:TeamEdge.WebLayer.Controllers.CommentController.GetComments(System.Int32,System.Int32,System.Int32)">
+        <member name="M:TeamEdge.WebLayer.Controllers.CommentController.GetComments(System.Int32)">
             <summary>
              Get list of comments for workItem
             </summary>

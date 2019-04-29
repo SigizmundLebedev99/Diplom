@@ -123,7 +123,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Status = e.Status.ToString(),
             StartDate = e.StartDate,
             EndDate = e.EndDate,
-            Duration = e.Duration.ToTimeSpan(),
             DescriptionId = e.DescriptionId,
             Name = e.Name,
             Number = e.Number,

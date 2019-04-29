@@ -1,26 +1,25 @@
 <template>
     <v-container class="mx-0 pt-0 scroll-y">
-        <v-btn small @click="preWICreating()" class="ml-2 text-none">
-            Создать
-            <v-icon small>
+        <v-btn small @click="preWICreating()" class="ml-2 mb-4 text-none">
+            <v-icon>
                 add
             </v-icon>
+            Создать единицу работы
         </v-btn>
 
-        <v-layout row wrap>
-            <v-flex md6 xs12>
-                <v-treeview :items="items" item-key="descriptionId" :open="allIds">
-                    <template v-slot:label="{ item }">
-                        <v-layout align-center>
-                            <v-chip label :color="workItems[item.code].color" class="white--text">
-                                <span class="chip">{{item.code}}-{{item.number}}</span>
-                            </v-chip>
-                            <router-link class="ml-2" :to="{name:item.code, params:{number:item.number}}">{{item.name}}</router-link>
-                        </v-layout>
-                    </template>
-                </v-treeview> 
-            </v-flex>
-        </v-layout>
+        <v-treeview :items="items" item-key="descriptionId" :open="allIds">
+            <template v-slot:label="{ item }">
+                <v-layout align-center>
+                    <v-chip small label :color="workItems[item.code].color" class="white--text">
+                        <span class="chip">{{item.code}}-{{item.number}}</span>
+                    </v-chip>
+                    <router-link class="ml-2" :to="{name:item.code, params:{number:item.number}}">{{item.name}}</router-link>
+                    <v-spacer/>
+                    <v-chip label small v-if="item.sprintNumber">Спринт {{item.sprintNumber}}</v-chip>
+                </v-layout>
+            </template>
+        </v-treeview> 
+
     </v-container>
 </template>
 

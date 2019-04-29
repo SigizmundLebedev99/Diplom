@@ -15,9 +15,27 @@
                     </v-toolbar>
                     <v-container class="pt-0 divide">
                         <v-layout column>
-                            <v-subheader class="pl-0 mt-1 subtitle">Название</v-subheader>
-                            <v-text-field v-model="currentWI.changed.name" class="pt-0 mt-0">
-                            </v-text-field>
+                            <v-layout wrap>
+                                <v-flex xs12 md6>
+                                    <v-subheader class="pl-0 mt-1 subtitle">Название</v-subheader>
+                                    <v-text-field v-model="currentWI.changed.name" class="pt-0 mt-0 mr-3">
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex>
+                                    <v-layout v-if="currentWiType.assignable" column align-end>
+                                        <v-subheader class="pl-0 mt-1 subtitle">Исполнитель</v-subheader>
+                                        <v-layout align-center class="mr-3">
+                                            <v-avatar color="primary" size="30">
+                                                <span v-if="!assignedTo.avatar" class="white--text text-xs-center" medium>
+                                                    {{`${assignedTo.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                                                </span>
+                                                <v-img v-else :src="assignedTo.avatar"/>
+                                            </v-avatar>
+                                            <span class="ml-3">{{assignedTo.fullName}}</span>
+                                        </v-layout>
+                                    </v-layout>
+                                </v-flex>
+                            </v-layout>
                             <v-subheader class="pl-0 subtitle">Описание</v-subheader>
                             <ckeditor :editor="editor" v-model="currentWI.changed.description.description" :config="editorConfig"></ckeditor>
                             <v-layout row wrap>
@@ -70,9 +88,7 @@
                     </v-tabs>
                     <v-tabs-items v-model="model">
                         <v-tab-item>
-                            <v-card flat>
-                            <v-card-text>Комментарии</v-card-text>
-                            </v-card>
+                            <comments/>                         
                         </v-tab-item>
                         <v-tab-item>
                             <files></files>
@@ -95,6 +111,7 @@ import onResize from '../../mixins/on-resize'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import adapters from '../../image-upload-adapter'
 import files from './files'
+import comments from './comments'
 import workItems from '../../data/work-items-object'
 import wiSelector from './wi-selector'
 
@@ -102,7 +119,8 @@ export default {
     mixins:[onResize],
     components:{
         'files':files,
-        'wi-selector': wiSelector
+        'wi-selector': wiSelector,
+        'comments':comments
     },
     mounted(){
         this.enter();
@@ -122,7 +140,10 @@ export default {
         currentWiType(){
             return workItems[this.$route.name];
         },
-        ...mapGetters({currentWI:'project/currentWI'})
+        ...mapGetters({currentWI:'project/currentWI'}),
+        assignedTo(){
+            return this.currentWI.changed.assignedTo;
+        }
     },
     methods:{
         enter(){

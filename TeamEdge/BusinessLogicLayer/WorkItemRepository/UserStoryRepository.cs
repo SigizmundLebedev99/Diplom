@@ -137,7 +137,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             AcceptenceCriteria = e.AcceptenceCriteria,
             Priority = e.Priority,
             SprintId = e.SprintId,
-            SprintName = e.SprintId == null? null : e.Sprint.Name,
+            SprintNumber = e.Sprint == null? null:(int?)e.Sprint.Number,
             Status = e.Status.ToString(),
             Children = e.Children.Select(a=>new ItemDTO
             {

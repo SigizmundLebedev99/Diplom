@@ -13,9 +13,10 @@ using TeamEdge.DAL.Models;
 namespace TeamEdge.Migrations
 {
     [DbContext(typeof(TeamEdgeDbContext))]
-    partial class TeamEdgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190423150711_number")]
+    partial class number
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,17 +228,13 @@ namespace TeamEdge.Migrations
                 {
                     b.Property<int>("FileId");
 
+                    b.Property<int>("WorkItemId");
+
                     b.Property<int>("CommentId");
 
-                    b.Property<int?>("WorkItemFileFileId");
-
-                    b.Property<int?>("WorkItemFileWorkItemId");
-
-                    b.HasKey("FileId", "CommentId");
+                    b.HasKey("FileId", "WorkItemId", "CommentId");
 
                     b.HasIndex("CommentId");
-
-                    b.HasIndex("WorkItemFileFileId", "WorkItemFileWorkItemId");
 
                     b.ToTable("CommentFiles");
                 });
@@ -685,15 +682,10 @@ namespace TeamEdge.Migrations
                         .HasForeignKey("CommentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TeamEdge.DAL.Models._File", "File")
+                    b.HasOne("TeamEdge.DAL.Models.WorkItemFile", "WorkItemFile")
                         .WithMany("CommentFiles")
-                        .HasForeignKey("FileId")
+                        .HasForeignKey("FileId", "WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("TeamEdge.DAL.Models.WorkItemFile")
-                        .WithMany("CommentFiles")
-                        .HasForeignKey("WorkItemFileFileId", "WorkItemFileWorkItemId")
-                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("TeamEdge.DAL.Models.Epick", b =>

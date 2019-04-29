@@ -59,7 +59,9 @@ const mutations = {
         state.opened = payload;
     },
     addFile(state, payload){
-        state.selectedFiles.push(payload);        
+        state.selectedFiles.push(payload);
+        if(!state.files.some(e=>e.id == payload.id))
+            state.files.push(payload);        
     },
     removeFile(state, payload){
         state.selectedFiles = state.selectedFiles.filter(e=>e.id != payload);

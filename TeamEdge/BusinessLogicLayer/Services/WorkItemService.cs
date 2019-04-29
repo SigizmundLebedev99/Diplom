@@ -93,16 +93,26 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task<IEnumerable<ItemDTO>> GetBacklog(int projectId)
         {
             Expression<Func<IBaseWorkItemWithParent, bool>> filter = e => e.Description.ProjectId == projectId;
-            return await _context.Tasks.Where(e=>e.Description.ProjectId == projectId).Select(item => new ItemForBacklogDTO
+            return await _context.Tasks.Where(e=>e.Description.ProjectId == projectId).Select(item => new ItemForBacklogWithSprintDTO
                 {
                     Code = item.Code,
                     DescriptionId = item.DescriptionId,
                     Name = item.Name,
                     Number = item.Number,
                     Status = item.Status,
-                    ParentId = item.ParentId??item.EpickId
+                    ParentId = item.ParentId??item.EpickId,
+                    SprintNumber = item.Sprint.Number
                 })
-                .Concat(_context.UserStories.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector))
+                .Concat(_context.UserStories.Where(e => e.Description.ProjectId == projectId).Select(item => new ItemForBacklogWithSprintDTO
+                {
+                    Code = "STORY",
+                    DescriptionId = item.DescriptionId,
+                    Name = item.Name,
+                    Number = item.Number,
+                    Status = item.Status,
+                    ParentId = item.ParentId,
+                    SprintNumber = item.Sprint.Number
+                }))
                 .Concat(_context.Epicks.Where(e=>e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector))
                 .Concat(_context.SubTasks.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector)).ToListAsync();
         }

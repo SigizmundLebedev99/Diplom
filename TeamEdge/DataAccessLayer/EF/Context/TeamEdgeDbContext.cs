@@ -76,11 +76,10 @@ namespace TeamEdge.DAL.Context
 
             builder.Entity<CommentFile>(ent =>
             {
-                ent.HasKey(e => new { e.FileId, e.WorkItemId, e.CommentId});
+                ent.HasKey(e => new { e.FileId, e.CommentId});
                 ent
-                .HasOne(e => e.WorkItemFile)
+                .HasOne(e => e.File)
                 .WithMany(e => e.CommentFiles)
-                .HasForeignKey(e=>new { e.FileId, e.WorkItemId})
                 .OnDelete(DeleteBehavior.Cascade);
             });
         }

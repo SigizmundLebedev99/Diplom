@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,18 +28,33 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<OperationResult<SprintDTO>> CreateSprint(CreateSprintDTO model)
         {
-            await _validationService.ValidateProjectAccess(model.ProjectId, model.CreatorId, e => e.CanReview);
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.CreatorId);
 
             var entity = _mapper.Map<Sprint>(model);
             entity.DateOfCreation = DateTime.Now;
-
+            var set = _context.Sprints.Where(e => e.ProjectId == model.ProjectId);
+            if (await set.AnyAsync())
+            {
+                var number = await set
+                    .Select(e => e.Number)
+                    .MaxAsync();
+                entity.Number = number + 1;
+            }
+            else
+                entity.Number = 1;
             var operRes = new OperationResult<SprintDTO>(true);
-
-            entity.Duration = TimeHelper.GetTimeSpanNumber(model.Days, model.Hours);
-            if (!TimeHelper.CheckTimeConstraints(entity))
-                operRes.AddErrorMessage("time_inv");
-
+            
             _context.Sprints.Add(entity);
+
+            var tasks = await _context.Tasks.Where(e => model.Tasks.Contains(e.DescriptionId)).ToListAsync();
+            var stories = await _context.UserStories.Where(e => model.UserStories.Contains(e.DescriptionId)).ToListAsync();
+            foreach (var t in tasks)
+                t.SprintId = entity.Id;
+            foreach (var s in stories)
+                s.SprintId = entity.Id;
+
+            _context.Tasks.UpdateRange(tasks);
+            _context.UserStories.UpdateRange(stories);
 
             await _context.SaveChangesAsync();
             operRes.Result = _mapper.Map<SprintDTO>(entity);
@@ -52,11 +67,10 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             return await _context.Sprints.Where(e => e.ProjectId == projectId).Select(e => new SprintDTO
             {
-                Id = e.Id,
-                Name = e.Name,
+                Number = e.Number,
                 StartDate = e.StartDate,
-                Duration = e.Duration.ToTimeSpan(),
-                EndDate = e.EndDate
+                EndDate = e.EndDate,
+                ProjectId = e.ProjectId
             })
             .ToListAsync();
         }

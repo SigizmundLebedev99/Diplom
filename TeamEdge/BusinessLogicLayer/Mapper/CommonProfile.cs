@@ -38,7 +38,7 @@ namespace TeamEdge.Mapper
                     Tag = r
                 })));
 
-            CreateMap<CreateSprintDTO, Sprint>();
+            CreateMap<CreateSprintDTO, Sprint>().ForMember(e=>e.UserStories,c=>c.Ignore()).ForMember(e => e.Tasks, c => c.Ignore());
             CreateMap<CreateSprintVM, CreateSprintDTO>();
             CreateMap<Sprint, SprintDTO>();
 
@@ -48,7 +48,7 @@ namespace TeamEdge.Mapper
             CreateMap<CreateCommentDTO, Comment>()
                 .ForMember(e => e.CreatorId, c => c.MapFrom(e => e.From.Id))
                 .ForMember(e=>e.Files,c=>c.Ignore());
-            CreateMap<CreateCommentVM, CommentDTO>();
+            CreateMap<CreateCommentVM, CreateCommentDTO>();
         }
     }
 }

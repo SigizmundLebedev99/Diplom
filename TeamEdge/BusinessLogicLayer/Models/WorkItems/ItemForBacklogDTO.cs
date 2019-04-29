@@ -9,4 +9,9 @@ namespace TeamEdge.Models
     {
         public int? ParentId { get; set; }
     }
+
+    public class ItemForBacklogWithSprintDTO : ItemForBacklogDTO
+    {
+        public int? SprintNumber { get; set; }
+    }
 }

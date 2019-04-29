@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,6 +7,7 @@ namespace TeamEdge.DAL.Models
     public class _File : BaseEntity
     {
         public virtual ICollection<WorkItemFile> WorkItemFiles { get; set; }
+        public virtual ICollection<CommentFile> CommentFiles { get; set; }
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }

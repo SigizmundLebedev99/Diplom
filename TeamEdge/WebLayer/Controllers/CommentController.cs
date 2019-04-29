@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +11,7 @@ using TeamEdge.Models;
 namespace TeamEdge.WebLayer.Controllers
 {
     [Authorize]
+    [Route("api/comment")]
     public class CommentController : Controller
     {
         readonly IMapper _mapper;
@@ -26,6 +27,7 @@ namespace TeamEdge.WebLayer.Controllers
         /// Create a new comment for workItem
         /// </summary>
         /// <returns>id of created entity</returns>
+        [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody]CreateCommentVM model)
         {
             var dto = _mapper.Map<CreateCommentDTO>(model);
@@ -37,9 +39,10 @@ namespace TeamEdge.WebLayer.Controllers
         /// <summary>
         ///  Get list of comments for workItem
         /// </summary>
-        public async Task<IActionResult> GetComments(int workItemId, int skip = 0, int take = 20)
+        [HttpGet("workitem/{workItemId}")]
+        public async Task<IActionResult> GetComments(int workItemId)
         {
-            var res = await _commentService.GetComments(User.Id(), workItemId, skip, take);
+            var res = await _commentService.GetComments(User.Id(), workItemId);
             return Ok(res);
         }
     }

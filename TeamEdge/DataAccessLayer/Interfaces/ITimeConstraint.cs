@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 
 namespace TeamEdge.BusinessLogicLayer
 {
@@ -9,6 +6,5 @@ namespace TeamEdge.BusinessLogicLayer
     {
         DateTime? StartDate { get; set; }
         DateTime? EndDate { get; set; }
-        short? Duration { get; set; }
     }
 }

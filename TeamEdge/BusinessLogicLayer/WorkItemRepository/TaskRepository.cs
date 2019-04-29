@@ -179,7 +179,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Name = e.Parent.Parent.Name,
                 Number = e.Parent.Parent.Number,
                 DescriptionId = e.Parent.Parent.DescriptionId
-            } : null):null)
+            } : null):null),
+            SprintId = e.SprintId,
+            SprintNumber = e.Sprint == null?null:(int?)e.Sprint.Number
         };
     }
 }

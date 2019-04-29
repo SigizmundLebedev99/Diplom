@@ -25,7 +25,6 @@ namespace TeamEdge.DAL.Models
 
         public override string Code => Type.Code();
 
-        public short? Duration { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 

@@ -9,9 +9,14 @@
         </v-toolbar>
         <div class="white">
             <v-layout column class="mr-3 ml-3 block">
-                <v-layout row align-center wrap justify-space-between>
-                    <span class="subheading mt-1">Прикрепите имеющиеся в проекте файлы или загрузите новые</span>
-                    <input type="file" class="my-2"/>
+                <v-layout row align-center wrap>
+                    <span class="subheading mt-1">Прикрепите имеющиеся в проекте файлы или </span>
+                    <span class="subheading loader mt-1 ml-1" @click="onFocus()">загрузите новые</span>
+                    <input type="file" v-show="false"
+                        :multiple="false" 
+                        ref="fileInput" 
+                        @change="onFileChange">   
+                    <v-spacer/>
                     <div class="constraint">
                         <v-text-field prepend-icon="search" v-model="filterText"></v-text-field>
                     </div>
@@ -84,7 +89,21 @@ export default {
             addFile:'fileSelector/addFile',
             removeFile:'fileSelector/removeFile'
         }),
-        ...mapActions({close:'fileSelector/close'})
+        ...mapActions({close:'fileSelector/close'}),
+        onFocus(event){
+            this.$refs.fileInput.click();
+        },
+        onFileChange($event){
+            const files = $event.target.files || $event.dataTransfer.files;
+            if (!files.length) 
+                return;
+            var fd  = new FormData();
+            fd.append('file', files[0]);
+            this.$http.post(`/api/file/project/${this.$route.params.projId}`, fd, { headers: {'Content-Type': 'multipart/form-data' }}).then(
+                r=>{this.addFile(r.data)},
+                r=>{console.log(r.responce);}
+            );
+        }
     },
     computed:{
         ...mapGetters({
@@ -111,6 +130,12 @@ export default {
 
 .block{
     min-width:200px;
+}
+
+.loader{
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
 }
 </style>
 
