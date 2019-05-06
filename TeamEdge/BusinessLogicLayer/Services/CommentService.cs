@@ -77,7 +77,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                         Id = f.FileId,
                         isPicture = f.File.IsPicture,
                         Name = f.File.FileName,
-                        ImageBase64 = f.File.Path
+                        Path = f.File.Path
                     }),
                     Text = e.Text,
                     User = new UserLightDTO { Avatar = e.Creator.Avatar,Id = e.CreatorId, Name = e.Creator.FullName }

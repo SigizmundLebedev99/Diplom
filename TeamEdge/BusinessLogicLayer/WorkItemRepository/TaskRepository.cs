@@ -75,7 +75,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Include(e => e.Description).ThenInclude(e => e.Tags)
                 .Include(e=> e.AssignedTo)
                 .Include(e => e.Parent)
-                .Include(e=>e.Epick);
+                .Include(e=>e.Epick)
+                .Include(e=>e.Children);
 
             var entity = await query
                 .FirstOrDefaultAsync(e => e.Description.ProjectId == model.ProjectId && e.Number == number && e.Type == type);
@@ -83,18 +84,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (entity == null)
                 throw new NotFoundException("item_nf");
 
-            if (nextentity.AssignedToId != null && nextentity.AssignedToId.Value != model.CreatorId)
-                if (!await _context.UserProjects.AnyAsync(e => e.UserId == model.CreatorId && e.ProjectId == model.ProjectId))
-                    throw new UnauthorizedException("Назначать участников на задачу может только администратор");
-
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Type = type;
             nextentity.Number = entity.Number;
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
-            var checkResult = await CheckChildren<SubTask>(model.ChildrenIds, model.ProjectId);
-            operRes.Plus(checkResult);
-            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
             if (model.ParentId != null)
                 operRes.Plus(await CheckParent<UserStory>(model.ProjectId, model.ParentId.Value));
 
@@ -109,7 +103,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.Tasks.Update(nextentity);
 
             await _context.SaveChangesAsync();
@@ -151,14 +144,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
             },
             Description = new DescriptionDTO
             {
-                CreatedBy = new UserLightDTO
+                CreatedBy = e.Description.Creator == null ? null : new UserLightDTO
                 {
                     Avatar = e.Description.Creator.Avatar,
                     Id = e.Description.CreatorId,
                     Name = e.Description.Creator.FullName
                 },
                 DateOfCreation = e.Description.DateOfCreation,
-                Description = e.Description.DescriptionText,
+                DescriptionText = e.Description.DescriptionText,
                 LastUpdate = e.Description.LastUpdate,
                 LastUpdateBy = e.Description.LastUpdater == null ? null : new UserLightDTO
                 {

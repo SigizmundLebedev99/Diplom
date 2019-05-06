@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="currentWI">
         <v-container v-show="loading">
             <v-layout column justify-center align-center fill-height>
                 <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -20,15 +20,19 @@
                     </v-icon>
                 </v-btn>
             </v-layout>
-            <v-layout row wrap justify-center>
+            <v-layout row wrap align-start justify-center>
                 <v-card v-for="(f,i) in localFiles" :key="i" class="mx-1 my-1">
-                    <v-card-text class="mx-1 my-1">
+                    <v-card-text>
+                        <v-layout justify-center align-center fill-height>
                         <img height="128px" v-if="f.isPicture" :src="f.path"/>
                         <v-icon v-else>
                             insert_drive_file
                         </v-icon>
+                        </v-layout>
                     </v-card-text>
-                    <span class="pl-3 caption">{{f.fileName}}</span>
+                    <v-card-actions>
+                        <span class="caption">{{f.fileName}}</span>
+                    </v-card-actions>
                 </v-card>
             </v-layout>
         </div>
@@ -54,7 +58,7 @@ export default {
             this.$http.get(`/api/project/${this.$route.params.projId}/item/${this.currentWI.descriptionId}/files`)
             .then(
                 r=>{
-                    this.currentWI.description.files = r.data;
+                    this.currentWI.source.description.files = r.data;
                     this.currentWI.changed.description.files = r.data;
                     this.localFiles = r.data
                     this.loading = false;
@@ -78,10 +82,14 @@ export default {
     },
     watch:{
         currentWI(from, to){
-            if(to.changed.description.files)
-                this.localFiles = to.changed.description.files;
-            else
+            if(!from)
+                return;
+            if(!from.changed.description.files || !from.changed.description.files.length){
                 this.fetchFiles();
+            }
+            else{
+                this.localFiles = from.changed.description.files;
+            }
         }
     }
 }

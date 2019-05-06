@@ -160,7 +160,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Name = e.Description.Creator.FullName
                 },
                 DateOfCreation = e.Description.DateOfCreation,
-                Description = e.Description.DescriptionText,
+                DescriptionText = e.Description.DescriptionText,
                 LastUpdate = e.Description.LastUpdate,
                 LastUpdateBy = e.Description.LastUpdater == null ? null : new UserLightDTO
                 {

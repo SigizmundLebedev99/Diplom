@@ -40,21 +40,32 @@
         </v-layout>
         <div v-show="!loading">
             <p class="text-xs-center subheading mt-2" v-if="!comments || !comments.length">Пока нет комментариев</p>
-            <v-list  class="transparent">
-                <v-list-tile v-for="(c,i) in comments" :key="i" class="mb-2">
-                    <v-list-tile-avatar>
-                        <v-avatar color="primary" size="30">
-                            <span v-if="!c.user.avatar" class="white--text text-xs-center" medium>
-                                {{`${c.user.fullName.split(' ').map(s=>s[0]).join('')}`}}
-                            </span>
-                            <v-img v-else :src="c.user.avatar"/>
-                        </v-avatar>
-                    </v-list-tile-avatar>
-                    <div class="comment px-2 py-1 ml-0">
-                        <span class="comment-text">{{c.text}}</span>
-                    </div>
-                </v-list-tile>
-            </v-list>
+            <v-layout v-for="(c,i) in comments" :key="i" class="mt-3 mb-3">
+                <v-avatar class="ml-1" color="primary" size="30">
+                    <span v-if="!c.user.avatar" class="white--text text-xs-center" medium>
+                        {{`${c.user.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                    </span>
+                    <v-img v-else :src="c.user.avatar"/>
+                </v-avatar>
+                <div class="comment px-2 py-1 ml-1">
+                    <span class="comment-text">{{c.text}}</span>
+                    <v-layout row wrap align-start justify-center>
+                        <v-card v-for="(f,i) in c.files" :key="i" class="mx-1 my-1">
+                            <v-card-text>
+                                <v-layout justify-center align-center fill-height>
+                                <img height="128px" v-if="f.isPicture" :src="f.path"/>
+                                <v-icon v-else>
+                                    insert_drive_file
+                                </v-icon>
+                                </v-layout>
+                            </v-card-text>
+                            <v-card-actions>
+                                <span class="caption">{{f.name}}</span>
+                            </v-card-actions>
+                        </v-card>
+                    </v-layout>
+                </div>
+            </v-layout>
         </div>
     </div>
 </template>
@@ -115,7 +126,11 @@ export default {
                 files:this.files.map(e=>e.id)
             }
             this.$http.post(`/api/comment`,model).then(
-                r=>{this.fetchComments();this.preCommentCreating();},
+                r=>{
+                    this.files.forEach(f=>this.currentWI.changed.description.files.push(f));
+                    this.fetchComments();
+                    this.preCommentCreating();
+                },
                 r=>{console.log(r.response)}
             )
         }
@@ -135,6 +150,7 @@ export default {
 .comment{
     width:100%;
     border-left: 3px solid grey;
+    background-color: #dddddd;
 }
 
 .comment-text{

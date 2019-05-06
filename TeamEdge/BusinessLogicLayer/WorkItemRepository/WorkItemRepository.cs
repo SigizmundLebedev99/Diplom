@@ -144,7 +144,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             else
             {
                 previous = previous.Select(e => { e.WorkItem = null; return e; });
-                next = next.Select(e => { e.WorkItem = null; return e; });
+                next = next.Select(e => { e.WorkItem = null; e.WorkItemId = itemId ; return e; });
                 var deleted = previous.Except(next, new FileComparer());
                 _context.WorkItemFiles.RemoveRange(deleted);
                 var added = next.Except(previous, new FileComparer());

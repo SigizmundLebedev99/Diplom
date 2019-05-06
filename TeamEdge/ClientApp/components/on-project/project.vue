@@ -17,7 +17,11 @@
             </v-list>
             <v-container v-show="!mini" class="p-3">
             <v-layout row>
-                <v-flex xs2></v-flex>
+                <v-flex xs2>
+                    <v-btn class="mt-0" icon flat @click.stop="mini = true">
+                        <v-icon>arrow_left</v-icon>
+                    </v-btn>
+                </v-flex>
                 <v-flex xs8>
                     <v-layout column align-center>
                         <v-avatar avatar color="white mt-2" size="80">
@@ -84,7 +88,7 @@
             </v-list>
         </v-navigation-drawer>
         <v-toolbar dense color="primary" dark app>
-            <v-toolbar-side-icon @click.stop="mini = !mini"></v-toolbar-side-icon>
+            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title class="white--text hidden-sm-and-down">TEAM EDGE</v-toolbar-title>
             <v-spacer></v-spacer>
             <span class="white--text">{{profile.fullName}}</span>

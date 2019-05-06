@@ -20,7 +20,10 @@
                     </v-container>
                     <v-list v-else>
                         <v-list-tile v-for="(t,i) in tasks" :key="i">
-                            <span>{{t.name}}</span>
+                            <v-chip small label :color="workItems[t.code].color" class="white--text">
+                                <span class="chip">{{t.code}}-{{t.number}}</span>
+                            </v-chip>
+                            <router-link class="ml-2" :to="{name:t.code, params:{number:t.number}}">{{t.name}}</router-link>
                         </v-list-tile>
                     </v-list>
                     <v-card-actions>
@@ -71,6 +74,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import createInvite from './create-invite'
+import workItems from '../../data/work-items-object'
 export default {
     components:{
         'create-invite': createInvite
@@ -98,6 +102,9 @@ export default {
             project:'project/project',
             user:'auth/profile'
         }),
+        workItems(){
+            return workItems;
+        }
     }
 }
 </script>

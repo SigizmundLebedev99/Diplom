@@ -1,9 +1,5 @@
 <template>
     <v-dialog v-model="dialog" :width="ofSize({xs:350, sm:400})" persistent>
-        <v-btn slot="activator" small class="text-none">
-            <v-icon>add</v-icon>
-            Создать спринт
-        </v-btn>
         <v-card class="elevation-12">
             <v-toolbar dark color="primary" dense>
                 <v-toolbar-title>Новый спринт</v-toolbar-title>
@@ -17,7 +13,7 @@
             <v-card-text>
                 <v-layout align-center>
                     <v-subheader class="pl-0">Запланированная работа</v-subheader>
-                    <wi-selector @selected="addChild" :forSprint="true" :filter="getFilter()"></wi-selector>
+                    <wi-selector @selected="addChild" :forSprint="true"></wi-selector>
                 </v-layout>
                 <v-divider class="mr-3 mt-0 mb-2"></v-divider>
                 <span v-if="!children.length">Не выбран ни один потомок</span>
@@ -44,6 +40,7 @@
 <script>
 import onResize from '../../mixins/on-resize'
 import wiSelector from './wi-selector'
+import { mapMutations } from 'vuex';
 const defaultModel = {
     startDate:null,
     endDate:null,
@@ -74,12 +71,6 @@ export default {
         removeChild(id){
             this.children = this.children.filter(e=>e.descriptionId != id);
         },
-        getFilter(){
-            var context = this;
-            return function(item){
-                return !(context.children.map(e=>e.descriptionId).some(e=>e.descriptionId == item.descriptionId))
-            }
-        },
         submit(){
             this.children.forEach(i=>{
                 if(i.code=='STORY')
@@ -91,12 +82,16 @@ export default {
             this.$http.post(`/api/sprints/project/${this.$route.params.projId}`, this.model).then(
                 r=>{
                     this.loading = false;
+                    this.children.forEach(e=>e.sprintNumber = r.data.number)
                     this.$emit('sprintCreated', r.data);
-                    this.dialog = false;
+                    this.close();
                 },
                 r=>console.log(r.response)
             )
-        }
+        },
+        ...mapMutations({
+            close:'backlog/closeSprintForm'
+        })
     }
 }
 </script>

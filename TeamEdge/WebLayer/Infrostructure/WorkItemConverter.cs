@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace TeamEdge.WebLayer
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject obj = JObject.Load(reader);
-            var code = obj.Property("code").Value.ToString();
+            var code = obj.Property("code")?.Value.ToString();
             if(code == null)
                 throw new NotFoundException("code_nf");
             var type = GetDeserializationType(code);

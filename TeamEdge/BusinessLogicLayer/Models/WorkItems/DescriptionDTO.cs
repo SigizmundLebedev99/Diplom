@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +7,7 @@ namespace TeamEdge.Models
 {
     public class DescriptionDTO
     {
-        public string Description { get; set; }
+        public string DescriptionText { get; set; }
         public DateTime DateOfCreation { get; set; }
         public UserLightDTO CreatedBy { get; set; }
         public DateTime? LastUpdate { get; set; }
