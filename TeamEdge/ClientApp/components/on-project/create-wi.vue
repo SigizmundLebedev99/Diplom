@@ -119,9 +119,12 @@ export default {
         tabModel:null
     }),
     methods:{
-        ...mapActions({setDialog:'createWorkItem/setDialog', openFiles:'fileSelector/open'}),
+        ...mapActions({
+            setDialog:'createWorkItem/setDialog', 
+            openFiles:'fileSelector/open'
+        }),
         ...mapMutations({
-            addWI:'project/addWI'
+            addWI:'project/addWI',
         }),
         submit(){
             this.validate()
@@ -171,8 +174,19 @@ export default {
         ...mapGetters({
             selectedFiles:'fileSelector/selectedFiles',
             project: 'project/project',
-            additionalInfo: 'createWorkItem/additionalInfo'
+            additionalInfo: 'createWorkItem/additionalInfo',
+            predefined: 'createWorkItem/predefined'
         })
+    },
+    watch:{
+        dialog(to,from){
+            if(!to)
+                return;
+            if(this.predefined && this.predefined.parentCode){
+                this.wiType = workItems.find(e=>!e.parent?false:
+                e.parent.startsWith(this.predefined.parentCode));
+            }
+        }
     }
 }
 </script>

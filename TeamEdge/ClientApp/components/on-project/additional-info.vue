@@ -12,7 +12,7 @@
                     <sub v-if="itemType.requireParent">Необходимо выбрать предка</sub>
                 </v-layout>
                 <v-divider class="mr-3 mt-0 mb-2"></v-divider>
-                <span v-if="parent">{{`${parent.code}${parent.number} - ${parent.name}`}}</span>
+                <span v-if="currentParent">{{`${currentParent.code}${currentParent.number} - ${currentParent.name}`}}</span>
                 <span v-else>Предок не выбран</span>
             </div>
             <div v-if="itemType.epickLink && !parent" class="mt-3">
@@ -116,8 +116,20 @@ export default {
     },
     computed:{
         ...mapGetters({
-            additionalInfo:'createWorkItem/additionalInfo'
-        })
+            additionalInfo:'createWorkItem/additionalInfo',
+            predefined:'createWorkItem/predefined'
+        }),
+        currentParent(){
+            return this.parent || this.predefined.parent;
+        }
+    },
+    watch:{
+        additionalInfo(){
+            if(this.additionalInfo.parent){
+                this.parent = this.additionalInfo.parent;
+                this.additionalInfo.parentId = this.parent.descriptionId
+            }
+        }
     }
 }
 </script>

@@ -109,7 +109,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     DescriptionId = item.DescriptionId,
                     Name = item.Name,
                     Number = item.Number,
-                    Status = item.Status,
                     ParentId = item.ParentId,
                     SprintNumber = item.Sprint.Number
                 }))

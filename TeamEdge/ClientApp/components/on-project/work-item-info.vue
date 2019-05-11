@@ -9,7 +9,7 @@
                             <span class="mr-3">Добавил: </span>
                             <v-avatar color="primary" size="30">
                                 <span v-if="!currentWI.source.description.createdBy.avatar" class="white--text text-xs-center" medium>
-                                    {{`${currentWI.source.description.createdBy.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                                    {{`${currentWI.source.description.createdBy.name.split(' ').map(s=>s[0]).join('')}`}}
                                 </span>
                                 <v-img v-else :src="currentWI.source.description.createdBy.avatar"/>
                             </v-avatar>
@@ -20,7 +20,7 @@
                                 <span class="mr-3">Изменил: </span>
                                 <v-avatar color="primary" size="30">
                                     <span v-if="!currentWI.source.description.lastUpdateBy.avatar" class="white--text text-xs-center" medium>
-                                        {{`${currentWI.source.description.lastUpdateBy.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                                        {{`${currentWI.source.description.lastUpdateBy.name.split(' ').map(s=>s[0]).join('')}`}}
                                     </span>
                                     <v-img v-else :src="currentWI.source.description.lastUpdateBy.avatar"/>
                                 </v-avatar>

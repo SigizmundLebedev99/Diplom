@@ -66,6 +66,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Number = entity.Number;
+            nextentity.Status = entity.Status;
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
             if (model.ParentId != null)
@@ -104,7 +105,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             DescriptionId = e.DescriptionId,
             Name = e.Name,
             Number = e.Number,
-            Status = e.Status.ToString(),
+            Status = e.Status,
             Parent = e.Parent == null ? null : new ItemDTO
             {
                 Code = e.Parent.Code,

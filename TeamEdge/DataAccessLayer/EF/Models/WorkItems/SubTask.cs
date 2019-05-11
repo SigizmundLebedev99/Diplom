@@ -17,5 +17,7 @@ namespace TeamEdge.DAL.Models
         public User AssignedTo { get; set; }
 
         public float PersentOfWork { get; set; }
+
+        public WorkItemStatus Status { get; set; }
     }
 }

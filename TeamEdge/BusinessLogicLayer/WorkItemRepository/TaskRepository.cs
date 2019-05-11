@@ -87,6 +87,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             nextentity.DescriptionId = entity.DescriptionId;
             nextentity.Type = type;
             nextentity.Number = entity.Number;
+            nextentity.Status = entity.Status;
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
             if (model.ParentId != null)
@@ -127,7 +128,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             DescriptionId = e.DescriptionId,         
             Name = e.Name,
             Number = e.Number,
-            Status = e.Status.ToString(),
+            Status = e.Status,
             Children = e.Children.Select(a => new ItemDTO
             {
                 Code = WorkItemType.SubTask.Code(),
@@ -155,9 +156,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 LastUpdate = e.Description.LastUpdate,
                 LastUpdateBy = e.Description.LastUpdater == null ? null : new UserLightDTO
                 {
-                    Avatar = e.Description.Creator.Avatar,
-                    Id = e.Description.CreatorId,
-                    Name = e.Description.Creator.FullName
+                    Avatar = e.Description.LastUpdater.Avatar,
+                    Id = e.Description.LastUpdaterId.Value,
+                    Name = e.Description.LastUpdater.FullName
                 }
             },
             Epick = e.Epick!=null?new ItemDTO

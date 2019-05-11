@@ -69,7 +69,6 @@ namespace TeamEdge
             services.AddSingleton<PathParams>();
             services.AddTransient<IMembershipService, MembershipService>();
             services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IRepositoryService, RepositoryService>();
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IFileWorkService, FileWorkService>();
             services.AddTransient<IValidationService, ValidationService>();
@@ -81,6 +80,7 @@ namespace TeamEdge
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<AccountService>();
             services.AddTransient<ExportHistoryService>();
+            services.AddTransient<TimesheetService>();
 
             services.AddMvc();
             services.AddMemoryCache();

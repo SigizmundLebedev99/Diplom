@@ -14,5 +14,6 @@ namespace TeamEdge.Models
         public ItemDTO Epick { get; set; }
         public int? SprintId { get; set; }
         public int? SprintNumber { get; set; }
+        public WorkItemStatus Status { get; set; }
     }
 }

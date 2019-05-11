@@ -10,7 +10,6 @@ namespace TeamEdge.DAL.Models
         int DescriptionId { get; set; }
         WorkItemDescription Description { get; set; }
 
-        WorkItemStatus Status { get; set; }
         int Number { get; set; }
         string Name { get; set; }
 

@@ -9,8 +9,6 @@ namespace TeamEdge.Mapper
     {
         public CommonProfile()
         {
-            CreateMap<CreateBranchVM, CreateBranchDTO>();
-            CreateMap<GetBranchesVM, GetBranchesDTO>();
             CreateMap<GetItemsVM, GetItemsDTO>();
 
             CreateMap<RegisterUserDTO, User>();

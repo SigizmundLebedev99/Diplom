@@ -41,8 +41,7 @@ namespace TeamEdge.BusinessLogicLayer
             Code = item.Code,
             DescriptionId = item.DescriptionId,
             Name = item.Name,
-            Number = item.Number,
-            Status = item.Status
+            Number = item.Number
         };
 
         public static Expression<Func<IBaseWorkItemWithParent, ItemForBacklogDTO>> ItemBacklogDTOSelector = item => new ItemForBacklogDTO
@@ -51,7 +50,6 @@ namespace TeamEdge.BusinessLogicLayer
             DescriptionId = item.DescriptionId,
             Name = item.Name,
             Number = item.Number,
-            Status = item.Status,
             ParentId = item.ParentId
         };
 

@@ -6,7 +6,7 @@ using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.DAL.Models
 {
-    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithChild<SubTask>, ITimeConstraint
+    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithChild<SubTask>
     {
         public ICollection<SubTask> Children { get; set; }
         public int? ParentId { get; set; }
@@ -19,26 +19,17 @@ namespace TeamEdge.DAL.Models
         public int? EpickId { get; set; }
         public Epick Epick { get; set; }
 
+        public WorkItemStatus Status { get; set; }
+
         [PropertyChanges(typeof(AssignedToChangeFactory))]
         [ForeignKey("AssignedToId")]
         public User AssignedTo { get; set; }
 
         public override string Code => Type.Code();
 
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
-
         public int? SprintId { get; set; }
 
         [ForeignKey("SprintId")]
         public Sprint Sprint { get; set; }
-
-        public int? ParentSummaryTaskId { get; set; }
-        [ForeignKey("ParentSummaryTaskId")]
-        public SummaryTask ParentSummaryTask { get; set; }
-
-        public int? GantPreviousId { get; set; }
-        [ForeignKey("GantPreviousId")]
-        public WorkItemDescription GantPrevious { get; set; }
     }
 }

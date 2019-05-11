@@ -12,8 +12,6 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("DescriptionId")]
         public WorkItemDescription Description { get; set; }
 
-        [PropertyChanges(typeof(SimpleChangeFactory))]
-        public WorkItemStatus Status { get; set; }
         public int Number { get; set; }
         [PropertyChanges(typeof(SimpleChangeFactory))]
         [StringLength(64, MinimumLength =3)]

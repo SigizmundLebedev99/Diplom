@@ -40,7 +40,7 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<CommentFile> CommentFiles { get; set; }
 
-        public virtual DbSet<SummaryTask> SummaryTasks { get; set; }
+        public virtual DbSet<Timesheet> Timesheets { get; set; }
 
         public TeamEdgeDbContext(DbContextOptions<TeamEdgeDbContext> options) : base(options) { }
 

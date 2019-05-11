@@ -43,7 +43,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             if (children != null)
             {
-                entity.Status = (WorkItemStatus)checkResult.Result.Select(e => (byte)e.Status).Max();
                 foreach (var t in children)
                     t.ParentId = description.Id;
                 _context.UserStories.UpdateRange(children);
@@ -100,7 +99,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
 
             operRes.Plus(checkResult);
-            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
 
             if (!operRes.Succeded)
                 return operRes;
@@ -137,16 +135,15 @@ namespace TeamEdge.BusinessLogicLayer.Services
             DescriptionId = e.DescriptionId,
             Name = e.Name,
             Number = e.Number,
-            Status = e.Status.ToString(),
             Children = e.Children.Select(a => new ItemDTO
             {
                 Code = WorkItemType.UserStory.Code(),
                 Name = a.Name,
                 Number = a.Number,
                 DescriptionId = a.DescriptionId
-            }).Concat(e.Links.Select(a => new ItemDTO
+            }).Concat(e.Links.Where(a=>a.Parent == null).Select(a => new ItemDTO
             {
-                Code = WorkItemType.UserStory.Code(),
+                Code = a.Code,
                 Name = a.Name,
                 Number = a.Number,
                 DescriptionId = a.DescriptionId

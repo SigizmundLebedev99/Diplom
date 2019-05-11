@@ -104,7 +104,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
 
             operRes.Plus(checkResult);
-            operRes.Plus(CheckStatus(checkResult.Result, entity.Status));
 
             if (!operRes.Succeded)
                 return operRes;
@@ -138,7 +137,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Priority = e.Priority,
             SprintId = e.SprintId,
             SprintNumber = e.Sprint == null? null:(int?)e.Sprint.Number,
-            Status = e.Status.ToString(),
             Children = e.Children.Select(a=>new ItemDTO
             {
                 DescriptionId = a.DescriptionId,
@@ -164,7 +162,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 DateOfCreation = e.Description.DateOfCreation,
                 DescriptionText = e.Description.DescriptionText,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserLightDTO
+                LastUpdateBy = e.Description.LastUpdater == null ? null : new UserLightDTO
                 {
                     Avatar = e.Description.LastUpdater.Avatar,
                     Name = e.Description.LastUpdater.FullName,

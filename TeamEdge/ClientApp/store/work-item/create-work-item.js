@@ -1,17 +1,18 @@
 const state = ()=>({
     dialog:false,
-    predefinedCode:null,
+    predefined:null,
     additionalInfo:{}
 });
 
 const getters = {
     dialog:(state)=>state.dialog,
-    additionalInfo:(state)=>state.additionalInfo
+    additionalInfo:(state)=>state.additionalInfo,
+    predefined:state=>state.predefined
 }
 
 const actions = {
-    preWICreating({commit}, predefinedCode){
-        commit('predefined', predefinedCode);
+    preWICreating({commit}, predefined){
+        commit('predefined', predefined);
         commit('setDialog', true);
     },
     setDialog({commit}, dialog){
@@ -25,7 +26,7 @@ const mutations = {
         state.dialog = dialog;
     },
     predefined(state,payload){
-        state.predefinedCode = payload;
+        state.predefined = payload;
     },
     setAdditionalInfo(state, payload){
         state.additionalInfo = payload;

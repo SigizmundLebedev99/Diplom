@@ -81,14 +81,14 @@ export default {
         }
     },
     watch:{
-        currentWI(from, to){
-            if(!from)
+        currentWI(to, from){
+            if(!to)
                 return;
-            if(!from.changed.description.files || !from.changed.description.files.length){
+            if(!to.changed.description.files || !to.changed.description.files.length){
                 this.fetchFiles();
             }
             else{
-                this.localFiles = from.changed.description.files;
+                this.localFiles = to.changed.description.files;
             }
         }
     }

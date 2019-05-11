@@ -47,24 +47,29 @@
                     </span>
                     <v-img v-else :src="c.user.avatar"/>
                 </v-avatar>
-                <div class="comment px-2 py-1 ml-1">
-                    <span class="comment-text">{{c.text}}</span>
-                    <v-layout row wrap align-start justify-center>
-                        <v-card v-for="(f,i) in c.files" :key="i" class="mx-1 my-1">
-                            <v-card-text>
-                                <v-layout justify-center align-center fill-height>
-                                <img height="128px" v-if="f.isPicture" :src="f.path"/>
-                                <v-icon v-else>
-                                    insert_drive_file
-                                </v-icon>
-                                </v-layout>
-                            </v-card-text>
-                            <v-card-actions>
-                                <span class="caption">{{f.name}}</span>
-                            </v-card-actions>
-                        </v-card>
+                <v-layout column>
+                    <div class="comment px-2 py-1 ml-1">
+                        <span class="comment-text">{{c.text}}</span>
+                        <v-layout row wrap align-start justify-center>
+                            <v-card v-for="(f,i) in c.files" :key="i" class="mx-1 my-1">
+                                <v-card-text>
+                                    <v-layout justify-center align-center fill-height>
+                                    <img height="128px" v-if="f.isPicture" :src="f.path"/>
+                                    <v-icon v-else>
+                                        insert_drive_file
+                                    </v-icon>
+                                    </v-layout>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <span class="caption">{{f.name}}</span>
+                                </v-card-actions>
+                            </v-card>
+                        </v-layout> 
+                    </div>
+                    <v-layout justify-end>
+                        <span class="date-text mr-1">{{getDate(c.dateOfCreation)}}</span>
                     </v-layout>
-                </div>
+                </v-layout>
             </v-layout>
         </div>
     </div>
@@ -119,6 +124,10 @@ export default {
                 this.formOpened = true;
             }
         },
+        getDate(date){
+            var temp = new Date(date);
+            return `${temp.getDate()}.${temp.getMonth() + 1}.${temp.getFullYear()}`
+        },
         send(){
             var model = {
                 text:this.text,
@@ -139,7 +148,7 @@ export default {
         ...mapGetters({currentWI:'project/currentWI'})
     },
     watch:{
-        currentWI(from, to){
+        currentWI(){
             this.fetchComments();
         }
     }
@@ -155,5 +164,10 @@ export default {
 
 .comment-text{
     font-size: 12px;
+}
+
+.date-text{
+    font-size: 11px;
+    opacity: 0.8;
 }
 </style>

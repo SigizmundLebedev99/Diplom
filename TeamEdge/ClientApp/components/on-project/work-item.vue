@@ -17,10 +17,25 @@
                         <v-layout column>
                             <v-layout align-center>
                                 <work-item-info/>
+                                <div class="status" v-if="status">
+                                    <v-select class="ml-3"
+                                        v-model="status"
+                                        :items="statuses"
+                                        @change="changeStatus"
+                                        required>
+                                        <template v-slot:selection="data">
+                                            <span>{{data.item.value}}</span>
+                                        </template>
+                                        <template v-slot:item="{ index, item }">
+                                            <span>{{item.value}}</span>
+                                        </template>
+                                    </v-select>
+                                </div>
                                 <v-spacer/>
                                 <v-btn class="primary text-none" small @click="saveChanges()">Сохранить</v-btn>
                                 <v-btn class="primary text-none ml-0" small @click="reset()">Откатить</v-btn>
                             </v-layout>
+                            <v-divider/>
                             <v-layout wrap>
                                 <v-flex xs12 md6>
                                     <v-subheader class="pl-0 mt-1 subtitle">Название</v-subheader>
@@ -29,7 +44,13 @@
                                 </v-flex>
                                 <v-flex>
                                     <v-layout v-if="currentWiType.assignable" column align-end>
-                                        <v-subheader class="pl-0 mt-1 subtitle">Исполнитель</v-subheader>
+                                        <v-layout>
+                                            <v-subheader class="pl-0 mt-1 subtitle">Исполнитель</v-subheader>
+                                            <user-selector @userSelected="userSelected"/>
+                                            <v-btn class="ml-0" icon small @click="currentWI.changed.assignedTo = null">
+                                                <v-icon small>close</v-icon>
+                                            </v-btn>
+                                        </v-layout>
                                         <v-layout align-center class="mr-3" v-if="assignedTo">
                                             <v-avatar color="primary" size="30">
                                                 <span v-if="!assignedTo.avatar" class="white--text text-xs-center" medium>
@@ -38,6 +59,7 @@
                                                 <v-img v-else :src="assignedTo.avatar"/>
                                             </v-avatar>
                                             <span class="ml-3">{{assignedTo.fullName}}</span>
+                                            
                                         </v-layout>
                                     </v-layout>
                                 </v-flex>
@@ -65,7 +87,7 @@
                                         <wi-selector code="EPICK" @selected="epickSelected" icon="edit"/>
                                         <v-btn small icon class="ml-0" @click="dropEpick()">
                                             <v-icon small>close</v-icon>
-                                        </v-btn> 
+                                        </v-btn>
                                     </v-layout>
                                     <v-divider class="mr-3 mt-0 mb-2"></v-divider>
                                     <router-link v-if="currentWI.changed.epick" :to="{name:currentWI.changed.epick.code, params:{number:currentWI.changed.epick.number}}">
@@ -74,6 +96,21 @@
                                     <span v-else>Epick не выбран</span>
                                 </v-flex>
                             </v-layout>
+                            <div v-if="currentWiType.children" class="mt-3">
+                                <v-layout align-center>
+                                    <v-subheader class="pl-0">Потомки</v-subheader>
+                                    <v-btn small class="text-none primary" @click="createChild()">
+                                        Создать
+                                    </v-btn>
+                                </v-layout>
+                                <v-divider class="mb-2"/>
+                                <v-layout align-center v-for="(t,i) in currentWI.changed.children" :key="i">
+                                    <v-chip small label :color="workItems[t.code].color" class="white--text ml-0">
+                                        <span class="chip">{{t.code}}-{{t.number}}</span>
+                                    </v-chip>
+                                    <router-link class="ml-2" :to="{name:t.code, params:{number:t.number}}">{{t.name}}</router-link>
+                                </v-layout>
+                            </div>
                         </v-layout>  
                     </v-container>       
                 </v-flex>
@@ -115,7 +152,7 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import onResize from '../../mixins/on-resize'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import adapters from '../../image-upload-adapter'
@@ -124,6 +161,9 @@ import comments from './comments'
 import workItems from '../../data/work-items-object'
 import wiSelector from './wi-selector'
 import workItemInfo from './work-item-info'
+import userSelector from './user-selector'
+
+import statuses from '../../data/statuses'
 
 export default {
     mixins:[onResize],
@@ -131,7 +171,8 @@ export default {
         'files':files,
         'wi-selector': wiSelector,
         'comments':comments,
-        'work-item-info':workItemInfo
+        'work-item-info':workItemInfo,
+        'user-selector':userSelector
     },
     mounted(){
         this.enter();
@@ -142,9 +183,13 @@ export default {
         editor: ClassicEditor,
         editorConfig: {
             extraPlugins: [ adapters.updateWIAdapter ]
-        }
+        },
+        status:{}
     }),
     computed:{
+        number(){
+            return this.$route.params.number;
+        },
         currentWiType(){
             return workItems[this.$route.name];
         },
@@ -153,11 +198,18 @@ export default {
             }),
         assignedTo(){
             return this.currentWI.changed.assignedTo;
+        },
+        statuses(){
+            return statuses.array;
+        },
+        workItems(){
+            return workItems;
         }
     },
     methods:{
         enter(){
             if(this.currentWI){
+                this.status = statuses.array[this.currentWI.source.status]
                 this.loading=false;
             }
             else{
@@ -173,11 +225,15 @@ export default {
                         wi.descriptionId = r.data.descriptionId;
                         wi.changed = Object.assign({}, r.data);
                         this.addWI(wi);
+                        this.status = statuses.array[wi.source.status]
                         this.loading = false;
                     },
                     r=>console.log(r.response)
                 );
             }
+        },
+        userSelected(user){
+            this.currentWI.changed.assignedTo = user;
         },
         parentSelected(item){
             this.currentWI.changed.parent = item;
@@ -222,10 +278,37 @@ export default {
                 r=>{this.currentWI.source = Object.assign({}, this.currentWI.changed)},
                 r=>{}
             )
-        }
+        },
+        changeStatus(smt){
+            this.$http.post(`/api/timesheet/status`,
+            {
+                projectId:this.$route.params.projId,
+                workItemId:this.currentWI.descriptionId,
+                status: statuses.object[smt]
+            }).then(r=>{
+                this.currentWI.source.status = this.status.key;
+            },
+                r=>{console.log(r.response)}
+            );
+        },
+        createChild(){
+            var predifined = {
+                parentCode:this.currentWI.code,
+                parent:{
+                    code:this.currentWI.code,
+                    number:this.currentWI.number,
+                    descriptionId:this.currentWI.descriptionId,
+                    name:this.currentWI.name
+                }
+            }
+            this.preWiCreating(predifined);
+        },
+        ...mapActions({
+            preWiCreating:'createWorkItem/preWICreating'
+        })
     },
     watch:{
-        currentWI(from, to){
+        currentWI(){
             this.enter();
         }
     }
@@ -241,6 +324,9 @@ export default {
 }
 .mainheader{
     transition: none;
+}
+.status{
+    width:90px;
 }
 </style>
 
