@@ -16,7 +16,7 @@ namespace TeamEdge.DAL.Context
 
         public virtual DbSet<Comment> Comments { get; set; }
 
-        public virtual DbSet<Epick> Epicks { get; set; }
+        public virtual DbSet<Epic> Epics { get; set; }
 
         public virtual DbSet<UserStory> UserStories { get; set; }
 
@@ -48,7 +48,7 @@ namespace TeamEdge.DAL.Context
         {
             return Tasks.Where(filter).Select(selector)
                 .Concat(UserStories.Where(filter).Select(selector))
-                .Concat(Epicks.Where(filter).Select(selector));
+                .Concat(Epics.Where(filter).Select(selector));
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

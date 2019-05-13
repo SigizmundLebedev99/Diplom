@@ -34,7 +34,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             operRes.Plus(checkResult);
 
             if (model.ParentId != null)
-                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
+                operRes.Plus(await CheckParent<Epic>(model.ProjectId, model.ParentId.Value));
             
             if (!operRes.Succeded)
                 return operRes;
@@ -101,7 +101,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             var checkResult = await CheckChildren<_Task>(model.ChildrenIds, model.ProjectId);
             if (model.ParentId != null)
-                operRes.Plus(await CheckParent<Epick>(model.ProjectId, model.ParentId.Value));
+                operRes.Plus(await CheckParent<Epic>(model.ProjectId, model.ParentId.Value));
 
             operRes.Plus(checkResult);
 
@@ -147,7 +147,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             Parent = e.Parent == null? null : new ItemDTO
             {
                 DescriptionId = e.Parent.DescriptionId,
-                Code = WorkItemType.Epick.Code(),
+                Code = WorkItemType.Epic.Code(),
                 Name = e.Parent.Name,
                 Number = e.Parent.Number
             },

@@ -6,8 +6,8 @@ namespace TeamEdge
 {
     public enum WorkItemType : byte
     {
-        [WorkItem("EPICK", typeof(EpickRepository), typeof(CreateEpickDTO))]
-        Epick,
+        [WorkItem("EPIC", typeof(EpicRepository), typeof(CreateEpickDTO))]
+        Epic,
 
         [WorkItem("STORY", typeof(UserStoryRepository), typeof(CreateUserStoryDTO))]
         UserStory,

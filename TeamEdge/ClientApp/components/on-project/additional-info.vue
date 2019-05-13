@@ -17,15 +17,15 @@
             </div>
             <div v-if="itemType.epickLink && !parent" class="mt-3">
                 <v-layout align-center>
-                    <v-subheader class="pl-0">Epick link</v-subheader>
-                    <wi-selector code="EPICK" @selected="epickSelected" icon="edit"></wi-selector>
-                    <v-btn small icon class="ml-0" @click="dropEpickLink()">
+                    <v-subheader class="pl-0">Epic link</v-subheader>
+                    <wi-selector code="EPIC" @selected="epickSelected" icon="edit"></wi-selector>
+                    <v-btn small icon class="ml-0" @click="dropEpicLink()">
                         <v-icon small>close</v-icon>
                     </v-btn>
                 </v-layout>
                 <v-divider class="mr-3 mt-0 mb-2"></v-divider>
                 <span v-if="epick">{{`${epick.code}${epick.number} - ${epick.name}`}}</span>
-                <span v-else>Epick не выбран</span>
+                <span v-else>Epic не выбран</span>
             </div>
             <div v-if="itemType.children" class="mt-3">
               <v-layout align-center>
@@ -80,7 +80,7 @@ export default {
             this.epick = item;
             this.additionalInfo.epickId = item.descriptionId;
         },
-        dropEpickLink(){
+        dropEpicLink(){
             this.epick = null;
             this.additionalInfo.epickId = null;
         },
@@ -90,7 +90,7 @@ export default {
             var arr = [];
             if(this.additionalInfo.childrenIds.some(id=>id==item.descriptionId))
                 return;
-            if(this.itemType.code == 'EPICK' && item.code != 'STORY'){       
+            if(this.itemType.code == 'EPIC' && item.code != 'STORY'){       
                 if(!this.additionalInfo.linkIds)
                     this.additionalInfo.linkIds = [];
                 if(this.additionalInfo.linkIds.some(id=>id==item.descriptionId))
@@ -104,7 +104,7 @@ export default {
         removeChild(id){
             this.children = this.children.filter(e=>e.descriptionId != id);
             this.additionalInfo.childrenIds = this.children.map(e=>e.descriptionId);
-            if(this.itemType.code == 'EPICK')
+            if(this.itemType.code == 'EPIC')
                 this.additionalInfo.linkIds = this.additionalInfo.linkIds.filter(e=>e!=id);
         },
         clear(){

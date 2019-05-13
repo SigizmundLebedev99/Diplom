@@ -1,5 +1,6 @@
 <template>
     <v-dialog v-model="dialog" :width="ofSize({xs:350, sm:400})" persistent>
+        
         <v-card class="elevation-12">
             <v-toolbar dark color="primary" dense>
                 <v-toolbar-title>Новый спринт</v-toolbar-title>
@@ -40,7 +41,7 @@
 <script>
 import onResize from '../../mixins/on-resize'
 import wiSelector from './wi-selector'
-import { mapMutations } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 const defaultModel = {
     startDate:null,
     endDate:null,
@@ -55,7 +56,6 @@ export default {
     data:()=>({
         model:{...defaultModel},
         loading:false,
-        dialog:false,
         children:[],
         selectionFilter:item=>!(this.children.map(e=>e.descriptionId).some(item.descriptionId))
     }),
@@ -63,7 +63,7 @@ export default {
         close(){
           this.model={...defaultModel};
           this.children = [];
-          this.dialog = false;
+          this.closeDialog();
         },
         addChild(item){
             this.children.push(item);
@@ -90,7 +90,12 @@ export default {
             )
         },
         ...mapMutations({
-            close:'backlog/closeSprintForm'
+            closeDialog:'backlog/closeSprintForm'
+        })
+    },
+    computed:{
+        ...mapGetters({
+            dialog:'backlog/sprintOpened'
         })
     }
 }

@@ -12,13 +12,12 @@
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
         </v-layout>
         <div v-show="!loading">
-            <v-layout v-if="projects.length === 0" justify-space-around align-center>
-                <span class="title text-xs-center contsraint mt-2">
-                    На данный момент у вы не принимаете участия ни в каком проекте.
-                </span>
-            </v-layout>
-            <v-container v-else>
+            <v-container>
+                
                 <v-layout wrap :class="ofSize({xs:'column align-center', sm:'row justify-center'})">
+                    <span v-if="!projects.length">
+                        На данный момент у вы не принимаете участия ни в каком проекте.
+                    </span>
                     <v-card v-for="(p,i) in projects" :key="i" dark width="200px" class="mr-4 elevation-12">
                         <v-toolbar dark dense color="primary" flat>
                                 <v-spacer></v-spacer>

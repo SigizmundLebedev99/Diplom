@@ -34,7 +34,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             entity.DateOfCreation = DateTime.Now;
             entity.Users = new UserProject[]
             {
-                new UserProject{UserId = model.UserId, ProjRole = ProjectAccessLevel.Administer, RepoRole = RepositoryAccessLevel.Administer}
+                new UserProject{UserId = model.UserId, ProjRole = ProjectAccessLevel.Administer}
             };
             var result = _context.Projects.Add(entity);
             await _context.SaveChangesAsync();

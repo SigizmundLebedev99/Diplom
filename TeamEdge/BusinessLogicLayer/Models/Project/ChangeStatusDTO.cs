@@ -1,4 +1,4 @@
-﻿using TeamEdge.DAL.Models;
+using TeamEdge.DAL.Models;
 
 namespace TeamEdge.Models
 {
@@ -8,7 +8,6 @@ namespace TeamEdge.Models
 
         public int UserId { get; set; }
         public int ProjectId { get; set; }
-        public RepositoryAccessLevel NewRepoLevel { get; set; }
         public ProjectAccessLevel NewProjLevel { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using TeamEdge.DAL.Mongo;
@@ -26,14 +26,10 @@ namespace TeamEdge.BusinessLogicLayer
             return res.ToJson();
         }
 
-        public async Task<string> GetHistoryRecordsForItem(int projectId, string code, int number, int skip, int take)
+        public async Task<string> GetHistoryRecordsForItem(int projectId, string code, int number)
         {
             var res = await _context.HistoryRecords.OfType<WorkItemChanged>()
-                .FindAsync(e => e.ProjectId == projectId && e.Code == code && e.Number == number, new FindOptions<WorkItemChanged, WorkItemChanged>()
-                {
-                    Skip = skip,
-                    Limit = take
-                });
+                .FindAsync(e => e.ProjectId == projectId && e.Code == code && e.Number == number);
             return res.ToJson();
         }
     }

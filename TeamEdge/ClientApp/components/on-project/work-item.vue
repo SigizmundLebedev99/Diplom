@@ -32,8 +32,13 @@
                                     </v-select>
                                 </div>
                                 <v-spacer/>
-                                <v-btn class="primary text-none" small @click="saveChanges()">Сохранить</v-btn>
+                                <v-btn :loading="updateLoading" class="primary text-none" small @click="saveChanges()">Сохранить</v-btn>
                                 <v-btn class="primary text-none ml-0" small @click="reset()">Откатить</v-btn>
+                                <v-btn icon small @click="load()">
+                                    <v-icon>
+                                        refresh
+                                    </v-icon>
+                                </v-btn>
                             </v-layout>
                             <v-divider/>
                             <v-layout wrap>
@@ -59,8 +64,8 @@
                                                 <v-img v-else :src="assignedTo.avatar"/>
                                             </v-avatar>
                                             <span class="ml-3">{{assignedTo.fullName}}</span>
-                                            
                                         </v-layout>
+                                        <span v-else class="mr-3">Исполнитель не назначен</span>
                                     </v-layout>
                                 </v-flex>
                             </v-layout>
@@ -76,34 +81,43 @@
                                         </v-btn> 
                                     </v-layout>
                                     <v-divider class="mr-3 mt-0 mb-2"></v-divider>
-                                    <router-link v-if="currentWI.changed.parent" :to="{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}">
-                                        <span>{{`${currentWI.changed.parent.code}${currentWI.changed.parent.number} - ${currentWI.changed.parent.name}`}}</span>
-                                    </router-link>
+                                    <v-layout align-center v-if="currentWI.changed.parent">
+                                        <v-chip small label :color="workItems[currentWI.changed.parent.code].color" class="white--text ml-0">
+                                            <span class="chip">{{currentWI.changed.parent.code}}-{{currentWI.changed.parent.number}}</span>
+                                        </v-chip>
+                                        <router-link class="ml-2" :to="{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}">{{currentWI.changed.parent.name}}</router-link>
+                                    </v-layout>
                                     <span v-else>Предок не выбран</span>
                                 </v-flex>
                                 <v-flex xs12 sm6 v-if="currentWiType.epickLink">
                                     <v-layout align-center>
-                                        <v-subheader class="pl-0">Epick link</v-subheader>
-                                        <wi-selector code="EPICK" @selected="epickSelected" icon="edit"/>
-                                        <v-btn small icon class="ml-0" @click="dropEpick()">
+                                        <v-subheader class="pl-0">Epic link</v-subheader>
+                                        <wi-selector code="EPIC" @selected="epickSelected" icon="edit"/>
+                                        <v-btn small icon class="ml-0" @click="dropEpic()">
                                             <v-icon small>close</v-icon>
                                         </v-btn>
                                     </v-layout>
                                     <v-divider class="mr-3 mt-0 mb-2"></v-divider>
-                                    <router-link v-if="currentWI.changed.epick" :to="{name:currentWI.changed.epick.code, params:{number:currentWI.changed.epick.number}}">
-                                        <span>{{`${currentWI.changed.epick.code}${currentWI.changed.epick.number} - ${currentWI.changed.epick.name}`}}</span>
-                                    </router-link>
-                                    <span v-else>Epick не выбран</span>
+                                    <v-layout align-center v-if="currentWI.changed.epick">
+                                        <v-chip small label :color="workItems['EPIC'].color" class="white--text ml-0">
+                                            <span class="chip">{{currentWI.changed.epick.code}}-{{currentWI.changed.epick.number}}</span>
+                                        </v-chip>
+                                        <router-link class="ml-2" :to="{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}">{{currentWI.changed.parent.name}}</router-link>
+                                    </v-layout>
+                                    <span v-else>Epic не выбран</span>
                                 </v-flex>
                             </v-layout>
                             <div v-if="currentWiType.children" class="mt-3">
                                 <v-layout align-center>
                                     <v-subheader class="pl-0">Потомки</v-subheader>
+                                    <v-spacer/>
                                     <v-btn small class="text-none primary" @click="createChild()">
+                                        <v-icon small>add</v-icon>
                                         Создать
                                     </v-btn>
                                 </v-layout>
                                 <v-divider class="mb-2"/>
+                                <span v-if="!currentWI.changed.children.length">Нет дочерних единиц работы</span>
                                 <v-layout align-center v-for="(t,i) in currentWI.changed.children" :key="i">
                                     <v-chip small label :color="workItems[t.code].color" class="white--text ml-0">
                                         <span class="chip">{{t.code}}-{{t.number}}</span>
@@ -184,7 +198,8 @@ export default {
         editorConfig: {
             extraPlugins: [ adapters.updateWIAdapter ]
         },
-        status:{}
+        status:{},
+        updateLoading:false
     }),
     computed:{
         number(){
@@ -232,6 +247,22 @@ export default {
                 );
             }
         },
+        load(){
+            this.loading = true;
+            this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/${this.$route.name}/${this.number}`)
+            .then(
+                r=>{
+                    this.currentWI.source = r.data;
+                    this.currentWI.changed = Object.assign({}, r.data);
+                    this.currentWI.name = r.data.name;
+                     this.loading = false;
+                },
+                r=>console.log(r.response)
+            );
+        },
+        reset(){
+            this.currentWI.changed = Object.assign({},this.currentWI.source);
+        },
         userSelected(user){
             this.currentWI.changed.assignedTo = user;
         },
@@ -244,11 +275,12 @@ export default {
         epickSelected(item){
             this.currentWI.changed.epick = item;
         },
-        dropEpick(){
+        dropEpic(){
             this.currentWI.changed.epick = null;
         },
         ...mapMutations({addWI:'project/addWI'}),
         saveChanges(){
+            this.updateLoading = true;
             var model = Object.assign({},this.currentWI.changed);
             model = Object.assign(model,this.currentWI.changed.description);
             model.fileIds = model.files.map(f=>f.id);
@@ -275,8 +307,14 @@ export default {
             model.projectId = this.$route.params.projId;
             this.$http.put(`/api/workitems/number/${this.currentWI.number}`,model)
             .then(
-                r=>{this.currentWI.source = Object.assign({}, this.currentWI.changed)},
-                r=>{}
+                r=>{
+                    this.updateLoading = false;
+                    this.currentWI.source = Object.assign({}, this.currentWI.changed)
+                },
+                r=>{
+                    this.updateLoading = false;
+                    console.log(r.response.data);
+                }
             )
         },
         changeStatus(smt){

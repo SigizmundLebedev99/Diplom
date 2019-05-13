@@ -30,7 +30,7 @@ export const routes = [
       {name:'project', path:'/', component: dashboard, beforeEnter: ifAuthenticated},
       {name:'backlog', path:'backlog', component: Backlog, beforeEnter: ifAuthenticated},
       {
-        name:'EPICK', path:'epick-:number', component: WorkItem, beforeEnter:ifAuthenticated
+        name:'EPIC', path:'epick-:number', component: WorkItem, beforeEnter:ifAuthenticated
       },
       {
         name:'STORY', path:'story-:number', component: WorkItem, beforeEnter:ifAuthenticated

@@ -27,6 +27,9 @@ const mutations = {
     },
     predefined(state,payload){
         state.predefined = payload;
+        if(payload && payload.parent){
+            state.additionalInfo.parentId = payload.parent.descriptionId;
+        }
     },
     setAdditionalInfo(state, payload){
         state.additionalInfo = payload;

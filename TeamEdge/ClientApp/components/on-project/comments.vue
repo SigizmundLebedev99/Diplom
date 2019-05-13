@@ -43,7 +43,7 @@
             <v-layout v-for="(c,i) in comments" :key="i" class="mt-3 mb-3">
                 <v-avatar class="ml-1" color="primary" size="30">
                     <span v-if="!c.user.avatar" class="white--text text-xs-center" medium>
-                        {{`${c.user.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                        {{`${c.user.name.split(' ').map(s=>s[0]).join('')}`}}
                     </span>
                     <v-img v-else :src="c.user.avatar"/>
                 </v-avatar>

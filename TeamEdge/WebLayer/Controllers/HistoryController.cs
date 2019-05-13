@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System;
@@ -24,7 +24,7 @@ namespace TeamEdge.WebLayer.Controllers
         [HttpGet("project/{projectId}/code/{code}/number/{number}")]
         public async Task<IActionResult> GetHistoryForWI(int projectId, string code, int number, [FromQuery]int skip, [FromQuery]int take = 20)
         {
-            var res = await _exportService.GetHistoryRecordsForItem(projectId, code, number, skip, take);
+            var res = await _exportService.GetHistoryRecordsForItem(projectId, code, number);
             return Ok(res);
         }
 

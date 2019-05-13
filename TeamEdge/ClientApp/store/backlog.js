@@ -72,7 +72,8 @@ const getters = {
     items:state=>state.items,
     itemsTree:state=>state.itemsTree,
     sprints:state=>state.sprints,
-    sprintsLoading:state=>state.sprintsLoading
+    sprintsLoading:state=>state.sprintsLoading,
+    sprintOpened:state=>state.sprintOpened
 };
 
 export default{

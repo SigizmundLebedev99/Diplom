@@ -9,6 +9,7 @@
             <div class="block">
                 <v-text-field prepend-icon="search" class="mx-2 my-0 pt-1 pb-0" v-model="filterText"></v-text-field>
             </div>
+            <span class="ml-3" v-if="message">{{message}}</span>
             <v-list dense class="pt-0">
                 <v-list-tile v-for="(item, i) in filteredItems" :key="i" @click="select(item)">
                     <span>{{`${item.code}${item.number} - ${item.name}`}}</span>
@@ -30,10 +31,12 @@ export default {
     data:()=>({
         items:[],
         filterText:'',
-        model:false
+        model:false,
+        message:null
     }),
     methods:{
         fetchItems(){
+            this.message = null;
             var string = `/api/workitems/project/${this.$route.params.projId}/items?`
             if(this.code)
                 string = string + `code=${this.code}`
@@ -43,7 +46,11 @@ export default {
                 string = `/api/workitems/project/${this.$route.params.projId}/for-sprint`
             }
             this.$http.get(string).then(
-                r=>{this.items = r.data},
+                r=>{
+                    this.items = r.data;
+                    if(!this.items.length)
+                        this.message = "Нет подходящих единиц"
+                },
                 r=>{console.log(r.response)}
             );
         },

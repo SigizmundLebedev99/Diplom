@@ -17,7 +17,7 @@ namespace TeamEdge.DAL.Models
         public TaskType Type { get; set; }
 
         public int? EpickId { get; set; }
-        public Epick Epick { get; set; }
+        public Epic Epic { get; set; }
 
         public WorkItemStatus Status { get; set; }
 

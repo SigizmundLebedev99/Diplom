@@ -4,21 +4,6 @@
         <name>TeamEdge</name>
     </assembly>
     <members>
-        <member name="F:TeamEdge.DAL.Models.RepositoryAccessLevel.Pull">
-            <summary>
-            User can read or clone a repository
-            </summary>
-        </member>
-        <member name="F:TeamEdge.DAL.Models.RepositoryAccessLevel.Push">
-            <summary>
-            User can push to a repository
-            </summary>
-        </member>
-        <member name="F:TeamEdge.DAL.Models.RepositoryAccessLevel.Administer">
-            <summary>
-            User can change repository settings
-            </summary>
-        </member>
         <member name="M:TeamEdge.Controllers.AccountController.Token(TeamEdge.Models.LoginDTO)">
             <summary>
             Returns jwt token for authorization after authentication

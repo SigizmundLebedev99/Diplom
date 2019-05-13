@@ -1,6 +1,6 @@
 export default {
-    EPICK:{color:'purple', name:'Epick', children:'EPICK!'},
-    STORY:{color:'orange ',name:'User Story',parent:'EPICK', children:'TASK!'},
+    EPIC:{color:'purple', name:'Epic', children:'EPIC!'},
+    STORY:{color:'orange ',name:'User Story',parent:'EPIC', children:'TASK!'},
     TASK:{color:'blue', name:'Task',parent:'STORY',epickLink:true,assignable:true,children:'SUBTASK'},
     BUG:{color:'red',name:'Bug',parent:'STORY',epickLink:true,assignable:true,children:'SUBTASK'},
     ISSUE:{color:'yellow', name:'Issue',parent:'STORY',epickLink:true,assignable:true,children:'SUBTASK'},

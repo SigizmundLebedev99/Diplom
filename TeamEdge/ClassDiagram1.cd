@@ -1,264 +1,155 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="TeamEdge.DAL.Context.TeamEdgeDbContext">
-    <Position X="23" Y="1.25" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAFAAAAgBAAggACABAIAAAAEABAgAAAACAIAAAEIYA=</HashCode>
-      <FileName>DataAccessLayer\EF\Context\TeamEdgeDbContext.cs</FileName>
-    </TypeIdentifier>
-  </Class>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="TeamEdge.DAL.Models.BaseEntity" Collapsed="true">
-    <Position X="7.75" Y="0.5" Width="1.5" />
+    <Position X="21.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAACAAAAAQAAAAAAAAAAEAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\BaseEntity.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models.Invite" Collapsed="true">
-    <Position X="3.25" Y="1.75" Width="1.5" />
+    <Position X="16.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gAAJQAEAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\Invite.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models.Project" Collapsed="true">
-    <Position X="7.75" Y="1.75" Width="1.5" />
+    <Position X="18.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAASAAgAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\Project.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models.Sprint" Collapsed="true">
-    <Position X="12.25" Y="1.75" Width="1.5" />
+    <Position X="23" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAAAAEAACAAgBAAAAAAAAAAIAEAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\Sprint.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Models.User" Collapsed="true">
-    <Position X="21.25" Y="1.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.User">
+    <Position X="37.25" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAACAAAIAAABQAAAAAAABAgAAAAAAAAAAAAAg=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\User.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.UserProject" Collapsed="true">
-    <Position X="17" Y="2.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.UserProject">
+    <Position X="31.75" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAAJAACACAAAAAIACAAACAgADAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAAJAAAAAAAAAAAAAAAACAgADAAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\UserProject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models.Comment" Collapsed="true">
-    <Position X="10" Y="1.75" Width="1.5" />
+    <Position X="25.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAACAAAAIA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\Comment.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.CommentFile" Collapsed="true">
-    <Position X="17" Y="0.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.CommentFile">
+    <Position X="31.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAEAAAgAAAAAAIAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\CommentFile.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models._File" Collapsed="true">
-    <Position X="14.5" Y="1.75" Width="1.5" />
+    <Position X="14" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACABAAAAAAAAgAIAAAAACAAABAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\File.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.Subscribe" Collapsed="true">
-    <Position X="21.25" Y="0.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Subscribe">
+    <Position X="33.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAAAAABCAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\Subscribe.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models.TestCase" Collapsed="true">
-    <Position X="1" Y="1.75" Width="1.5" />
+    <Position X="20.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\TestCase.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="TeamEdge.DAL.Models.Timesheet" Collapsed="true">
+    <Position X="27.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAACAAAAAAAAAAAgAAgAAAAAAEAAAEAIAAA=</HashCode>
+      <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\Timesheet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="TeamEdge.DAL.Models.WorkItemDescription" Collapsed="true">
-    <Position X="5.5" Y="1.75" Width="1.75" />
+    <Position X="29.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAAAAQAAASAAQBAAAAEAAAAAAAQAAIIA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\WorkItemDescription.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.WorkItemFile" Collapsed="true">
-    <Position X="19.5" Y="2.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.WorkItemFile">
+    <Position X="35.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAgAAABAAAAAAAAAAEAAAABAAAAAIAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\WorkItemFile.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.WorkItemTag" Collapsed="true">
-    <Position X="21.25" Y="2.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.WorkItemTag">
+    <Position X="35.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAABAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\WorkItemTag.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models.BaseWorkItem" Collapsed="true">
-    <Position X="5.25" Y="3.5" Width="1.5" />
+    <Position X="16.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAiAAAAAEAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAiAAAAAEAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\BaseWorkItem.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Models.Epick" Collapsed="true">
-    <Position X="0.75" Y="4.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Epic" Collapsed="true">
+    <Position X="18" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\EF\Models\WorkItems\Epick.cs</FileName>
+      <FileName>DataAccessLayer\EF\Models\WorkItems\Epic.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TeamEdge.DAL.Models.SubTask" Collapsed="true">
-    <Position X="3" Y="4.75" Width="1.5" />
+    <Position X="20.25" Y="8.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAgQAAAAAAAAAAAAgABAgAACAA=</HashCode>
+      <HashCode>AAAAAAAEAAAAAAAAAAAgQAAAAAAAAAAAAgABAgAACAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\SubTask.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Models.SummaryTask" Collapsed="true">
-    <Position X="5.25" Y="4.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAABAAAABCAgAAAAAkYAAgAAAgAAAAAgAAAEAAAAA=</HashCode>
-      <FileName>DataAccessLayer\EF\Models\WorkItems\SummaryTask.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" />
-  </Class>
   <Class Name="TeamEdge.DAL.Models._Task" Collapsed="true">
-    <Position X="7.5" Y="4.75" Width="1.5" />
+    <Position X="13.5" Y="8.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIAAAAAAEAAAAgAiAAAkQEAgAAAgAAAAA4ABAEAACAA=</HashCode>
+      <HashCode>AAAAAAAEAAAAAAAgAAAkQEAQAAAAAAAAA4ABAAAACAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\Task.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TeamEdge.DAL.Models.UserStory" Collapsed="true">
-    <Position X="9.75" Y="4.75" Width="1.5" />
+    <Position X="15.75" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAAAkQEAAAAAAAAAAAoEAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\UserStory.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Mongo.MongoContext" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="19.5" Y="0.5" Width="1.5" />
+  <Enum Name="TeamEdge.DAL.Models.ProjectAccessLevel">
+    <Position X="33.75" Y="8.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Context\MongoContext.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="TeamEdge.DAL.Mongo.Models.HistoryRecord" Collapsed="true">
-    <Position X="5.5" Y="6.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAQAABAAAAAAAAAAAAAAgAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Models\HistoryRecord.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="TeamEdge.DAL.Mongo.Models.TestCase" Collapsed="true">
-    <Position X="19.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Models\TestCase.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="TeamEdge.DAL.Mongo.Models.WorkItemChanged" Collapsed="true">
-    <Position X="5.5" Y="7.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAgAAEAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Models\WorkItemChanged.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Struct Name="TeamEdge.DAL.Mongo.Models.CollectionChanged" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="17" Y="3.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAAAABAAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Models\PropertyChanged\CollectionChanged.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Struct>
-  <Struct Name="TeamEdge.DAL.Mongo.Models.SimpleValueChanged" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="19.5" Y="3.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAiAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Models\PropertyChanged\SimpleValueChanged.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Struct>
-  <Interface Name="TeamEdge.DAL.Models.IBaseWorkItem" Collapsed="true">
-    <Position X="1.75" Y="6.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAiAAAAAEAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Interfaces\IBaseWorkItem.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="TeamEdge.DAL.Models.IBaseWorkItemWithChild&lt;TChild&gt;" Collapsed="true">
-    <Position X="0.5" Y="7.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Interfaces\IBaseWorkItem.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="TeamEdge.DAL.Models.IBaseWorkItemWithParent" Collapsed="true">
-    <Position X="3.25" Y="7.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Interfaces\IBaseWorkItem.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="TeamEdge.DAL.Models.IBaseWorkItemWithParent&lt;TParent&gt;" Collapsed="true">
-    <Position X="2.75" Y="9.25" Width="2.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Interfaces\IBaseWorkItem.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="TeamEdge.BusinessLogicLayer.ITimeConstraint" Collapsed="true">
-    <Position X="20.5" Y="5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAEAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Interfaces\ITimeConstraint.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="TeamEdge.DAL.Mongo.IMongoContext" Collapsed="true">
-    <Position X="17" Y="5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Context\IMongoContext.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Interface Name="TeamEdge.DAL.Mongo.Models.IPropertyChanged" Collapsed="true">
-    <Position X="18.75" Y="5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
-      <FileName>DataAccessLayer\Mongo\Models\PropertyChanged\IPropertyChanged.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
-  <Enum Name="TeamEdge.DAL.Models.RepositoryAccessLevel" Collapsed="true">
-    <Position X="19.25" Y="6" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAEAiAA=</HashCode>
-      <FileName>DataAccessLayer\EF\Models\Common\UserProject.cs</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="TeamEdge.DAL.Models.ProjectAccessLevel" Collapsed="true">
-    <Position X="17" Y="6" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAACAAAEAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\UserProject.cs</FileName>
     </TypeIdentifier>
   </Enum>

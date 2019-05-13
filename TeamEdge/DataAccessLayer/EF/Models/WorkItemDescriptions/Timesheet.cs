@@ -16,6 +16,6 @@ namespace TeamEdge.DAL.Models
         public SubTask SubTask { get; set; }
         public int? SubTaskId { get; set; }
 
-        public WorkItemStatus EndsWith { get; set; }
+        public WorkItemStatus? EndsWith { get; set; }
     }
 }

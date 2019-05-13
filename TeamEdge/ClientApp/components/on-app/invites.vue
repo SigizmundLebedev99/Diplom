@@ -8,6 +8,7 @@
         <v-divider></v-divider>
         <v-container>
             <v-layout row wrap justify-center align-start>
+                <span v-if="!invites.length">У вас нет ни одного инвайта</span>
                 <v-card v-for="(invite,i) in invites" :key="i" dark width="220px" class="mr-4 elevation-12">
                     <v-layout column align-center dark class="primary pt-2 pb-2">
                         <v-chip class="mb-2">

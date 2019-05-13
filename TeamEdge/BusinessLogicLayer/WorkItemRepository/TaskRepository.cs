@@ -75,7 +75,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 .Include(e => e.Description).ThenInclude(e => e.Tags)
                 .Include(e=> e.AssignedTo)
                 .Include(e => e.Parent)
-                .Include(e=>e.Epick)
+                .Include(e=>e.Epic)
                 .Include(e=>e.Children);
 
             var entity = await query
@@ -161,15 +161,15 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Name = e.Description.LastUpdater.FullName
                 }
             },
-            Epick = e.Epick!=null?new ItemDTO
+            Epic = e.Epic!=null?new ItemDTO
             {
-                Code = WorkItemType.Epick.Code(),
-                Name = e.Epick.Name,
-                Number = e.Epick.Number,
-                DescriptionId = e.Epick.DescriptionId
+                Code = WorkItemType.Epic.Code(),
+                Name = e.Epic.Name,
+                Number = e.Epic.Number,
+                DescriptionId = e.Epic.DescriptionId
             }:(e.Parent!=null?(e.Parent.Parent!=null? new ItemDTO
             {
-                Code = WorkItemType.Epick.Code(),
+                Code = WorkItemType.Epic.Code(),
                 Name = e.Parent.Parent.Name,
                 Number = e.Parent.Parent.Number,
                 DescriptionId = e.Parent.Parent.DescriptionId

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +10,6 @@ namespace TeamEdge.Models
     {
         public int UserId { get; set; }
         public int ProjectId { get; set; }
-        public RepositoryAccessLevel NewRepoLevel { get; set; }
         public ProjectAccessLevel NewProjLevel { get; set; }
     }
 }

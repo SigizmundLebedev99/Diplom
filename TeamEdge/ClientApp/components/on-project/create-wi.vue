@@ -64,12 +64,17 @@
                             </v-layout>
                             <v-layout row wrap justify-center>
                                 <v-card v-for="(f,i) in selectedFiles" :key="i" class="mx-1 my-1">
-                                    <v-card-text class="mx-1 my-1">
+                                    <v-card-text>
+                                        <v-layout justify-center align-center fill-height>
                                         <img height="128px" v-if="f.isPicture" :src="f.path"/>
                                         <v-icon v-else>
                                             insert_drive_file
                                         </v-icon>
+                                        </v-layout>
                                     </v-card-text>
+                                    <v-card-actions>
+                                        <span class="caption">{{f.fileName}}</span>
+                                    </v-card-actions>
                                 </v-card>
                             </v-layout>
                         </div>
@@ -140,14 +145,20 @@ export default {
             };
             this.$http.post(`/api/workitems`, model)
             .then(
-              r => {
-                  r.data.changed = Object.assign({}, r.data);
-                  this.addWI(r.data);
-                  this.$router.push({ name: r.data.code, params: { number: r.data.number } })
-                  this.loading = false;
-                  this.close();
-              },
-              r => {console.log('error', r.response); this.loading = false;}
+                r => {
+                var wi = {};
+                wi.name = r.data.name;
+                wi.number = r.data.number;
+                wi.code = r.data.code;
+                wi.source = r.data;
+                wi.descriptionId = r.data.descriptionId;
+                wi.changed = Object.assign({}, r.data);
+                this.addWI(wi);
+                this.$router.push({ name: r.data.code, params: { number: r.data.number } })
+                this.loading = false;
+                this.close();
+            },
+                r => {console.log('error', r.response); this.loading = false;}
             );
         },
         close(){

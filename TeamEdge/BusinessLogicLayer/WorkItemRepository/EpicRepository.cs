@@ -14,20 +14,20 @@ using TeamEdge.Models;
 
 namespace TeamEdge.BusinessLogicLayer.Services
 {
-    class EpickRepository : WorkItemRepository
+    class EpicRepository : WorkItemRepository
     {
-        public EpickRepository(IServiceProvider provider) : base(provider) { }
+        public EpicRepository(IServiceProvider provider) : base(provider) { }
 
         public override Task<WorkItemDTO> GetWorkItem(string code, int number, int project)
         {
-            return _context.Epicks.Where(e => e.Description.ProjectId == project && e.Number == number)
+            return _context.Epics.Where(e => e.Description.ProjectId == project && e.Number == number)
                 .Select(SelectExpression).FirstOrDefaultAsync();
         }
 
         public override async Task<OperationResult<WorkItemDTO>> CreateWorkItem(WorkItemDescription description, CreateWorkItemDTO model, UserProject userProj = null)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
-            var entity = _mapper.Map<Epick>(model);
+            var entity = _mapper.Map<Epic>(model);
 
             var epickDto = model as CreateEpickDTO;
             var checkLinksResult = await CheckChildren<_Task>(epickDto.LinkIds, model.ProjectId);
@@ -38,7 +38,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (!operRes.Succeded)
                 return operRes;
             var children = checkResult.Result;
-            entity.Number = await GetNumber<Epick>(model.ProjectId);
+            entity.Number = await GetNumber<Epic>(model.ProjectId);
             entity.DescriptionId = description.Id;
 
             if (children != null)
@@ -54,10 +54,10 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 _context.Tasks.UpdateRange(checkLinksResult.Result);
             }
 
-            _context.Epicks.Add(entity);
+            _context.Epics.Add(entity);
 
             await _context.SaveChangesAsync();
-            operRes.Result = await _context.Epicks.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
+            operRes.Result = await _context.Epics.Select(SelectExpression).FirstOrDefaultAsync(e => e.DescriptionId == description.Id);
             return operRes;
         }
 
@@ -70,18 +70,18 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }
             model.HasNoParent = false;
             model.ParentId = null;
-            var filter = WorkItemHelper.GetFilter<Epick>(model);
-            return _context.Epicks.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
+            var filter = WorkItemHelper.GetFilter<Epic>(model);
+            return _context.Epics.Where(filter).Select(WorkItemHelper.ItemDTOSelector);
         }
 
         public override async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
 
-            var nextentity = _mapper.Map<Epick>(model);
+            var nextentity = _mapper.Map<Epic>(model);
             var nextdesc = _mapper.Map<WorkItemDescription>(model);
 
-            var query = _context.Epicks
+            var query = _context.Epics
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
                 .Include(e=>e.Description).ThenInclude(e=>e.Tags)
                 .Include(e => e.Children);
@@ -112,7 +112,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
             UpdateChildren(entity.Children, checkResult.Result, entity.DescriptionId);
-            _context.Epicks.Update(nextentity);
+            _context.Epics.Update(nextentity);
 
             await _context.SaveChangesAsync();
 
@@ -124,14 +124,14 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public override Task<ItemDTO> GetDenseWorkItem(string code, int number, int projectId)
         {
-            return _context.Epicks.Where(e => e.Description.ProjectId == projectId && e.Number == number)
+            return _context.Epics.Where(e => e.Description.ProjectId == projectId && e.Number == number)
                 .Select(WorkItemHelper.ItemDTOSelector)
                 .FirstOrDefaultAsync();
         }
 
-        private static readonly Expression<Func<Epick, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
+        private static readonly Expression<Func<Epic, WorkItemDTO>> SelectExpression = e => new WorkItemDTO
         {
-            Code = WorkItemType.Epick.Code(),
+            Code = WorkItemType.Epic.Code(),
             DescriptionId = e.DescriptionId,
             Name = e.Name,
             Number = e.Number,

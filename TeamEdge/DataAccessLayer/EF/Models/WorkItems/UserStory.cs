@@ -5,7 +5,7 @@ using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.DAL.Models
 {
-    public class UserStory : BaseWorkItem, IBaseWorkItemWithParent<Epick>, IBaseWorkItemWithChild<_Task>
+    public class UserStory : BaseWorkItem, IBaseWorkItemWithParent<Epic>, IBaseWorkItemWithChild<_Task>
     {
         public ICollection<_Task> Children { get; set; }
 
@@ -13,7 +13,7 @@ namespace TeamEdge.DAL.Models
 
         [PropertyChanges(typeof(ParentChangeFactory))]
         [ForeignKey("ParentId")]
-        public Epick Parent { get; set; }
+        public Epic Parent { get; set; }
 
         [PropertyChanges(typeof(SimpleChangeFactory))]
         public Priority Priority { get; set; }

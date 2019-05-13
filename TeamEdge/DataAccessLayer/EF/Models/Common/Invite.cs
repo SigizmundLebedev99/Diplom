@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamEdge.DAL.Models
 {
@@ -12,7 +12,6 @@ namespace TeamEdge.DAL.Models
         [ForeignKey("ToUserId")]
         public User User { get; set; }
 
-        public RepositoryAccessLevel RepoRole { get; set; }
         public ProjectAccessLevel ProjRole { get; set; }
 
         public bool IsAccepted { get; set; }

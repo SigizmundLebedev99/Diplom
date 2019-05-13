@@ -11,7 +11,7 @@ namespace TeamEdge.Models
         public UserDTO AssignedTo { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public ItemDTO Epick { get; set; }
+        public ItemDTO Epic { get; set; }
         public int? SprintId { get; set; }
         public int? SprintNumber { get; set; }
         public WorkItemStatus Status { get; set; }
