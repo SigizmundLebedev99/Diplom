@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using TeamEdge.DAL.Models;
 using TeamEdge.DAL.Mongo.Models;
 
@@ -13,7 +13,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
 
         private string _type;
 
-        public IPropertyChanged CreateHistoryRecord(object previous, object next)
+        public PropertyChanged CreateHistoryRecord(object previous, object next)
         {
             var p = previous.ToString();
             var n = next.ToString();

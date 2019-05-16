@@ -6,9 +6,8 @@
             </v-layout>
         </v-container>
         <div v-show="!loading">
-            <v-layout>
-                <span class="mt-2 ml-3 subheading" v-if="!localFiles.length">Пока нет вложений</span>
-                <v-spacer/>
+            <v-layout class="mr-5" justify-end>
+                <span class="my-2 mr-5 subheading" v-if="!localFiles.length">Пока нет вложений</span>
                 <v-btn small icon @click="openFileSelector()">
                     <v-icon>
                         attach_file
@@ -22,10 +21,10 @@
             </v-layout>
             <v-layout row wrap align-start justify-center>
                 <v-card v-for="(f,i) in localFiles" :key="i" class="mx-1 my-1">
-                    <v-card-text>
+                    <v-card-text class="px-1 py-1">
                         <v-layout justify-center align-center fill-height>
                         <img height="128px" v-if="f.isPicture" :src="f.path"/>
-                        <v-icon v-else>
+                        <v-icon v-else class="mt-2">
                             insert_drive_file
                         </v-icon>
                         </v-layout>

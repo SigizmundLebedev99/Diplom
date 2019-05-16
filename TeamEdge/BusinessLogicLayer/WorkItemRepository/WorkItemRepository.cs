@@ -82,7 +82,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }
         }
 
-        protected void UpdateChildren<TChild>(IEnumerable<TChild> previous, IEnumerable<TChild> next, int parentId) where TChild:IBaseWorkItemWithParent
+        protected void UpdateChildren<TChild, TParent>(IEnumerable<TChild> previous, IEnumerable<TChild> next, int parentId)
+            where TChild:class, IBaseWorkItemWithParent<TParent>
+            where TParent:class, IBaseWorkItemWithChild<TChild>
         {
             IEnumerable<TChild> resultSeq;
 
@@ -91,14 +93,20 @@ namespace TeamEdge.BusinessLogicLayer.Services
             else if (previous == null || previous.Count() == 0)
             {
                 foreach (var ch in next)
+                {
                     ch.ParentId = parentId;
+                    ch.Parent = null;
+                }
                 resultSeq = next;
             }
 
             else if (next == null || next.Count() == 0)
             {
                 foreach (var ch in previous)
+                {
                     ch.ParentId = null;
+                    ch.Parent = null;
+                }
                 resultSeq = previous;
             }
 
@@ -106,16 +114,21 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 var deleted = previous.Except(next, new WorkItemComparer<TChild>());
                 foreach (var ch in deleted)
+                {
                     ch.ParentId = null;
+                    ch.Parent = null;
+                }
 
                 var added = next.Except(previous, new WorkItemComparer<TChild>());
                 foreach (var ch in added)
+                {
                     ch.ParentId = parentId;
-
+                    ch.Parent = null;
+                }
                 resultSeq = added.Concat(deleted);
             } 
             
-            _context.UpdateRange(resultSeq);
+            _context.Set<TChild>().UpdateRange(resultSeq);
         }
 
         protected void UpdateFiles(IEnumerable<WorkItemFile> previous, IEnumerable<WorkItemFile> next, int itemId)
@@ -128,6 +141,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 foreach(var n in next)
                 {
                     n.WorkItem = null;
+                    n.WorkItemId = itemId;
                 }
                 _context.WorkItemFiles.AddRange(next);
             }

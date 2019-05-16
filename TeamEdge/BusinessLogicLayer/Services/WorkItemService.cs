@@ -92,7 +92,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task<IEnumerable<ItemDTO>> GetBacklog(int projectId)
         {
-            Expression<Func<IBaseWorkItemWithParent, bool>> filter = e => e.Description.ProjectId == projectId;
             return await _context.Tasks.Where(e=>e.Description.ProjectId == projectId).Select(item => new ItemForBacklogWithSprintDTO
                 {
                     Code = item.Code,
@@ -100,7 +99,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Name = item.Name,
                     Number = item.Number,
                     Status = item.Status,
-                    ParentId = item.ParentId??item.EpickId,
+                    ParentId = item.ParentId??item.EpicId,
                     SprintNumber = item.Sprint.Number
                 })
                 .Concat(_context.UserStories.Where(e => e.Description.ProjectId == projectId).Select(item => new ItemForBacklogWithSprintDTO
@@ -113,7 +112,15 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     SprintNumber = item.Sprint.Number
                 }))
                 .Concat(_context.Epics.Where(e=>e.Description.ProjectId == projectId).Select(WorkItemHelper.ItemDTOSelector))
-                .Concat(_context.SubTasks.Where(filter).Select(WorkItemHelper.ItemBacklogDTOSelector)).ToListAsync();
+                .Concat(_context.SubTasks.Where(e => e.Description.ProjectId == projectId).Select(item => new ItemForBacklogWithSprintDTO
+                {
+                    Code = item.Code,
+                    DescriptionId = item.DescriptionId,
+                    Name = item.Name,
+                    Number = item.Number,
+                    Status = item.Status,
+                    ParentId = item.ParentId
+                })).ToListAsync();
         }
 
         public async Task<IEnumerable<ItemDTO>> GetWorkItemsForSprint(int projectId, int userId)

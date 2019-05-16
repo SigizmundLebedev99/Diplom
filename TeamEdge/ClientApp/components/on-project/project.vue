@@ -58,7 +58,7 @@
                     </v-list-tile-action>
 
                     <v-list-tile-content>
-                    <v-list-tile-title>Единицы работы</v-list-tile-title>
+                    <v-list-tile-title>Backlog</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
@@ -91,7 +91,7 @@
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title class="white--text hidden-sm-and-down">TEAM EDGE</v-toolbar-title>
             <v-spacer></v-spacer>
-            <span class="white--text">{{profile.fullName}}</span>
+            <span class="white--text">{{profile.name}}</span>
             <v-avatar size="36px" class="ml-3">
                 <v-img v-if="profile.avatar"
                 :src="profile.avatar"

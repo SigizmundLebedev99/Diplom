@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace TeamEdge.DAL.Mongo.Models
@@ -8,6 +8,6 @@ namespace TeamEdge.DAL.Mongo.Models
         public int Number { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-        public ICollection<IPropertyChanged> Changes { get; set; }
+        public ICollection<PropertyChanged> Changes { get; set; }
     }
 }

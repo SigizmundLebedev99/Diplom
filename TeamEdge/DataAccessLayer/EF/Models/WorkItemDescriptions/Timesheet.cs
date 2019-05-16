@@ -16,6 +16,9 @@ namespace TeamEdge.DAL.Models
         public SubTask SubTask { get; set; }
         public int? SubTaskId { get; set; }
 
+        public int? EndedById { get; set; }
+        [ForeignKey("EndedById")]
+        public User EndedBy { get; set; }
         public WorkItemStatus? EndsWith { get; set; }
     }
 }

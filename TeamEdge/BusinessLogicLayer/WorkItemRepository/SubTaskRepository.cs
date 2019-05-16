@@ -124,7 +124,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 DateOfCreation = e.Description.DateOfCreation,
                 DescriptionText = e.Description.DescriptionText,
                 LastUpdate = e.Description.LastUpdate,
-                LastUpdateBy = e.Description.LastUpdaterId == null ? null : new UserLightDTO
+                LastUpdateBy = e.Description.LastUpdater == null ? null : new UserLightDTO
                 {
                     Avatar = e.Description.Creator.Avatar,
                     Id = e.Description.CreatorId,

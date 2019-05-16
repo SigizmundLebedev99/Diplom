@@ -13,5 +13,6 @@ namespace TeamEdge.Models
         public WorkItemStatus? EndsWith { get; set; }
         public ItemDTO Subtask { get; set; }
         public UserLightDTO ChangedBy { get; set; }
+        public UserLightDTO EndedBy { get; set; }
     }
 }

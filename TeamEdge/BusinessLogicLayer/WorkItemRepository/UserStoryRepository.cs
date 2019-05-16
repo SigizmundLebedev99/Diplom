@@ -48,7 +48,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 foreach (var t in children)
                 {
                     t.ParentId = entity.DescriptionId;
-                    t.EpickId = model.ParentId;
+                    t.EpicId = model.ParentId;
                 }
                 _context.Tasks.UpdateRange(children);
             }
@@ -72,7 +72,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Parent = e.Parent != null ? new WorkItemIdentifier
                 {
                     Code = e.Parent.Code,
-                    Number = e.Parent.Number
+                    Number = e.Parent.Number,
+                    Name = e.Parent.Name
                 } : null
             });
         }
@@ -116,7 +117,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren(entity.Children, checkResult.Result, entity.DescriptionId);
+            UpdateChildren<_Task, UserStory>(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.UserStories.Update(nextentity);
 
             await _context.SaveChangesAsync();
@@ -153,7 +154,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             },
             Description = new DescriptionDTO
             {
-                CreatedBy = new UserLightDTO
+                CreatedBy = e.Description.Creator == null?null:new UserLightDTO
                 {
                     Avatar = e.Description.Creator.Avatar,
                     Name = e.Description.Creator.FullName,

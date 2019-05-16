@@ -1,7 +1,11 @@
 <template>
     <div v-if="currentWI">
-        <v-icon class="transparent" @mouseenter="menu=true">info</v-icon>
-        <v-menu absolute v-model="menu" :position-x="85" :position-y="60">
+        <v-menu v-model="menu">
+           <template v-slot:activator="{ on }">
+                <v-btn icon flat small v-on="on">
+                    <v-icon color="white">info</v-icon>
+                </v-btn>
+            </template>
             <v-card @mouseleave="menu=false">
                 <v-card-text class="pt-2 pb-2">
                     <v-layout column>

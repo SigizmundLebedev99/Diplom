@@ -16,7 +16,7 @@
                                 <v-icon v-if="!invite.fromAvatar" light color="primary">account_circle</v-icon>
                                 <img v-else :src="invite.fromAvatar"/>
                             </v-avatar>
-                            {{invite.fromFullName}}
+                            {{invite.fromname}}
                         </v-chip>
                         кинул вам инвайт в проект
                     </v-layout>

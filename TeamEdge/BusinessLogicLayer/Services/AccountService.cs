@@ -86,7 +86,7 @@ namespace TeamEdge
             if (!string.IsNullOrEmpty(user.UserName))
                 claims.Add(new Claim("UserName", user.UserName));
             if (!string.IsNullOrEmpty(user.Avatar))
-                claims.Add(new Claim("Avatar", user.UserName));
+                claims.Add(new Claim("Avatar", user.Avatar));
             claims.Add(new Claim("Id", user.Id.ToString()));
 
             ClaimsIdentity claimsIdentity =
@@ -109,7 +109,7 @@ namespace TeamEdge
                 Access_token = token,
                 Avatar = user.Avatar,
                 Email = user.Email,
-                FullName = user.FirstName + " " + user.LastName,
+                Name = user.FirstName + " " + user.LastName,
                 Start = now,
                 Finish = now.Add(TimeSpan.FromMinutes(AuthTokenOptions.LIFETIME))
             };

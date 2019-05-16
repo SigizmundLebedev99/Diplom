@@ -51,6 +51,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     StartDate =e.StartDate,
                     EndDate = e.EndDate,
                     EndsWith = e.EndsWith,
+                    EndedBy = e.EndedBy == null?null: new UserLightDTO
+                    {
+                        Avatar = e.EndedBy.Avatar,
+                        Id = e.EndedById.Value,
+                        Name = e.EndedBy.FullName
+                    },
                     Subtask = e.SubTask == null?null:new ItemDTO
                     {
                         Code = "SUBTASK",
@@ -69,11 +75,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (task.Status == WorkItemStatus.New)
                 if (status != WorkItemStatus.Active)
                     return;
-            if(status == WorkItemStatus.Closed || status == WorkItemStatus.Closed)
+            if(status == WorkItemStatus.Closed || status == WorkItemStatus.Stoped)
             {
                 var sheet = await _context.Timesheets.FirstOrDefaultAsync(e => e.TaskId == task.DescriptionId && e.EndDate == null);
                 sheet.EndDate = DateTime.Now;
                 sheet.EndsWith = status;
+                sheet.EndedById = model.UserId;
                 _context.Timesheets.Update(sheet);
             }
             if(status == WorkItemStatus.Active)
@@ -98,11 +105,12 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (subtask.Status == WorkItemStatus.New)
                 if (status != WorkItemStatus.Active)
                     return;
-            if (status == WorkItemStatus.Closed || status == WorkItemStatus.Closed)
+            if (status == WorkItemStatus.Closed || status == WorkItemStatus.Stoped)
             {
                 var sheet = await _context.Timesheets.FirstOrDefaultAsync(e => e.SubTaskId == subtask.DescriptionId && e.EndDate == null);
                 sheet.EndDate = DateTime.Now;
                 sheet.EndsWith = status;
+                sheet.EndedById = model.UserId;
                 _context.Timesheets.Update(sheet);
             }
             if (status == WorkItemStatus.Active)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +18,11 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
 
         private string _type;
 
-        public IPropertyChanged CreateHistoryRecord(object previous, object next)
+        public PropertyChanged CreateHistoryRecord(object previous, object next)
         {
             var p = previous as BaseWorkItem;
             var n = next as BaseWorkItem;
-            if ((p == null && n == null) || p.DescriptionId == n.DescriptionId)
+            if (p?.DescriptionId == n?.DescriptionId)
                 return null;
 
             return new SimpleValueChanged

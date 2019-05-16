@@ -3,7 +3,7 @@
         
         <v-card class="elevation-12">
             <v-toolbar dark color="primary" dense>
-                <v-toolbar-title>Новый спринт</v-toolbar-title>
+                <v-toolbar-title>{{editSprint?`Спринт ${editSprint.number}`:'Новый спринт'}}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="close()">
                     <v-icon>
@@ -31,7 +31,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-layout row justify-end>
-                    <v-btn color="primary" :loading="loading" class="mr-2" @click="submit()">Создать</v-btn>
+                    <v-btn color="primary" :loading="loading" class="mr-2" @click="submit()">Сохранить</v-btn>
                 </v-layout>
             </v-card-actions>
         </v-card>
@@ -72,6 +72,13 @@ export default {
             this.children = this.children.filter(e=>e.descriptionId != id);
         },
         submit(){
+            if(this.editSprint)
+                this.editingSprint();
+            else
+                this.createSprint();
+            
+        },
+        createSprint(){
             this.children.forEach(i=>{
                 if(i.code=='STORY')
                     this.model.userStories.push(i.descriptionId)
@@ -82,8 +89,25 @@ export default {
             this.$http.post(`/api/sprints/project/${this.$route.params.projId}`, this.model).then(
                 r=>{
                     this.loading = false;
-                    this.children.forEach(e=>e.sprintNumber = r.data.number)
-                    this.$emit('sprintCreated', r.data);
+                    this.$emit('done');
+                    this.close();
+                },
+                r=>console.log(r.response)
+            )
+        },
+        editingSprint(){
+            this.children.forEach(i=>{
+                if(i.code=='STORY')
+                    this.model.userStories.push(i.descriptionId)
+                else
+                    this.model.tasks.push(i.descriptionId);
+            })
+            this.loading = true;
+            this.$http.put(`/api/sprints/project/${this.$route.params.projId}/sprint/${this.editSprint.number}`, 
+            this.model).then(
+                r=>{               
+                    this.loading = false;
+                    this.$emit('done');
                     this.close();
                 },
                 r=>console.log(r.response)
@@ -95,8 +119,17 @@ export default {
     },
     computed:{
         ...mapGetters({
-            dialog:'backlog/sprintOpened'
+            dialog:'backlog/sprintOpened',
+            editSprint:'backlog/editSprint'
         })
+    },
+    watch:{
+        dialog(to, from)
+        {
+            if(this.editSprint){
+                this.children = [...this.editSprint.children];
+            }
+        }
     }
 }
 </script>

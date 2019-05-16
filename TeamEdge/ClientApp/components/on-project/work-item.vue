@@ -6,110 +6,106 @@
             </v-layout>
         </v-container>
         <div v-else>
-            <v-layout row justify-end wrap fill-height>
-                <v-flex md8 sm12>
-                    <v-toolbar dark :class="currentWiType.color" class="mainheader" dense flat>
-                        <v-toolbar-title class="ml-2">
-                            {{currentWiType.name}}-{{currentWI.number}} "{{currentWI.source.name}}"
-                        </v-toolbar-title>
-                    </v-toolbar>
-                    <v-container class="pt-0 divide">
-                        <v-layout column>
-                            <v-layout align-center>
-                                <work-item-info/>
-                                <div class="status" v-if="status">
-                                    <v-select class="ml-3"
-                                        v-model="status"
-                                        :items="statuses"
-                                        @change="changeStatus"
-                                        required>
-                                        <template v-slot:selection="data">
-                                            <span>{{data.item.value}}</span>
-                                        </template>
-                                        <template v-slot:item="{ index, item }">
-                                            <span>{{item.value}}</span>
-                                        </template>
-                                    </v-select>
-                                </div>
-                                <v-spacer/>
-                                <v-btn :loading="updateLoading" class="primary text-none" small @click="saveChanges()">Сохранить</v-btn>
-                                <v-btn class="primary text-none ml-0" small @click="reset()">Откатить</v-btn>
-                                <v-btn icon small @click="load()">
-                                    <v-icon>
-                                        refresh
-                                    </v-icon>
-                                </v-btn>
+            <v-toolbar dark :class="currentWiType.color" class="mainheader" dense flat>
+                <v-toolbar-title class="ml-2">
+                    {{currentWiType.name}}-{{currentWI.number}} "{{currentWI.source.name}}"
+                </v-toolbar-title>
+                <v-spacer/>
+                <work-item-info/>
+            </v-toolbar>
+            <v-container class="pt-0">
+                <v-layout column>
+                    <v-layout align-center wrap>    
+                        <v-subheader v-if="status" class="pl-0">Статус: </v-subheader>
+                        <div class="status" v-if="status">
+                            <v-select class="ml-2"
+                                v-model="status"
+                                :items="statuses"
+                                @change="changeStatus"
+                                required>
+                                <template v-slot:selection="data">
+                                    <span>{{data.item.value}}</span>
+                                </template>
+                                <template v-slot:item="{ index, item }">
+                                    <span>{{item.value}}</span>
+                                </template>
+                            </v-select>
+                        </div>
+                        <v-spacer/>
+                        <v-layout align-center justify-end>
+                            <v-btn :loading="updateLoading" class="primary text-none" small @click="saveChanges()">Сохранить</v-btn>
+                            <v-btn class="primary text-none ml-0" small @click="reset()">Откатить</v-btn>
+                            <v-btn icon small @click="load()">
+                                <v-icon>
+                                    refresh
+                                </v-icon>
+                            </v-btn>
+                        </v-layout>
+                    </v-layout>
+                    <v-divider/>
+                    <v-layout wrap align-center>
+                        <v-flex>
+                            <v-subheader class="pl-0 mt-1 subtitle">Название</v-subheader>
+                            <v-text-field v-model="currentWI.changed.name" class="pt-0 mt-0 mr-3">
+                            </v-text-field>
+                        </v-flex>
+                        <v-flex xs12 md6>
+                            <v-layout v-if="currentWiType.assignable" column align-end>
+                                <v-layout>
+                                    <v-subheader class="pl-0 mt-1 subtitle">Исполнитель</v-subheader>
+                                    <user-selector @userSelected="userSelected"/>
+                                    <v-btn class="ml-0" icon small @click="currentWI.changed.assignedTo = null">
+                                        <v-icon small>close</v-icon>
+                                    </v-btn>
+                                </v-layout>
+                                <user-label :user="assignedTo" class="mr-3" v-if="assignedTo"/>
+                                <span v-else class="mr-3">Исполнитель не назначен</span>
                             </v-layout>
-                            <v-divider/>
-                            <v-layout wrap>
-                                <v-flex xs12 md6>
-                                    <v-subheader class="pl-0 mt-1 subtitle">Название</v-subheader>
-                                    <v-text-field v-model="currentWI.changed.name" class="pt-0 mt-0 mr-3">
-                                    </v-text-field>
-                                </v-flex>
-                                <v-flex>
-                                    <v-layout v-if="currentWiType.assignable" column align-end>
-                                        <v-layout>
-                                            <v-subheader class="pl-0 mt-1 subtitle">Исполнитель</v-subheader>
-                                            <user-selector @userSelected="userSelected"/>
-                                            <v-btn class="ml-0" icon small @click="currentWI.changed.assignedTo = null">
-                                                <v-icon small>close</v-icon>
-                                            </v-btn>
-                                        </v-layout>
-                                        <v-layout align-center class="mr-3" v-if="assignedTo">
-                                            <v-avatar color="primary" size="30">
-                                                <span v-if="!assignedTo.avatar" class="white--text text-xs-center" medium>
-                                                    {{`${assignedTo.fullName.split(' ').map(s=>s[0]).join('')}`}}
-                                                </span>
-                                                <v-img v-else :src="assignedTo.avatar"/>
-                                            </v-avatar>
-                                            <span class="ml-3">{{assignedTo.fullName}}</span>
-                                        </v-layout>
-                                        <span v-else class="mr-3">Исполнитель не назначен</span>
-                                    </v-layout>
-                                </v-flex>
-                            </v-layout>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout wrap fluid>
+                        <v-flex xs12 md6>
                             <v-subheader class="pl-0 subtitle">Описание</v-subheader>
-                            <ckeditor :editor="editor" v-model="currentWI.changed.description.descriptionText" :config="editorConfig"></ckeditor>
-                            <v-layout row wrap>
-                                <v-flex xs12 sm6 v-if="currentWiType.parent">
+                            
+                                <ckeditor :height="200" :editor="editor" v-model="currentWI.changed.description.descriptionText" :config="editorConfig"></ckeditor>
+                            
+                        </v-flex>
+                        <v-flex xs12 md6 :class='ofSize({md:"pl-5",xs:"pl-0"})' v-if="currentWiType.parent || currentWiType.epicLink">
+                            <v-layout column>
+                                <div v-if="currentWiType.parent">
                                     <v-layout align-center>
-                                        <v-subheader class="pl-0">Предок</v-subheader>
+                                        <v-subheader class="pl-0 subtitle">Предок</v-subheader>
+                                        <v-spacer/>
                                         <wi-selector :code="currentWiType.parent" @selected="parentSelected" icon="edit"/>
                                         <v-btn small icon class="ml-0" @click="dropParent()">
                                             <v-icon small>close</v-icon>
                                         </v-btn> 
                                     </v-layout>
                                     <v-divider class="mr-3 mt-0 mb-2"></v-divider>
-                                    <v-layout align-center v-if="currentWI.changed.parent">
-                                        <v-chip small label :color="workItems[currentWI.changed.parent.code].color" class="white--text ml-0">
-                                            <span class="chip">{{currentWI.changed.parent.code}}-{{currentWI.changed.parent.number}}</span>
-                                        </v-chip>
-                                        <router-link class="ml-2" :to="{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}">{{currentWI.changed.parent.name}}</router-link>
-                                    </v-layout>
+                                    <item-chip :item="currentWI.changed.parent" v-if="currentWI.changed.parent"/>
                                     <span v-else>Предок не выбран</span>
-                                </v-flex>
-                                <v-flex xs12 sm6 v-if="currentWiType.epickLink">
-                                    <v-layout align-center>
-                                        <v-subheader class="pl-0">Epic link</v-subheader>
-                                        <wi-selector code="EPIC" @selected="epickSelected" icon="edit"/>
-                                        <v-btn small icon class="ml-0" @click="dropEpic()">
-                                            <v-icon small>close</v-icon>
-                                        </v-btn>
+                                </div>
+                                <div v-if="currentWiType.epicLink">
+                                    <v-layout align-center justify-space-between>
+                                        <v-subheader class="pl-0 subtitle">Epic link</v-subheader>
+                                        <v-layout justify-end align-center v-show="!currentWI.changed.parent">
+                                            <wi-selector code="EPIC" @selected="epicSelected" icon="edit"/>
+                                            <v-btn small icon class="ml-0" @click="dropEpic()">
+                                                <v-icon small>close</v-icon>
+                                            </v-btn>
+                                        </v-layout>
                                     </v-layout>
                                     <v-divider class="mr-3 mt-0 mb-2"></v-divider>
-                                    <v-layout align-center v-if="currentWI.changed.epick">
-                                        <v-chip small label :color="workItems['EPIC'].color" class="white--text ml-0">
-                                            <span class="chip">{{currentWI.changed.epick.code}}-{{currentWI.changed.epick.number}}</span>
-                                        </v-chip>
-                                        <router-link class="ml-2" :to="{name:currentWI.changed.parent.code, params:{number:currentWI.changed.parent.number}}">{{currentWI.changed.parent.name}}</router-link>
-                                    </v-layout>
+                                    <item-chip :item="currentWI.changed.epic" v-if="currentWI.changed.epic"/>
                                     <span v-else>Epic не выбран</span>
-                                </v-flex>
+                                </div>
                             </v-layout>
-                            <div v-if="currentWiType.children" class="mt-3">
+                        </v-flex>
+                        <v-flex xs12 md6 v-if="currentWiType.children">
+                            <div class="mt-3 px-3">
                                 <v-layout align-center>
-                                    <v-subheader class="pl-0">Потомки</v-subheader>
+                                    <v-subheader class="pl-0 subtitle">Потомки</v-subheader>
+                                    <wi-selector v-if="currentWiType.children!='SUBTASK'" :code="currentWiType.children" @selected="childSelected"/>
                                     <v-spacer/>
                                     <v-btn small class="text-none primary" @click="createChild()">
                                         <v-icon small>add</v-icon>
@@ -118,49 +114,60 @@
                                 </v-layout>
                                 <v-divider class="mb-2"/>
                                 <span v-if="!currentWI.changed.children.length">Нет дочерних единиц работы</span>
-                                <v-layout align-center v-for="(t,i) in currentWI.changed.children" :key="i">
-                                    <v-chip small label :color="workItems[t.code].color" class="white--text ml-0">
-                                        <span class="chip">{{t.code}}-{{t.number}}</span>
-                                    </v-chip>
-                                    <router-link class="ml-2" :to="{name:t.code, params:{number:t.number}}">{{t.name}}</router-link>
-                                </v-layout>
+                                <div class="scroll-x overflow-x-hidden constraint">
+                                    <v-layout align-center v-for="(t,i) in currentWI.changed.children" :key="i">
+                                        <item-chip :item="t"/>
+                                        <v-spacer/>
+                                        <v-btn small icon @click="removeChild(t)">
+                                            <v-icon small>
+                                                close
+                                            </v-icon>
+                                        </v-btn>
+                                    </v-layout>  
+                                </div>
                             </div>
-                        </v-layout>  
-                    </v-container>       
-                </v-flex>
-                <v-flex md4 sm12>
-                    <v-tabs dark
-                        :color="currentWiType.color"
-                        v-model="model"
-                        centered
-                        slider-color="yellow">
-                        <v-tab ripple class="text-none">
-                            Комментарии
-                        </v-tab>
-                        <v-tab ripple class="text-none">
-                            Вложения
-                        </v-tab>
-                        <v-tab ripple class="text-none">
-                            История
-                        </v-tab>
-                    </v-tabs>
-                    <div>
-                        <v-tabs-items v-model="model">
-                            <v-tab-item>
-                                <comments/>                         
-                            </v-tab-item>
-                            <v-tab-item>
-                                <files></files>
-                            </v-tab-item>
-                            <v-tab-item>
-                                <v-card flat>
-                                <v-card-text>История</v-card-text>
-                                </v-card>
-                            </v-tab-item>
-                        </v-tabs-items>
-                    </div>
-                </v-flex>
-            </v-layout>
+                        </v-flex>
+                        <!-- $Timesheet! -->
+                        <v-flex v-if="currentWiType.timesheet" xs12 md6>
+                            <div class="mt-3">
+                                <v-subheader class="pl-0 subtitle my-2">Timesheet</v-subheader>
+                                <v-divider class="mb-2"/>
+                                <timesheet/>
+                            </div>
+                        </v-flex>
+                    </v-layout>
+                </v-layout>  
+            </v-container>       
+        <div>
+            <v-tabs dark
+                :color="currentWiType.color"
+                v-model="model"
+                centered
+                slider-color="yellow">
+                <v-tab ripple class="text-none">
+                    Комментарии
+                </v-tab>
+                <v-tab ripple class="text-none">
+                    Вложения
+                </v-tab>
+                <v-tab ripple class="text-none">
+                    История
+                </v-tab>
+            </v-tabs>
+            <div class="pb-2">
+                <v-tabs-items v-model="model">
+                    <v-tab-item>
+                        <comments/>                         
+                    </v-tab-item>
+                    <v-tab-item>
+                        <files></files>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <history/>
+                    </v-tab-item>
+                </v-tabs-items>
+            </div>
+        </div>
         </div>
     </div>
 </template>
@@ -176,6 +183,10 @@ import workItems from '../../data/work-items-object'
 import wiSelector from './wi-selector'
 import workItemInfo from './work-item-info'
 import userSelector from './user-selector'
+import history from './wi-history'
+import userLabel from './user-label'
+import timesheet from './timesheet'
+import itemChip from './item-chip'
 
 import statuses from '../../data/statuses'
 
@@ -186,7 +197,11 @@ export default {
         'wi-selector': wiSelector,
         'comments':comments,
         'work-item-info':workItemInfo,
-        'user-selector':userSelector
+        'user-selector':userSelector,
+        'history':history,
+        'user-label':userLabel,
+        'timesheet':timesheet,
+        'item-chip':itemChip
     },
     mounted(){
         this.enter();
@@ -196,10 +211,12 @@ export default {
         model:null,
         editor: ClassicEditor,
         editorConfig: {
-            extraPlugins: [ adapters.updateWIAdapter ]
+            extraPlugins: [ adapters.updateWIAdapter ],
+            toolbar:["heading","|","bold","italic","bulletedList","numberedList","imageUpload","insertTable","undo","redo"]
         },
         status:{},
-        updateLoading:false
+        updateLoading:false,
+        timesheet:[]
     }),
     computed:{
         number(){
@@ -268,15 +285,24 @@ export default {
         },
         parentSelected(item){
             this.currentWI.changed.parent = item;
+            if(item && this.currentWiType.epicLink)
+                this.currentWI.changed.epic = item.parent;
+        },
+        childSelected(item){
+            this.currentWI.changed.children.push(item);
+        },
+        removeChild(item){
+            this.currentWI.changed.children = 
+            this.currentWI.changed.children.filter(e=>e!=item);
         },
         dropParent(){
             this.currentWI.changed.parent = null;
         },
-        epickSelected(item){
-            this.currentWI.changed.epick = item;
+        epicSelected(item){
+            this.currentWI.changed.epic = item;
         },
         dropEpic(){
-            this.currentWI.changed.epick = null;
+            this.currentWI.changed.epic = null;
         },
         ...mapMutations({addWI:'project/addWI'}),
         saveChanges(){
@@ -300,9 +326,9 @@ export default {
                 model.parentId = this.currentWI.changed.parent.descriptionId;
                 delete model.parent;
             }
-            if(model.epick){
-                model.epickId = model.epick.descriptionId;
-                delete model.epick;
+            if(model.epic){
+                model.epicId = model.epic.descriptionId;
+                delete model.epic;
             }
             model.projectId = this.$route.params.projId;
             this.$http.put(`/api/workitems/number/${this.currentWI.number}`,model)
@@ -354,9 +380,6 @@ export default {
 </script>
 
 <style scoped>
-.divide{
-    border-right: 1px solid #bbbbbb;
-}
 .subtitle{
     height: 30px;
 }
@@ -365,6 +388,9 @@ export default {
 }
 .status{
     width:90px;
+}
+.constraint{
+    max-height: 300px;
 }
 </style>
 

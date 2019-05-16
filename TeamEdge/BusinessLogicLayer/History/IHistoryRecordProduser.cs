@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +8,6 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
 {
     public interface IHistoryRecordProduser
     {
-        IPropertyChanged CreateHistoryRecord(object previous, object next);
+        PropertyChanged CreateHistoryRecord(object previous, object next);
     }
 }

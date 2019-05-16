@@ -1,5 +1,5 @@
 <template>
-    <v-layout column>
+    <v-layout column class="overflow-auto">
         <v-toolbar color="transparent" flat dense>
             <v-tabs color="transparent"
                 v-model="model"

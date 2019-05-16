@@ -26,12 +26,6 @@
                             <router-link class="ml-2" :to="{name:t.code, params:{number:t.number}}">{{t.name}}</router-link>
                         </v-list-tile>
                     </v-list>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn small class="text-none">
-                            Добавить задачу
-                        </v-btn>
-                    </v-card-actions>
                 </v-card>
             </v-flex>
             <v-flex md1>
@@ -50,12 +44,12 @@
                         <v-list-tile v-for="(p,i) in project.partisipants" :key="i">
                             <v-list-tile-avatar color="primary" size="35">
                                 <span v-if="!p.avatar" class="white--text text-xs-center mt-1" medium>
-                                    {{`${p.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                                    {{`${p.name.split(' ').map(s=>s[0]).join('')}`}}
                                 </span>
                                 <v-img v-else :src="p.avatar"/>
                             </v-list-tile-avatar>
                             <v-list-tile-title>
-                                <span>{{p.fullName}}</span>
+                                <span>{{p.name}}</span>
                             </v-list-tile-title>
                         </v-list-tile>
                     </v-list>

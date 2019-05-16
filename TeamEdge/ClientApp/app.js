@@ -7,7 +7,9 @@ import App from 'components/app-root'
 import Vuetify from 'vuetify'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import interceptionSetup from './interception/interceptors'
-import CKEditor from '@ckeditor/ckeditor5-vue';
+import CKEditor from '@ckeditor/ckeditor5-vue'
+import getDate from './mixins/get-date' 
+Vue.mixin(getDate);
 
 Vue.use( CKEditor );
 Vue.use(Vuetify, {

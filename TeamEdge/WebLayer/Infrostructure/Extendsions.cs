@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -54,7 +54,7 @@ namespace TeamEdge.WebLayer
                 Id = user.Id(),
                 UserName = user.Username(),
                 Email = user.Email(),
-                FullName = user.FullName(),
+                Name = user.FullName(),
                 Avatar = user.Avatar()
             };
         }

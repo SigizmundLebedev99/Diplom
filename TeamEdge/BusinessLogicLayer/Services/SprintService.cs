@@ -74,5 +74,26 @@ namespace TeamEdge.BusinessLogicLayer.Services
             })
             .ToListAsync();
         }
+
+        public async Task UpdateSprint(UpdateSprintDTO model)
+        {
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId);
+            var entity = await _context.Sprints.FirstOrDefaultAsync(e => e.ProjectId == model.ProjectId && e.Number == model.Number);
+            entity.StartDate = model.StartDate;
+            entity.EndDate = model.EndDate;
+            if (entity == null)
+                throw new NotFoundException("sprint_nf");
+            var tasks = await _context.Tasks.Where(e => model.Tasks.Contains(e.DescriptionId)).ToListAsync();
+            var stories = await _context.UserStories.Where(e => model.UserStories.Contains(e.DescriptionId)).ToListAsync();
+            foreach (var t in tasks)
+                t.SprintId = entity.Id;
+            foreach (var s in stories)
+                s.SprintId = entity.Id;
+            _context.Sprints.Update(entity);
+            _context.Tasks.UpdateRange(tasks);
+            _context.UserStories.UpdateRange(stories);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

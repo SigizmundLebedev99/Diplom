@@ -7,6 +7,7 @@ namespace TeamEdge.DAL.Models
 {
     public class UserStory : BaseWorkItem, IBaseWorkItemWithParent<Epic>, IBaseWorkItemWithChild<_Task>
     {
+        [PropertyChanges(typeof(ChildrenChangeFactory))]
         public ICollection<_Task> Children { get; set; }
 
         public int? ParentId { get; set; }

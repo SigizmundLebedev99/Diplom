@@ -112,7 +112,8 @@ export default {
         },
         editor: ClassicEditor,
         editorConfig: {
-            extraPlugins: [ adapters.createWIAdapter ]
+            extraPlugins: [ adapters.updateWIAdapter ],
+            toolbar:["heading","|","bold","italic","bulletedList","numberedList","imageUpload","insertTable","undo","redo"]
         },
         wiType:null,
         rules:{

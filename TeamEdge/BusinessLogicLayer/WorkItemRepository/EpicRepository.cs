@@ -50,7 +50,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (checkLinksResult.Result != null)
             {
                 foreach (var t in checkLinksResult.Result)
-                    t.EpickId = description.Id;
+                    t.EpicId = description.Id;
                 _context.Tasks.UpdateRange(checkLinksResult.Result);
             }
 
@@ -84,6 +84,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             var query = _context.Epics
                 .Include(e => e.Description).ThenInclude(e => e.Files).ThenInclude(e => e.File)
                 .Include(e=>e.Description).ThenInclude(e=>e.Tags)
+                .Include(e=>e.Links)
                 .Include(e => e.Children);
 
             var entity = await query
@@ -111,7 +112,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             _context.WorkItemDescriptions.Update(nextdesc);
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
-            UpdateChildren(entity.Children, checkResult.Result, entity.DescriptionId);
+            UpdateChildren<UserStory, Epic>(entity.Children, checkResult.Result, entity.DescriptionId);
             _context.Epics.Update(nextentity);
 
             await _context.SaveChangesAsync();
@@ -141,7 +142,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Name = a.Name,
                 Number = a.Number,
                 DescriptionId = a.DescriptionId
-            }).Concat(e.Links.Where(a=>a.Parent == null).Select(a => new ItemDTO
+            }).Concat(e.Links.Where(a=>a.ParentId != null).Select(a => new ItemDTO
             {
                 Code = a.Code,
                 Name = a.Name,

@@ -70,7 +70,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 {
                     Id = u.UserId,
                     Email = u.User.Email,
-                    FullName = u.User.FullName,
+                    Name = u.User.FullName,
                     UserName = u.User.UserName,
                     Avatar = u.User.Avatar
                 }).ToArray(),

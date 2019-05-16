@@ -8,6 +8,7 @@ namespace TeamEdge.DAL.Models
 {
     public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithChild<SubTask>
     {
+        [PropertyChanges(typeof(ChildrenChangeFactory))]
         public ICollection<SubTask> Children { get; set; }
         public int? ParentId { get; set; }
         [ForeignKey("ParentId")]
@@ -16,7 +17,8 @@ namespace TeamEdge.DAL.Models
         public int? AssignedToId { get; set; }
         public TaskType Type { get; set; }
 
-        public int? EpickId { get; set; }
+        public int? EpicId { get; set; }
+        [ForeignKey("EpicId")]
         public Epic Epic { get; set; }
 
         public WorkItemStatus Status { get; set; }

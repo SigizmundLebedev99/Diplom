@@ -1,12 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace TeamEdge.DAL.Mongo.Models
 {
-    public interface IPropertyChanged
+    public class PropertyChanged
     {
-        string PropertyName { get; set; }
+        public string PropertyName { get; set; }
     }
 }

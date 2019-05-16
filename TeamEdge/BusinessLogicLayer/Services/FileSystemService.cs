@@ -32,9 +32,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (file == null || string.IsNullOrEmpty(_params.FileDirectoryPath))
                 return null;
 
-            string ext = file.FileName.Split('.').Last();
-            if (!(ext == "doc" || ext == "docx" ||
-                ext == "xls" || ext == "xlsx" || ext == "pdf" || ext == "txt"))
+            if(file.Length > (10*Math.Pow(2,10)*Math.Pow(2, 10)))
                 return null;
 
             string hash = GetHashFromFile(file.OpenReadStream());

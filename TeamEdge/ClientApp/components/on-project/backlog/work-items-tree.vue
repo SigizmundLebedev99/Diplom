@@ -10,11 +10,10 @@
         <v-treeview :items="itemsTree" item-key="descriptionId" :open="allIds">
             <template v-slot:label="{ item }">
                 <v-layout align-center>
-                    <v-chip small label :color="workItems[item.code].color" class="white--text">
-                        <span class="chip">{{item.code}}-{{item.number}}</span>
-                    </v-chip>
-                    <router-link class="ml-2" :to="{name:item.code, params:{number:item.number}}">{{item.name}}</router-link>
+                    <item-chip :item="item"/>
                     <v-spacer/>
+                    <v-chip v-if="item.status == 3" label small class="green lighten-1 white--text">Готово</v-chip>
+                    <v-chip v-if="item.status == 2" label small class="red lighten-1 white--text">Приостановлено</v-chip>
                     <v-chip label small v-if="item.sprintNumber">Спринт {{item.sprintNumber}}</v-chip>
                 </v-layout>
             </template>
@@ -25,8 +24,11 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import workItems from '../../../data/work-items-object'
+import itemChip from '../item-chip'
 export default {
+    components:{
+        'item-chip':itemChip
+    },
     mounted() {
         this.fetchItems();
     },
@@ -37,9 +39,6 @@ export default {
             }),
     },
     computed:{
-        workItems(){
-            return workItems;
-        },
         allIds(){
             return this.items.map(e=>e.descriptionId)
         },

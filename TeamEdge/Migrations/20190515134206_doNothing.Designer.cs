@@ -13,9 +13,10 @@ using TeamEdge.DAL.Models;
 namespace TeamEdge.Migrations
 {
     [DbContext(typeof(TeamEdgeDbContext))]
-    partial class TeamEdgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190515134206_doNothing")]
+    partial class doNothing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -370,8 +371,6 @@ namespace TeamEdge.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<int?>("EndedById");
-
                     b.Property<byte?>("EndsWith");
 
                     b.Property<DateTime>("StartDate");
@@ -383,8 +382,6 @@ namespace TeamEdge.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
-
-                    b.HasIndex("EndedById");
 
                     b.HasIndex("SubTaskId");
 
@@ -753,11 +750,6 @@ namespace TeamEdge.Migrations
                     b.HasOne("TeamEdge.DAL.Models.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("TeamEdge.DAL.Models.User", "EndedBy")
-                        .WithMany()
-                        .HasForeignKey("EndedById")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("TeamEdge.DAL.Models.SubTask", "SubTask")

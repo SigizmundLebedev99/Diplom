@@ -12,7 +12,7 @@
           <v-btn @click="openSignInDialog()" flat>Войти</v-btn>
           </template>
           <template v-else>
-            <span class="white--text">{{profile.fullName}}</span>
+            <span class="white--text">{{profile.name}}</span>
             <v-avatar size="40px" class="ml-3">
                 <v-img v-if="profile.avatar"
                 :src="profile.avatar"

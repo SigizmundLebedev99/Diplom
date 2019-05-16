@@ -1,26 +1,26 @@
 <template>
-    <v-container class="mx-0">
-        <v-btn small class="text-none" @click="openSprintForm()">Создать спринт</v-btn>
-        <create-sprint @sprintCreated="sprintAdded"/>
+    <v-container class="mx-0 pt-0 scroll-y">
+        <v-btn small class="text-none" @click="openSprintForm()">
+            <v-icon>add</v-icon>
+            Создать спринт
+            </v-btn>
+        <create-sprint @done="fetchItems()"/>
         <v-layout justify-center class="mt-3" v-if="!loading && !sprints.length">
             <span class="title">Пока в проекте не создано ни одного спринта</span>
         </v-layout>
-        <v-treeview :items="sprints" item-key="id">
+        <v-treeview :items="sprints" item-key="descriptionId" :open="ids">
             <template v-slot:label="{ item }">
-                <div v-if="!item.code">
-                    <v-layout align-center>
-                        <span>Спринт {{item.number}}</span>
-                        <v-btn icon small class="ml-5">
-                            <v-icon small class="ml-2" @click="editScript(item)">edit</v-icon>
-                        </v-btn>
-                    </v-layout>
-                </div>
-                
-                <v-layout v-else align-center>
-                    <v-chip small label :color="workItems[item.code].color" class="white--text">
-                        <span class="chip">{{item.code}}-{{item.number}}</span>
-                    </v-chip>
-                    <router-link class="ml-2" :to="{name:item.code, params:{number:item.number}}">{{item.name}}</router-link>
+                <v-layout align-center v-if="!item.code">
+                    <span>Спринт {{item.number}}</span>
+                    <v-btn icon small class="ml-5">
+                        <v-icon small class="ml-2" @click="editScript(item)">edit</v-icon>
+                    </v-btn>
+                </v-layout>
+                <v-layout align-center v-else>
+                <item-chip :item="item"/>
+                <v-spacer/>
+                    <v-chip v-if="item.status == 3" label small class="green lighten-1 white--text">Готово</v-chip>
+                    <v-chip v-if="item.status == 2" label small class="red lighten-1 white--text">Приостановлено</v-chip>
                 </v-layout>
             </template>
         </v-treeview>
@@ -29,22 +29,23 @@
 
 <script>
 import createSprint from '../create-sprint'
-import workItems from '../../../data/work-items-object'
-import {mapGetters, mapMutations} from 'vuex'
+import itemChip from '../item-chip'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 export default {
     components:{
-        'create-sprint':createSprint
+        'create-sprint':createSprint,
+        'item-chip':itemChip
     },
     methods:{
-        sprintAdded(model){
-            this.sprints.push(model);
-        },
         ...mapMutations({
             openSprintForm:'backlog/openSprintForm'
         }),
-        editScript(script){
-            
-        }
+        editScript(sprint){
+            this.openSprintForm(sprint);
+        },
+        ...mapActions({
+            fetchItems:'backlog/fetchItems'
+        })
     },
     computed:{
         ...mapGetters({
@@ -55,7 +56,11 @@ export default {
         workItems(){
             return workItems;
         },
+        ids(){
+            return this.sprints.map(e=>e.descriptionId);
+        }
     }
 }
 </script>
+
 

@@ -1,78 +1,83 @@
 <template>
-    <div>
-        <v-layout justify-space-between>
-            <v-btn class="grey text-none white--text" small flat @click="preCommentCreating()">
-                {{formOpened?"Отмена":"Написать комментарий"}}
-            </v-btn>
-            <v-btn icon small @click="fetchComments()">
-                <v-icon>refresh</v-icon>
-            </v-btn>
-        </v-layout>
-        <template v-if="formOpened">
-            <v-textarea class="mx-2 mt-2 mb-0"
-                hide-details
-                outline
-                name="input-7-4"
-                label="Ваш комментарий" v-model="text"></v-textarea>
-            <v-layout row wrap v-show="!loading" class="mb-2 mt-2" justify-center max-width="400px">
-                <v-chip label v-for="(f,i) in files" :key="i" class="primary" dark>
-                    <div class="mr-1 ml-1">
-                        <v-icon v-if="f.isPicture">
-                            image
-                        </v-icon>
-                        <v-icon v-else>
-                            insert_drive_file
-                        </v-icon>
-                    </div>
-                    <span>{{f.fileName}}</span>
-                </v-chip>
-            </v-layout>
-            <v-layout justify-end>
-                <v-btn icon small @click="openFileSelector()">
-                    <v-icon>attach_file</v-icon>
+    <v-layout>
+        <v-flex md6 sm8 xs10 offset-md3 offset-xs1 offset-sm2>
+            <v-layout justify-space-between v-show="!formOpened">
+                <v-btn class="grey text-none white--text ml-0" small flat @click="preCommentCreating()">
+                    Написать комментарий
                 </v-btn>
-                <v-btn class="primary" @click="send()" small>OK</v-btn>
+                <v-btn icon small @click="fetchComments()" class="mr-0">
+                    <v-icon>refresh</v-icon>
+                </v-btn>
             </v-layout>
-        </template>
-        <v-divider class="grey"></v-divider>
-        <v-layout justify-center v-show="loading" class="mt-4">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
-        </v-layout>
-        <div v-show="!loading">
-            <p class="text-xs-center subheading mt-2" v-if="!comments || !comments.length">Пока нет комментариев</p>
-            <v-layout v-for="(c,i) in comments" :key="i" class="mt-3 mb-3">
-                <v-avatar class="ml-1" color="primary" size="30">
-                    <span v-if="!c.user.avatar" class="white--text text-xs-center" medium>
-                        {{`${c.user.name.split(' ').map(s=>s[0]).join('')}`}}
-                    </span>
-                    <v-img v-else :src="c.user.avatar"/>
-                </v-avatar>
-                <v-layout column>
-                    <div class="comment px-2 py-1 ml-1">
-                        <span class="comment-text">{{c.text}}</span>
-                        <v-layout row wrap align-start justify-center>
-                            <v-card v-for="(f,i) in c.files" :key="i" class="mx-1 my-1">
-                                <v-card-text>
-                                    <v-layout justify-center align-center fill-height>
-                                    <img height="128px" v-if="f.isPicture" :src="f.path"/>
-                                    <v-icon v-else>
-                                        insert_drive_file
-                                    </v-icon>
-                                    </v-layout>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <span class="caption">{{f.name}}</span>
-                                </v-card-actions>
-                            </v-card>
-                        </v-layout> 
-                    </div>
-                    <v-layout justify-end>
-                        <span class="date-text mr-1">{{getDate(c.dateOfCreation)}}</span>
+            <template v-if="formOpened">
+                <v-textarea class="mx-2 mt-2 mb-0"
+                    hide-details
+                    outline
+                    name="input-7-4"
+                    label="Ваш комментарий" v-model="text"></v-textarea>
+                <v-layout row wrap v-show="!loading" class="my-2" justify-center max-width="400px">
+                    <v-chip label v-for="(f,i) in files" :key="i" class="primary" dark>
+                        <div class="mr-1 ml-1">
+                            <v-icon v-if="f.isPicture">
+                                image
+                            </v-icon>
+                            <v-icon v-else>
+                                insert_drive_file
+                            </v-icon>
+                        </div>
+                        <span>{{f.fileName}}</span>
+                    </v-chip>
+                </v-layout>
+                <v-layout justify-end>
+                    <v-btn icon small @click="openFileSelector()">
+                        <v-icon>attach_file</v-icon>
+                    </v-btn>
+                    <v-btn class="primary text-none" @click="send()" small>Отправить</v-btn>
+                    <v-btn class="grey text-none white--text" small flat @click="preCommentCreating()" v-show="formOpened">
+                        Отмена
+                    </v-btn>
+                </v-layout>
+            </template>
+            <v-divider class="grey"></v-divider>
+            <v-layout justify-center v-show="loading" class="my-4">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            </v-layout>
+            <div v-show="!loading">
+                <p class="text-xs-center mt-4" v-if="!comments || !comments.length">Пока нет комментариев</p>
+                <v-layout v-for="(c,i) in comments" :key="i" class="my-3 mr-2">
+                    <v-avatar color="primary" size="30">
+                        <span v-if="!c.user.avatar" class="white--text text-xs-center" medium>
+                            {{`${c.user.name.split(' ').map(s=>s[0]).join('')}`}}
+                        </span>
+                        <v-img v-else :src="c.user.avatar"/>
+                    </v-avatar>
+                    <v-layout column>
+                        <div class="comment px-2 py-1 ml-2">
+                            <span class="comment-text">{{c.text}}</span>
+                            <v-layout row wrap align-start justify-center>
+                                <v-card v-for="(f,i) in c.files" :key="i" class="mx-1 my-1">
+                                    <v-card-text class="py-1 px-1">
+                                        <v-layout justify-center align-center fill-height>
+                                        <img height="128px" v-if="f.isPicture" :src="f.path"/>
+                                        <v-icon v-else>
+                                            insert_drive_file
+                                        </v-icon>
+                                        </v-layout>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <span class="caption">{{f.name}}</span>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-layout> 
+                        </div>
+                        <v-layout justify-end>
+                            <span class="date-text">{{getDate(c.dateOfCreation)}}</span>
+                        </v-layout>
                     </v-layout>
                 </v-layout>
-            </v-layout>
-        </div>
-    </div>
+            </div>
+        </v-flex>
+    </v-layout>
 </template>
 
 <script>
@@ -124,10 +129,7 @@ export default {
                 this.formOpened = true;
             }
         },
-        getDate(date){
-            var temp = new Date(date);
-            return `${temp.getDate()}.${temp.getMonth() + 1}.${temp.getFullYear()}`
-        },
+        
         send(){
             var model = {
                 text:this.text,
@@ -159,15 +161,10 @@ export default {
 .comment{
     width:100%;
     border-left: 3px solid grey;
-    background-color: #dddddd;
+    background-color: #dad6d6;
 }
 
 .comment-text{
     font-size: 12px;
-}
-
-.date-text{
-    font-size: 11px;
-    opacity: 0.8;
 }
 </style>

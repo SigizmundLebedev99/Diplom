@@ -14,6 +14,8 @@ const mutations = {
         state.items = payload;
     },
     populateSprints(state, payload){
+        //костыль
+        payload.forEach(e=>{e.descriptionId = state.items.length + e.number});
         state.sprints = payload;
     },
     buildTree(state, items){
@@ -42,6 +44,7 @@ const mutations = {
 
     closeSprintForm(state){
         state.sprintOpened = false;
+        state.editSprint = null;
     }
 };
 
@@ -73,7 +76,8 @@ const getters = {
     itemsTree:state=>state.itemsTree,
     sprints:state=>state.sprints,
     sprintsLoading:state=>state.sprintsLoading,
-    sprintOpened:state=>state.sprintOpened
+    sprintOpened:state=>state.sprintOpened,
+    editSprint:state=>state.editSprint
 };
 
 export default{

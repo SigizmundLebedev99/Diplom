@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TeamEdge.DAL.Models;
@@ -22,7 +22,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
             Name = f.File.FileName
         };
 
-        public IPropertyChanged CreateHistoryRecord(object previous, object next)
+        public PropertyChanged CreateHistoryRecord(object previous, object next)
         {
             var prev = previous as IEnumerable<WorkItemFile>;
             var nex = next as IEnumerable<WorkItemFile>;

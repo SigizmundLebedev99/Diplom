@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +27,7 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
             _type = type;
         }
 
-        public IPropertyChanged CreateHistoryRecord(object previous, object next)
+        public PropertyChanged CreateHistoryRecord(object previous, object next)
         {
             var prev = previous as IEnumerable<BaseWorkItem>;
             var nex = next as IEnumerable<BaseWorkItem>;

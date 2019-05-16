@@ -1,28 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="TeamEdge.DAL.Models.BaseEntity" Collapsed="true">
-    <Position X="21.75" Y="4.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Invite">
+    <Position X="15.75" Y="11.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAACAAAAAQAAAAAAAAAAEAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\EF\Models\Common\BaseEntity.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="TeamEdge.DAL.Models.Invite" Collapsed="true">
-    <Position X="16.25" Y="5.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>gAAJQAEAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAJQAEAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\Invite.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.Project" Collapsed="true">
-    <Position X="18.5" Y="5.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Project">
+    <Position X="17" Y="13.75" Width="4" />
     <TypeIdentifier>
       <HashCode>AAAAASAAgAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\Project.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.Sprint" Collapsed="true">
-    <Position X="23" Y="5.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Sprint">
+    <Position X="21.5" Y="13.25" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAAAAEAACAAgBAAAAAAAAAAIAEAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\Sprint.cs</FileName>
@@ -30,124 +23,125 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TeamEdge.DAL.Models.User">
-    <Position X="37.25" Y="4.75" Width="1.5" />
+    <Position X="27.5" Y="12.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAACAAAIAAABQAAAAAAABAgAAAAAAAAAAAAAg=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\User.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.UserProject">
-    <Position X="31.75" Y="6.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.UserProject" Collapsed="true">
+    <Position X="41" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAJAAAAAAAAAAAAAAAACAgADAAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\UserProject.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.Comment" Collapsed="true">
-    <Position X="25.25" Y="5.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Comment">
+    <Position X="26.75" Y="5.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAACAAAAIA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\Comment.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.CommentFile">
-    <Position X="31.75" Y="4.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.CommentFile" Collapsed="true">
+    <Position X="41" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAEAAAgAAAAAAIAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\CommentFile.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models._File" Collapsed="true">
-    <Position X="14" Y="5.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models._File">
+    <Position X="16.25" Y="5.5" Width="3" />
     <TypeIdentifier>
       <HashCode>ACABAAAAAAAAgAIAAAAACAAABAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\File.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TeamEdge.DAL.Models.Subscribe">
-    <Position X="33.75" Y="4.5" Width="1.5" />
+    <Position X="25" Y="12.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAQAAAAAAABCAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\Subscribe.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.TestCase" Collapsed="true">
-    <Position X="20.75" Y="5.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>QAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
-      <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\TestCase.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="TeamEdge.DAL.Models.Timesheet" Collapsed="true">
-    <Position X="27.5" Y="5.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Timesheet">
+    <Position X="27.5" Y="9" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAQAAAAAACAAAAAAAAAAAgAAgAAAAAAEAAAEAIAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\Timesheet.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.WorkItemDescription" Collapsed="true">
-    <Position X="29.75" Y="5.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.WorkItemDescription">
+    <Position X="23.25" Y="5.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAAAAQAAASAAQBAAAAEAAAAAAAQAAIIA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\WorkItemDescription.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.WorkItemFile">
-    <Position X="35.5" Y="6.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.WorkItemFile" Collapsed="true">
+    <Position X="42.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAgAAABAAAAAAAAAAEAAAABAAAAAIAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\WorkItemFile.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.WorkItemTag">
-    <Position X="35.5" Y="4.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.WorkItemTag" Collapsed="true">
+    <Position X="44.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAABAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItemDescriptions\WorkItemTag.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TeamEdge.DAL.Models.BaseWorkItem" Collapsed="true">
-    <Position X="16.75" Y="7.5" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.BaseWorkItem">
+    <Position X="20" Y="6.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAiAAAAAEAgAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\BaseWorkItem.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Models.Epic" Collapsed="true">
-    <Position X="18" Y="8.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.Epic">
+    <Position X="15.5" Y="9.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\Epic.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Models.SubTask" Collapsed="true">
-    <Position X="20.25" Y="8.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.SubTask">
+    <Position X="25" Y="9.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAEAAAAAAAAAAAgQAAAAAAAAAAAAgABAgAACAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\SubTask.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Models._Task" Collapsed="true">
-    <Position X="13.5" Y="8.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models._Task">
+    <Position X="21.75" Y="9.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAEAAAAAAAgAAAkQEAQAAAAAAAAA4ABAAAACAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\Task.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TeamEdge.DAL.Models.UserStory" Collapsed="true">
-    <Position X="15.75" Y="8.75" Width="1.5" />
+  <Class Name="TeamEdge.DAL.Models.UserStory">
+    <Position X="18.75" Y="9.25" Width="2.25" />
+    <InheritanceLine Type="TeamEdge.DAL.Models.BaseWorkItem" ManuallyRouted="true">
+      <Path>
+        <Point X="21.25" Y="8.623" />
+        <Point X="21.25" Y="8.891" />
+        <Point X="19.875" Y="8.891" />
+        <Point X="19.875" Y="9.25" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAEAAAkQEAAAAAAAAAAAoEAAAAAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\WorkItems\UserStory.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Enum Name="TeamEdge.DAL.Models.ProjectAccessLevel">
-    <Position X="33.75" Y="8.25" Width="1.5" />
+  <Enum Name="TeamEdge.DAL.Models.ProjectAccessLevel" Collapsed="true">
+    <Position X="41" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
       <FileName>DataAccessLayer\EF\Models\Common\UserProject.cs</FileName>

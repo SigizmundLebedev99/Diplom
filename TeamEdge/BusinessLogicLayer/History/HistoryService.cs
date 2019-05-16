@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -52,13 +52,13 @@ namespace TeamEdge.BusinessLogicLayer.History
             });
         }
 
-        private List<IPropertyChanged> GetChanges(object obj1, object obj2)
+        private List<PropertyChanged> GetChanges(object obj1, object obj2)
         {
             var t = obj1.GetType();
             if (t != obj2.GetType())
                 throw new InvalidOperationException("GetChanges throws");
             var properties = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            List<IPropertyChanged> historyRecords = new List<IPropertyChanged>(properties.Length);
+            List<PropertyChanged> historyRecords = new List<PropertyChanged>(properties.Length);
             foreach (var prop in properties)
             {
                 if (!Attribute.IsDefined(prop, typeof(PropertyChangesAttribute)))

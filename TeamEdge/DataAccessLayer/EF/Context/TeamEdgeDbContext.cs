@@ -72,6 +72,7 @@ namespace TeamEdge.DAL.Context
             {
                 ent.HasKey(e => new { e.FileId, e.WorkItemId });
                 ent.HasOne(e => e.File).WithMany(e => e.WorkItemFiles).OnDelete(DeleteBehavior.Cascade);
+                ent.HasOne(e => e.WorkItem).WithMany(e => e.Files).OnDelete(DeleteBehavior.Cascade);
             });
 
             builder.Entity<CommentFile>(ent =>

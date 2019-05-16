@@ -10,12 +10,12 @@
                 <v-list-tile v-for="(p,i) in project.partisipants" :key="i" @click="$emit('userSelected', p)">
                     <v-list-tile-avatar color="primary" size="35">
                         <span v-if="!p.avatar" class="white--text text-xs-center mt-1" medium>
-                            {{`${p.fullName.split(' ').map(s=>s[0]).join('')}`}}
+                            {{`${p.name.split(' ').map(s=>s[0]).join('')}`}}
                         </span>
                         <v-img v-else :src="p.avatar"/>
                     </v-list-tile-avatar>
                     <v-list-tile-title>
-                        <span>{{p.fullName}}</span>
+                        <span>{{p.name}}</span>
                     </v-list-tile-title>
                 </v-list-tile>
             </v-list>

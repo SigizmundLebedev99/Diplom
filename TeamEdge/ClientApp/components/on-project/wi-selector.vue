@@ -5,7 +5,7 @@
                 <v-icon small>{{icon?icon:'add'}}</v-icon>
             </v-btn>
         </template>
-        <div class="constraint white">
+        <div class="constraint white scroll-x">
             <div class="block">
                 <v-text-field prepend-icon="search" class="mx-2 my-0 pt-1 pb-0" v-model="filterText"></v-text-field>
             </div>
@@ -77,7 +77,7 @@ export default {
         max-width: 200px;
     }
     .constraint{
-        max-height: 300px;
+        max-height: 250px;
     }
 </style>
 

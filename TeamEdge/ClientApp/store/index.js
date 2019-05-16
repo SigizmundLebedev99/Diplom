@@ -7,6 +7,7 @@ import profile from './profile'
 import createWorkItem from './work-item/create-work-item'
 import fileSelector from './work-item/file-selector'
 import backlog from './backlog'
+import timesheet from './timesheet'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -17,6 +18,7 @@ modules:{
   createWorkItem,
   fileSelector,
   profile,
-  backlog
+  backlog,
+  timesheet
 }
 })

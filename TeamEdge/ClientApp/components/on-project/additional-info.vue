@@ -15,16 +15,16 @@
                 <span v-if="currentParent">{{`${currentParent.code}${currentParent.number} - ${currentParent.name}`}}</span>
                 <span v-else>Предок не выбран</span>
             </div>
-            <div v-if="itemType.epickLink && !parent" class="mt-3">
+            <div v-if="itemType.epicLink && !currentParent" class="mt-3">
                 <v-layout align-center>
                     <v-subheader class="pl-0">Epic link</v-subheader>
-                    <wi-selector code="EPIC" @selected="epickSelected" icon="edit"></wi-selector>
+                    <wi-selector code="EPIC" @selected="epicSelected" icon="edit"></wi-selector>
                     <v-btn small icon class="ml-0" @click="dropEpicLink()">
                         <v-icon small>close</v-icon>
                     </v-btn>
                 </v-layout>
                 <v-divider class="mr-3 mt-0 mb-2"></v-divider>
-                <span v-if="epick">{{`${epick.code}${epick.number} - ${epick.name}`}}</span>
+                <span v-if="epic">{{`${epic.code}${epic.number} - ${epic.name}`}}</span>
                 <span v-else>Epic не выбран</span>
             </div>
             <div v-if="itemType.children" class="mt-3">
@@ -62,7 +62,7 @@ export default {
     data:()=>({
         parent:null,
         children:[],
-        epick:null,
+        epic:null,
     }),
     methods:{
         ...mapMutations({
@@ -74,15 +74,16 @@ export default {
         },
         dropParent(){
             this.additionalInfo.parentId = null;
+            this.predefined.parent = null
             this.parent = null;
         },
-        epickSelected(item){
-            this.epick = item;
-            this.additionalInfo.epickId = item.descriptionId;
+        epicSelected(item){
+            this.epic = item;
+            this.additionalInfo.epicId = item.descriptionId;
         },
         dropEpicLink(){
-            this.epick = null;
-            this.additionalInfo.epickId = null;
+            this.epic = null;
+            this.additionalInfo.epicId = null;
         },
         addChild(item){
             if(!this.additionalInfo.childrenIds)
@@ -109,9 +110,10 @@ export default {
         },
         clear(){
             this.setAdditionalInfo({});
-            this.parent = null,
-            this.epick = null,
-            this.children = []
+            this.parent = null;
+            this.epic = null;
+            this.children = [];
+            this.predefined.parent = null;
         }
     },
     computed:{

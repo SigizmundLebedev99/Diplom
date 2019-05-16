@@ -91,7 +91,10 @@ namespace TeamEdge.BusinessLogicLayer.Services
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
             if (model.ParentId != null)
+            {
                 operRes.Plus(await CheckParent<UserStory>(model.ProjectId, model.ParentId.Value));
+                entity.EpicId = null;
+            }
 
             if (!operRes.Succeded)
                 return operRes;
@@ -120,7 +123,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             {
                 Avatar = e.AssignedTo.Avatar,
                 Email = e.AssignedTo.Email,
-                FullName = e.AssignedTo.FullName,
+                Name = e.AssignedTo.FullName,
                 Id = e.AssignedToId.Value,
                 UserName = e.AssignedTo.UserName
             },
