@@ -30,7 +30,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
         public async Task DeletePartisipant(DeletePartisipantDTO model)
         {
-            var userProject = await _context.UserProjects.FirstOrDefaultAsync(e => e.ProjectId == model.ProjectId && model.UserId == model.UserId);
+            var userProject = await _context.UserProjects.FirstOrDefaultAsync(e => e.ProjectId == model.ProjectId && e.UserId == model.UserId);
             if (userProject == null)
                 throw new NotFoundException("project_nf");
             userProject.IsDeleted = true;
@@ -94,8 +94,10 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public async Task UpdatePartisipantStatus(ChangeStatusDTO model)
         {
             var operRes = new OperationResult(true);
-            await _validationService.ValidateProjectAccess(model.ProjectId, model.UserId, e=>e.IsAdmin);
-            _context.UserProjects.Update(_mapper.Map<UserProject>(model));
+            await _validationService.ValidateProjectAccess(model.ProjectId, model.FromId, e=>e.IsAdmin);
+            var entity = _mapper.Map<UserProject>(model);
+            entity.ProjRole = model.NewProjLevel;
+            _context.UserProjects.Update(entity);
             await _context.SaveChangesAsync();
         }
 

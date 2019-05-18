@@ -29,7 +29,7 @@
                             <span class="date-text">{{getDate(h.dateOfCreation)}}</span>
                         </v-layout>
                         <v-divider class="mt-1"/>
-                        <div v-for="(c,i) in h.changes" :key="i" class="my-3">
+                        <div v-for="(c,i) in h.changes" :key="i" class="my-2">
                             <v-layout column v-if="c.propertyName == 'Name'">
                                 <span><strong>Название</strong> изменено с</span> 
                                 <span class="label">"{{c.previous}}"</span>
@@ -46,30 +46,28 @@
                             </v-layout>
                             <v-layout column v-if="c.propertyName == 'Files'">
                                 <span><strong>Список вложенных файлов</strong> изменен</span>
-                                <v-layout justify-space-around>
-                                    <div>
-                                        <span>Добавлено:</span>
-                                        <v-layout align-center v-for="(f,i) in c.added" :key="i">
-                                            <v-icon v-if="f.isPicture">
-                                                image
-                                            </v-icon>
-                                            <v-icon v-else>
-                                                insert_drive_file
-                                            </v-icon>
-                                            <span>{{f.Name}}</span>   
-                                        </v-layout>
+                                <v-layout v-if="c.added && c.added.length" align-center>
+                                    <span>Добавлено:</span>
+                                    <div class="flex-row mr-2" v-for="(f,i) in c.added" :key="i">
+                                        <v-icon v-if="f.isPicture" class="center">
+                                            image
+                                        </v-icon>
+                                        <v-icon v-else class="center">
+                                            insert_drive_file
+                                        </v-icon>
+                                        <span class="center">{{f.Name}}</span>   
                                     </div>
-                                    <div v-if="c.deleted && c.deleted.length">
-                                        <span>Удалено:</span>
-                                        <v-layout align-center v-for="(f,i) in c.deleted" :key="i">
-                                            <v-icon v-if="f.isPicture">
-                                                image
-                                            </v-icon>
-                                            <v-icon v-else>
-                                                insert_drive_file
-                                            </v-icon>
-                                            <span>{{f.Name}}</span>   
-                                        </v-layout>
+                                </v-layout>
+                                <v-layout v-if="c.deleted && c.deleted.length" align-center>
+                                    <span>Удалено:</span>
+                                    <div class="flex-row mr-2" v-for="(f,i) in c.deleted" :key="i">
+                                        <v-icon v-if="f.isPicture" class="center">
+                                            image
+                                        </v-icon>
+                                        <v-icon v-else class="center">
+                                            insert_drive_file
+                                        </v-icon>
+                                        <span class="center">{{f.Name}}</span>   
                                     </div>
                                 </v-layout>
                             </v-layout> 
@@ -86,6 +84,25 @@
                             </v-layout>
                             <v-layout column v-if="c.propertyName == 'Parent'">
                                 <span><strong>Предок</strong> изменен с</span>
+                                <strong v-if="!c.previous">-</strong>
+                                <item-chip v-else :item="c.previous"/>
+                                <span class="mx-2"> на </span>
+                                <strong v-if="!c.new">-</strong>
+                                <item-chip v-else :item="c.new"/>
+                            </v-layout>
+                            <v-layout column v-if="c.propertyName == 'Children'">
+                                <span><strong>Список дочерних единиц работы</strong> изменен</span>
+                                <div v-if="c.added && c.added.length">
+                                    <span>Добавлено:</span>
+                                    <item-chip v-for="(w,i) in c.added" :key="i" :item="toLow(w)"/>
+                                </div>
+                                <div v-if="c.deleted && c.deleted.length">
+                                    <span>Удалено:</span>
+                                    <item-chip v-for="(w,i) in c.deleted" :key="i" :item="toLow(w)"/>
+                                </div>
+                            </v-layout>
+                            <v-layout column v-if="c.propertyName == 'Epic'">
+                                <span><strong>Epic link</strong> изменен с</span>
                                 <strong v-if="!c.previous">-</strong>
                                 <item-chip v-else :item="c.previous"/>
                                 <span class="mx-2"> на </span>
@@ -125,6 +142,13 @@ export default {
                 r=>{this.history = r.data; this.loading = false},
                 r=>{console.log(r.response.data);this.loading = false;}
             )
+        },
+        toLow(item){
+            for(var key in item){
+                var newKey = key[0].toLowerCase() + key.substring(1);
+                item[newKey] = item[key];
+            }
+            return item;
         }
     },
     computed:{

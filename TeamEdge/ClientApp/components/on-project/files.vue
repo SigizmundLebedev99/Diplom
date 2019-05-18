@@ -20,7 +20,7 @@
                 </v-btn>
             </v-layout>
             <v-layout row wrap align-start justify-center>
-                <v-card v-for="(f,i) in localFiles" :key="i" class="mx-1 my-1">
+                <v-card v-for="(f,i) in localFiles" :key="i" class="mx-1 my-1" @click="clickFile(f)">
                     <v-card-text class="px-1 py-1">
                         <v-layout justify-center align-center fill-height>
                         <img height="128px" v-if="f.isPicture" :src="f.path"/>
@@ -40,7 +40,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import dounload from '../../mixins/download'
 export default {
+    mixins:[dounload],
     mounted(){
         this.fetchFiles();
     },
@@ -77,6 +79,12 @@ export default {
         setFiles(files){
             this.currentWI.changed.description.files = files;
             this.localFiles = files;
+        },
+        clickFile(file){
+            if(file.isPicture)
+                window.open(file.path,'_blank')
+            else
+                this.downloadFile(file.id);
         }
     },
     watch:{

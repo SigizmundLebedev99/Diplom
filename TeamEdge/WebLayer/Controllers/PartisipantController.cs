@@ -71,8 +71,8 @@ namespace TeamEdge.WebLayer.Controllers
             if (selfLeaving)
             {
                 var result = await _membershipService.LeaveProject(userId, projectId);
-                if (result.Succeded)
-                    _emailService.NotifyUserLeaveAsync(User.Model(), projectId);
+                //if (result.Succeded)
+                   // _emailService.NotifyUserLeaveAsync(User.Model(), projectId);
                 return result.GetResult();
             }
             else
@@ -83,7 +83,7 @@ namespace TeamEdge.WebLayer.Controllers
                     ProjectId = projectId,
                     UserId = userId
                 });
-                _emailService.NotifyUserDeletedAsync(User.Model(), userId, projectId);
+                //_emailService.NotifyUserDeletedAsync(User.Model(), userId, projectId);
                 return Ok();
             }
         }
@@ -93,10 +93,10 @@ namespace TeamEdge.WebLayer.Controllers
         /// Change partisipant status
         /// </summary>
         [HttpPut("status")]
-        public async Task<IActionResult> ChangePartisipantStatus(ChangeStatusVM model)
+        public async Task<IActionResult> ChangePartisipantStatus([FromBody]ChangeStatusVM model)
         {
             var dto = _mapper.Map<ChangeStatusDTO>(model);
-            dto.UserId = User.Id();
+            dto.FromId = User.Id();
             await _membershipService.UpdatePartisipantStatus(dto);
             return Ok();
         }

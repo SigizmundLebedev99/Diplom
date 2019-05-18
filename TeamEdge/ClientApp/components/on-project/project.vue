@@ -111,6 +111,7 @@
         </v-content>
         <create-work-item></create-work-item>
         <file-selector></file-selector>
+        <message/>
     </div>
 </template>
 
@@ -118,13 +119,15 @@
 import sideMenu from '../side-menu'
 import createWI from './create-wi.vue'
 import fileSelector from './file-selector'
+import message from '../message'
 import {mapActions,mapGetters} from 'vuex'
 export default {
     components:
     {
         'side-menu':sideMenu,
         'create-work-item':createWI,
-        'file-selector':fileSelector
+        'file-selector':fileSelector,
+        message
     },
     data:function(){
         return{

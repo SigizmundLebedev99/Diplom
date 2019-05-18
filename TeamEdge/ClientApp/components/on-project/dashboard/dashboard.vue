@@ -1,14 +1,12 @@
 <template>
     <v-container>
         <v-layout row wrap>
-            <v-flex md1>
-            </v-flex>
-            <v-flex xs12 md5>
+            <v-flex xs12 md6 class="px-3">
                 <v-card class="mb-2">
                     <v-toolbar color="transparent" flat dense>
                         <v-toolbar-title>Ваши задачи</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn icon>
+                        <v-btn icon @click="fetchUserTasks(user.userId)">
                             <v-icon>refresh</v-icon>
                         </v-btn>
                     </v-toolbar>
@@ -20,17 +18,12 @@
                     </v-container>
                     <v-list v-else>
                         <v-list-tile v-for="(t,i) in tasks" :key="i">
-                            <v-chip small label :color="workItems[t.code].color" class="white--text">
-                                <span class="chip">{{t.code}}-{{t.number}}</span>
-                            </v-chip>
-                            <router-link class="ml-2" :to="{name:t.code, params:{number:t.number}}">{{t.name}}</router-link>
-                        </v-list-tile>
+                            <item-chip :item="t"/>
+                        </v-list-tile>    
                     </v-list>
                 </v-card>
             </v-flex>
-            <v-flex md1>
-            </v-flex>
-            <v-flex xs12 md4>
+            <v-flex xs12 md6 class="px-3">
                 <v-card>
                     <v-toolbar color="transparent" flat dense>
                         <v-toolbar-title>Участники проекта</v-toolbar-title>
@@ -49,8 +42,11 @@
                                 <v-img v-else :src="p.avatar"/>
                             </v-list-tile-avatar>
                             <v-list-tile-title>
-                                <span>{{p.name}}</span>
+                                <span>{{p.name}}</span><span class="ml-1" v-if="p.role==1">(администратор)</span>
                             </v-list-tile-title>
+                            <v-list-tile-action v-if="user.userId != p.id && role==1">
+                                <user-menu :user="p"/>
+                            </v-list-tile-action>
                         </v-list-tile>
                     </v-list>
                     <v-card-actions>
@@ -59,8 +55,6 @@
                     </v-card-actions>
                 </v-card>
             </v-flex>
-            <v-flex md1>
-            </v-flex>
         </v-layout>
     </v-container>
 </template>
@@ -68,10 +62,13 @@
 <script>
 import {mapGetters} from 'vuex'
 import createInvite from './create-invite'
-import workItems from '../../data/work-items-object'
+import itemChip from '../item-chip'
+import userMenu from './user-menu'
 export default {
     components:{
-        'create-invite': createInvite
+        'create-invite': createInvite,
+        'item-chip':itemChip,
+        'user-menu':userMenu
     },
     mounted(){
         this.fetchUserTasks(this.user.userId);
@@ -94,11 +91,9 @@ export default {
     computed:{
         ...mapGetters({
             project:'project/project',
-            user:'auth/profile'
-        }),
-        workItems(){
-            return workItems;
-        }
+            user:'auth/profile',
+            role:'project/role'
+        })
     }
 }
 </script>

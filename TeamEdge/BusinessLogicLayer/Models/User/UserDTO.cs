@@ -12,5 +12,6 @@ namespace TeamEdge.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Avatar { get; set; }
+        public int Role { get; set; }
     }
 }

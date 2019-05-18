@@ -55,7 +55,7 @@
                         <div class="comment px-2 py-1 ml-2">
                             <span class="comment-text">{{c.text}}</span>
                             <v-layout row wrap align-start justify-center>
-                                <v-card v-for="(f,i) in c.files" :key="i" class="mx-1 my-1">
+                                <v-card v-for="(f,i) in c.files" :key="i" class="mx-1 my-1" @click="clickFile(f)">
                                     <v-card-text class="py-1 px-1">
                                         <v-layout justify-center align-center fill-height>
                                         <img height="128px" v-if="f.isPicture" :src="f.path"/>
@@ -82,8 +82,9 @@
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
-
+import download from '../../mixins/download'
 export default {
+    mixins:[download],
     mounted() {
         this.fetchComments();
     },
@@ -144,6 +145,12 @@ export default {
                 },
                 r=>{console.log(r.response)}
             )
+        },
+        clickFile(file){
+            if(file.isPicture)
+                window.open(file.path,'_blank')
+            else
+                this.downloadFile(file.id);
         }
     },
     computed:{

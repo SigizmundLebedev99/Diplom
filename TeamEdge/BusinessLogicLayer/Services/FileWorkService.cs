@@ -94,7 +94,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 throw new UnauthorizedException();
             if (!file.IsPicture)
             {
-                string path = Path.Combine(_env.ContentRootPath, file.Path);
+                string path = _env.ContentRootPath + file.Path;
                 if (File.Exists(path))
                 {
                     FileInfo info = new FileInfo(path);

@@ -27,7 +27,7 @@ namespace TeamEdge.WebLayer.Controllers
             _provider = provider;
         }
 
-        [HttpGet("file/{fileId}")]
+        [HttpPost("file/{fileId}")]
         public async Task<IActionResult> GetFile(int fileId)
         {
             var file = await _fileWorkService.GetFile(fileId, User.Id());

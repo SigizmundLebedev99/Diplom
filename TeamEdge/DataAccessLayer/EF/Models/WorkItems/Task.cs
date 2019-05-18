@@ -19,6 +19,7 @@ namespace TeamEdge.DAL.Models
 
         public int? EpicId { get; set; }
         [ForeignKey("EpicId")]
+        [PropertyChanges(typeof(ParentChangeFactory))]
         public Epic Epic { get; set; }
 
         public WorkItemStatus Status { get; set; }

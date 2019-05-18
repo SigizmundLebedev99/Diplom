@@ -19,7 +19,9 @@ namespace TeamEdge.BusinessLogicLayer.Infrostructure
         private static Func<WorkItemFile, FileLightDTO> selector = f => new FileLightDTO
         {
             Id = f.FileId,
-            Name = f.File.FileName
+            Name = f.File.FileName,
+            isPicture = f.File.IsPicture,
+            Path = f.File.Path
         };
 
         public PropertyChanged CreateHistoryRecord(object previous, object next)

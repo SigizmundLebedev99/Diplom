@@ -48,6 +48,8 @@ namespace TeamEdge.Mapper
                 .ForMember(e => e.CreatorId, c => c.MapFrom(e => e.From.Id))
                 .ForMember(e=>e.Files,c=>c.Ignore());
             CreateMap<CreateCommentVM, CreateCommentDTO>();
+
+            CreateMap<ChangeStatusVM, ChangeStatusDTO>();
         }
     }
 }

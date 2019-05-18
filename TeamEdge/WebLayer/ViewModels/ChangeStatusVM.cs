@@ -6,7 +6,7 @@ using TeamEdge.DAL.Models;
 
 namespace TeamEdge.Models
 {
-    public struct ChangeStatusVM
+    public class ChangeStatusVM
     {
         public int UserId { get; set; }
         public int ProjectId { get; set; }

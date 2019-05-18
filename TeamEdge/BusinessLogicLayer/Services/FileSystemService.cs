@@ -60,7 +60,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
 
             string hash = GetHashFromFile(file.OpenReadStream());
             string ext = file.FileName.Split('.').Last();
-            string result = Path.Combine(_environment.WebRootPath, "Images", "Avatars", $"{hash}.{ext}");
+            string result = Path.Combine(_environment.WebRootPath, "Images", $"{hash}.{ext}");
 
             using (var fs = new FileStream(result, FileMode.Create))
             {

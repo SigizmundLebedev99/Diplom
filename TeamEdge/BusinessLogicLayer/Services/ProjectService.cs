@@ -72,7 +72,8 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     Email = u.User.Email,
                     Name = u.User.FullName,
                     UserName = u.User.UserName,
-                    Avatar = u.User.Avatar
+                    Avatar = u.User.Avatar,
+                    Role = (int)u.ProjRole
                 }).ToArray(),
                 Id = p.Id,
                 Logo = p.Logo,
