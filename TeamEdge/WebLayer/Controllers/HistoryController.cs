@@ -1,13 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer;
-using TeamEdge.DAL.Mongo;
-using TeamEdge.DAL.Mongo.Models;
 
 namespace TeamEdge.WebLayer.Controllers
 {
@@ -20,14 +14,24 @@ namespace TeamEdge.WebLayer.Controllers
         {
             _exportService = service;
         }
-
+        /// <summary>
+        /// Получить историю изменений единицы работы
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/code/{code}/number/{number}")]
-        public async Task<IActionResult> GetHistoryForWI(int projectId, string code, int number, [FromQuery]int skip, [FromQuery]int take = 20)
+        public async Task<IActionResult> GetHistoryForWI(int projectId, string code, int number)
         {
             var res = await _exportService.GetHistoryRecordsForItem(projectId, code, number);
             return Ok(res);
         }
 
+        /// <summary>
+        /// Получить список изменений по проекту
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="skip"></param>
+        /// <param name="take"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}")]
         public async Task<IActionResult> GetHistoryForProject(int projectId, [FromQuery]int skip, [FromQuery]int take = 20)
         {

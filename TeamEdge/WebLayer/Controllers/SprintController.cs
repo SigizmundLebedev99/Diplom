@@ -20,6 +20,12 @@ namespace TeamEdge.WebLayer.Controllers
             _sprintService = sprintService;
         }
 
+        /// <summary>
+        /// Создать новый спринт
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("project/{projectId}")]
         public async Task<IActionResult> CreateSprint(int projectId, [FromBody]CreateSprintVM model)
         {
@@ -30,6 +36,13 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// Изменить план спринта
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="number"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("project/{projectId}/sprint/{number}")]
         public async Task<IActionResult> UpdateSprint(int projectId, int number, [FromBody]CreateSprintVM model)
         {
@@ -41,6 +54,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Получить список спринтов
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}")]
         public async Task<IActionResult> GetSprints(int projectId)
         {

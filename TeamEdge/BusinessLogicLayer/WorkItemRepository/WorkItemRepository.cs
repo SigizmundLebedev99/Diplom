@@ -72,7 +72,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             }
         }
 
-        protected void AddChildren<TChild>(IEnumerable<TChild> children, int parentId) where TChild : IBaseWorkItemWithParent
+        protected void AddChildren<TChild>(IEnumerable<TChild> children, int parentId) where TChild : IBaseWorkItemWithParent<TChild>
         {
             if (children != null)
             {

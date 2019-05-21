@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Infrostructure;
 using TeamEdge.BusinessLogicLayer.Interfaces;
@@ -21,30 +21,6 @@ namespace TeamEdge.BusinessLogicLayer.Services
         {
             _parameters = parameters;
             _context = context;
-        }
-
-        public Task<OperationResult> ValidateBranches(string[] branches, string repositoryName)
-        {
-            return Task.Run(() =>
-            {
-                var operRes = new OperationResult(true);
-                if (branches == null || branches.Length == 0)
-                    return operRes;
-                string path = Path.Combine(_parameters.RepositoriesDirPath, repositoryName);
-                if (!LibGit2Sharp.Repository.IsValid(path))
-                {
-                    operRes.AddErrorMessage("repo_nf");
-                    return operRes;
-                }
-                var repository = new LibGit2Sharp.Repository(path);
-                var errors = branches.Where(b => !repository.Branches.Select(e => e.FriendlyName).Contains(b));
-                if (errors.Count()>0)
-                {
-                    foreach (var b in errors)
-                        operRes.AddErrorMessage("branch_nf", b);
-                }
-                return operRes;
-            });
         }
 
         public async Task<OperationResult> ValidateFileIds(int[] fileIds, int projectId)

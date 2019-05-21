@@ -21,13 +21,9 @@ namespace TeamEdge.DAL.Models
         ICollection<TChild> Children { get; set; }
     }
 
-    public interface IBaseWorkItemWithParent : IBaseWorkItem
+    public interface IBaseWorkItemWithParent<TParent> : IBaseWorkItem where TParent : IBaseWorkItem
     {
         int? ParentId { get; set; }
-    }
-
-    public interface IBaseWorkItemWithParent<TParent> : IBaseWorkItemWithParent where TParent : IBaseWorkItem
-    {
         TParent Parent { get; set; }
     }
 }

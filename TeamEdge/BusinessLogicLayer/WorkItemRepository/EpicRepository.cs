@@ -66,7 +66,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             if (model.Code.EndsWith('!'))
             {
                 return _context.UserStories.Select(WorkItemHelper.ItemDTOSelector).Concat(
-                    _context.Tasks.Select(WorkItemHelper.ItemDTOSelector));
+                    _context.Tasks.Where(e=>e.ParentId == null).Select(WorkItemHelper.ItemDTOSelector));
             }
             model.HasNoParent = false;
             model.ParentId = null;
@@ -77,7 +77,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
         public override async Task<OperationResult<WorkItemDTO>> UpdateWorkItem(int number, CreateWorkItemDTO model)
         {
             var operRes = new OperationResult<WorkItemDTO>(true);
-
+            var newModel = model as CreateEpickDTO;
             var nextentity = _mapper.Map<Epic>(model);
             var nextdesc = _mapper.Map<WorkItemDescription>(model);
 
@@ -98,9 +98,9 @@ namespace TeamEdge.BusinessLogicLayer.Services
             WorkItemHelper.RestoreDescriptionData(entity.Description, nextdesc);
 
             var checkResult = await CheckChildren<UserStory>(model.ChildrenIds, model.ProjectId);
-
+            var checkLinks = await CheckChildren<_Task>(newModel.LinkIds, model.ProjectId);
             operRes.Plus(checkResult);
-
+            operRes.Plus(checkLinks);
             if (!operRes.Succeded)
                 return operRes;
 
@@ -113,6 +113,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             UpdateFiles(entity.Description.Files, files, nextdesc.Id);
             UpdateTags(entity.Description.Tags, tags);
             UpdateChildren<UserStory, Epic>(entity.Children, checkResult.Result, entity.DescriptionId);
+            UpdateChildren<_Task, Epic>(entity.Links, checkLinks.Result, entity.DescriptionId);
             _context.Epics.Update(nextentity);
 
             await _context.SaveChangesAsync();
@@ -142,7 +143,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
                 Name = a.Name,
                 Number = a.Number,
                 DescriptionId = a.DescriptionId
-            }).Concat(e.Links.Where(a=>a.ParentId != null).Select(a => new ItemDTO
+            }).Concat(e.Links.Where(a=>a.ParentId == null).Select(a => new ItemDTO
             {
                 Code = a.Code,
                 Name = a.Name,

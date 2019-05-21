@@ -20,6 +20,12 @@ namespace TeamEdge.WebLayer.Controllers
             _service = service;
         }
 
+
+        /// <summary>
+        /// Получить timesheet
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("workitem/{id}")]
         public async Task<IActionResult> GetTimesheet(int id)
         {
@@ -27,6 +33,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// Изменить статус задачи 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("status")]
         public async Task<IActionResult> ChangeStatus([FromBody]ChangeWorkItemStatusDTO model)
         {

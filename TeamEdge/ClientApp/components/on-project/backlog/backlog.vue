@@ -11,9 +11,7 @@
                 <v-tab ripple>
                     Спринты
                 </v-tab>
-                <v-tab ripple>
-                    Поиск
-                </v-tab>
+
             </v-tabs>
             <v-spacer></v-spacer>
             
@@ -25,9 +23,7 @@
             <v-tab-item>
                 <sprints/>
             </v-tab-item>
-            <v-tab-item>
-                Search
-            </v-tab-item>
+
         </v-tabs-items>
     </v-layout>
 </template>

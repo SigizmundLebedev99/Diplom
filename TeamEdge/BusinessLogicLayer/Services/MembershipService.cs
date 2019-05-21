@@ -108,7 +108,7 @@ namespace TeamEdge.BusinessLogicLayer.Services
             string code = null;
             var invite = _mapper.Map<Invite>(model);
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user != null)
+            if (user != null && user.EmailConfirmed)
             {
                 if(await _context.Invites.Select(e=>new { userId = e.ToUserId , e.ProjectId})
                     .Concat(_context.UserProjects.Where(e=>!e.IsDeleted).Select(e=>new { userId = e.UserId, e.ProjectId}))
@@ -118,6 +118,11 @@ namespace TeamEdge.BusinessLogicLayer.Services
                     return operRes;
                 }
                 invite.ToUserId = user.Id;
+            }
+            else if (user != null)
+            {
+                invite.ToUserId = user.Id;
+                code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             }
             else
             {

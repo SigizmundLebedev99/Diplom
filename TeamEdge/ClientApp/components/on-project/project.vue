@@ -28,7 +28,7 @@
                             <v-icon v-if="!project.logo" size="60" color="primary">work</v-icon>
                             <img v-else :src="project.logo"/>
                         </v-avatar>
-                        <span class="mt-3 title white--text">{{project.name}}</span>
+                        <span class="mt-3 title white--text text-xs-center">{{project.name}}</span>
                     </v-layout>
                 </v-flex>
                 <v-flex xs2>

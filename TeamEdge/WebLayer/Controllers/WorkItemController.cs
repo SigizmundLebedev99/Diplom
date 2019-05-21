@@ -23,13 +23,25 @@ namespace TeamEdge.WebLayer.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Плучить информацию о единице работы
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="code"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/item/{code}/{number}")]
         public async Task<IActionResult> GetWorkItem(int projectId, string code, int number)
         {
             var result = await _workItemService.GetWorkItem(projectId, User.Id(), code, number);
             return Ok(result);
         } 
-        
+
+        /// <summary>
+        /// Создать единицу работы
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> CreateWorkItem([FromBody]CreateWorkItemDTO model)
         {
@@ -38,6 +50,12 @@ namespace TeamEdge.WebLayer.Controllers
             return res.GetResult();
         }
 
+        /// <summary>
+        /// Получить список единиц работы
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/items")]
         public async Task<IActionResult> GetListOfItems(int projectId, GetItemsVM model)
         {
@@ -48,6 +66,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить список единиц работы с данными для построения дерева
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/backlog")]
         public async Task<IActionResult> GetBacklog(int projectId)
         {
@@ -55,6 +78,12 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Обновить единицу работы
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut("number/{number}")]
         public async Task<IActionResult> UpdateWorkItem(int number, [FromBody]CreateWorkItemDTO model)
         {
@@ -63,6 +92,12 @@ namespace TeamEdge.WebLayer.Controllers
             return res.GetResult();
         }
 
+        /// <summary>
+        /// Получить задачи для пользователей
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/user/{userId}")]
         public async Task<IActionResult> GetTasksForUser(int projectId, int userId)
         {
@@ -70,6 +105,13 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// Получить уменьшенную модель единицы работы
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="code"></param>
+        /// <param name="number"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/itemdense/{code}/{number}")]
         public async Task<IActionResult> GetDenseWorkItem(int projectId, string code, int number)
         {
@@ -77,6 +119,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// Получить свободные единицы работы для спринта
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/for-sprint")]
         public async Task<IActionResult> GetWorkItemsForSprint(int projectId)
         {

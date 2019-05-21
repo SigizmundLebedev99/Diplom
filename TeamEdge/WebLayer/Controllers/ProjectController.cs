@@ -25,7 +25,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        /// Get projects and invites for user
+        /// Получить список проектов и список инвайтов для пользователя
         /// </summary>
         [HttpGet("user/{userId}")]
         [ProducesResponseType(200, Type = typeof(ProjectsForUserDTO))]
@@ -38,7 +38,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        /// Create new project
+        /// Создвть новый проект
         /// </summary>
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(ProjectDTO))]
@@ -54,7 +54,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        /// Get infomation about current project
+        /// Получить информацию о проекте
         /// </summary>
         [HttpGet("{projectId}")]
         [ProducesResponseType(200, Type = typeof(ProjectInfoDTO))]
@@ -65,7 +65,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        /// Update info about project
+        /// Обновить лого проекта
         /// </summary>
         [HttpPut("{projectId}")]
         [ProducesResponseType(200, Type = typeof(ProjectDTO))]
@@ -78,6 +78,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить файлы проекта
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet("files/{projectId}")]
         public async Task<IActionResult> GetFilesForProject(int projectId)
         {
@@ -85,6 +90,11 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// Получить инвайты для проекта
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet("invites/{projectId}")]
         public async Task<IActionResult> GetInvitesForProject(int projectId)
         {

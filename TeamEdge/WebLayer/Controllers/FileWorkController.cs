@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TeamEdge.BusinessLogicLayer.Interfaces;
@@ -27,6 +26,11 @@ namespace TeamEdge.WebLayer.Controllers
             _provider = provider;
         }
 
+        /// <summary>
+        /// Получить файл для скачивания в виде массива байтов
+        /// </summary>
+        /// <param name="fileId">Id файла</param>
+        /// <returns>arraybuffer</returns>
         [HttpPost("file/{fileId}")]
         public async Task<IActionResult> GetFile(int fileId)
         {
@@ -36,7 +40,14 @@ namespace TeamEdge.WebLayer.Controllers
             return BadRequest("Can't define content type");
         }
 
+        /// <summary>
+        /// Загрузить файл на сервер и создать запись в БД
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpPost("file/project/{projectId}")]
+        [ProducesResponseType(200, Type =typeof(FileDTO))]
         public async Task<IActionResult> CreateFile(IFormFile file, [FromRoute]int projectId)
         {
             if (file == null || file.Length == 0)
@@ -70,7 +81,13 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Загрузить файл на сервер как аватар, не сохранять как сущность в БД
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns>Путь к изображению</returns>
         [HttpPost("file/image")]
+        [ProducesResponseType(200, Type = typeof(string))]
         public async Task<IActionResult> SaveAvatar(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -79,14 +96,27 @@ namespace TeamEdge.WebLayer.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить список файлов для проекта
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/files")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<FileDTO>))]
         public async Task<IActionResult> GetFiles(int projectId)
         {
             var result = await _fileWorkService.GetFilesForProject(User.Id(), projectId);
             return Ok(result);
         }
 
+        /// <summary>
+        /// Получить список вложений для единицы работы
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         [HttpGet("project/{projectId}/item/{itemId}/files")]
+        [ProducesResponseType(200, Type = typeof(FileDTO))]
         public async Task<IActionResult> GetFilesForItem(int projectId, int itemId)
         {
             var result = await _fileWorkService.GetFilesForItem(itemId, User.Id(), projectId);

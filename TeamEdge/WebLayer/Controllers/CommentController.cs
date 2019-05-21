@@ -24,7 +24,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        /// Create a new comment for workItem
+        /// Добавить комментарий
         /// </summary>
         /// <returns>id of created entity</returns>
         [HttpPost]
@@ -37,7 +37,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        ///  Get list of comments for workItem
+        ///  Получить список комментариев для единицы работы
         /// </summary>
         [HttpGet("workitem/{workItemId}")]
         public async Task<IActionResult> GetComments(int workItemId)

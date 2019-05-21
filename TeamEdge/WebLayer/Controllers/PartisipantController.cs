@@ -23,7 +23,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        /// Create invite for new project partisipant
+        /// Создать инвайт для пользователя
         /// </summary>
         [HttpPost("invite")]
         [ProducesResponseType(200, Type = typeof(InviteDTO))]
@@ -49,7 +49,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
 
         /// <summary>
-        /// Accept invite and join to project
+        /// Принять инвайта
         /// </summary>
         [HttpPost("join/{inviteId}")]
         public async Task<IActionResult> JoinProject(int inviteId)
@@ -61,7 +61,7 @@ namespace TeamEdge.WebLayer.Controllers
         }
         
         /// <summary>
-        /// Remove participant from project
+        /// Удалить участника из проекта
         /// </summary>
         [HttpDelete("project/{projectId}/user/{userId}")]
         public async Task<IActionResult> LeaveProject(int projectId, int userId)
@@ -90,7 +90,7 @@ namespace TeamEdge.WebLayer.Controllers
 
 
         /// <summary>
-        /// Change partisipant status
+        /// Изменить статус участника
         /// </summary>
         [HttpPut("status")]
         public async Task<IActionResult> ChangePartisipantStatus([FromBody]ChangeStatusVM model)

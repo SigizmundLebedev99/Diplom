@@ -6,7 +6,7 @@ using TeamEdge.BusinessLogicLayer.Infrostructure;
 
 namespace TeamEdge.DAL.Models
 {
-    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithChild<SubTask>
+    public class _Task : BaseWorkItem, IBaseWorkItemWithParent<UserStory>, IBaseWorkItemWithChild<SubTask>, IBaseWorkItemWithParent<Epic>
     {
         [PropertyChanges(typeof(ChildrenChangeFactory))]
         public ICollection<SubTask> Children { get; set; }
@@ -34,5 +34,10 @@ namespace TeamEdge.DAL.Models
 
         [ForeignKey("SprintId")]
         public Sprint Sprint { get; set; }
+
+        [NotMapped]
+        Epic IBaseWorkItemWithParent<Epic>.Parent { get => Epic; set => Epic = value; }
+        [NotMapped]
+        int? IBaseWorkItemWithParent<Epic>.ParentId { get => EpicId; set => EpicId = value; }
     }
 }

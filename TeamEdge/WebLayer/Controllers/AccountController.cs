@@ -33,9 +33,10 @@ namespace TeamEdge.Controllers
         }
 
         /// <summary>
-        /// Returns jwt token for authorization after authentication
+        /// Возвращает JWT для авторизации
         /// </summary>
         [HttpPost("token")]
+        [ProducesResponseType(200, Type = typeof(TokenResultDTO))]
         public async Task<IActionResult> Token([FromBody]LoginDTO model)
         {
             if (!ModelState.IsValid)
@@ -44,6 +45,11 @@ namespace TeamEdge.Controllers
             return Ok(token);
         }
 
+        /// <summary>
+        /// Регистрация пользователя
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody]RegisterUserDTO model)
         {
@@ -75,6 +81,12 @@ namespace TeamEdge.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Подтверждение электронного адреса. Возвращает html страницу.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
@@ -92,24 +104,40 @@ namespace TeamEdge.Controllers
                 return View(new ConfirmEmailBM { FullName = user.FirstName, Url = Url.Action("Index", "Home")});
             return View("Error");
         }
-
+        /// <summary>
+        /// Регистрация по приглашению без подтверждения электронной почты
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpPost("register/code")]
-        public async Task<IActionResult> RegisterWithInvite([FromBody]RegisterWithInviteVM model, string code)
+        public async Task<IActionResult> RegisterWithInvite([FromForm]RegisterWithInviteVM model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
-            return View("Error");
+            await _accountService.RegisterWithInvite(model);
+            return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Информация о пользователе
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpGet("info/{userId}")]
+        [ProducesResponseType(200, Type = typeof(UserFullDTO))]
         public async Task<IActionResult> GetUserInfo(int userId)
         {
             var res = await _accountService.GetUserInfo(userId);
             return Ok(res);
         }
 
+        /// <summary>
+        /// Обновление профиля пользователя
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpPut("info")]
         public async Task<IActionResult> UpdateUserInfo([FromBody]UpdateUserDTO model)

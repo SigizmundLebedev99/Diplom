@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,7 +11,6 @@ namespace TeamEdge.BusinessLogicLayer.Interfaces
 {
     public interface IValidationService
     {
-        Task<OperationResult> ValidateBranches(string[] branches, string repositoryPath);
         Task<OperationResult> ValidateFileIds(int[] fileIds, int projectId);
         Task ValidateProjectAccess(int projId, int userId);
         Task ValidateProjectAccess(int projId, int userId, Expression<Func<UserProject, bool>> filter);

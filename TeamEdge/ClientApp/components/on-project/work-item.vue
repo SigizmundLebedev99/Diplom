@@ -22,7 +22,8 @@
                                 v-model="status"
                                 :items="statuses"
                                 @change="changeStatus"
-                                required>
+                                required
+                                :item-disabled="itemDisabled">
                                 <template v-slot:selection="data">
                                     <span>{{data.item.value}}</span>
                                 </template>
@@ -64,10 +65,9 @@
                         </v-flex>
                     </v-layout>
                     <v-layout wrap fluid>
-                        <v-flex xs12 md6>
-                            <v-subheader class="pl-0 subtitle">Описание</v-subheader>
-                            
-                                <ckeditor :height="200" :editor="editor" v-model="currentWI.changed.description.descriptionText" :config="editorConfig"></ckeditor>
+                        <v-flex xs12 md6 class="mb-3">
+                            <v-subheader class="pl-0">Описание</v-subheader>
+                            <ckeditor :height="200" :editor="editor" v-model="currentWI.changed.description.descriptionText" :config="editorConfig"></ckeditor>
                             
                         </v-flex>
                         <v-flex xs12 md6 :class='ofSize({md:"pl-5",xs:"pl-0"})' v-if="currentWiType.parent || currentWiType.epicLink">
@@ -102,7 +102,7 @@
                             </v-layout>
                         </v-flex>
                         <v-flex xs12 md6 v-if="currentWiType.children">
-                            <div class="mt-3 px-3">
+                            <div class="px-3">
                                 <v-layout align-center>
                                     <v-subheader class="pl-0 subtitle">Потомки</v-subheader>
                                     <wi-selector v-if="currentWiType.children!='SUBTASK'" :code="currentWiType.children" @selected="childSelected"/>
@@ -129,11 +129,11 @@
                         </v-flex>
                         <!-- $Timesheet! -->
                         <v-flex v-if="currentWiType.timesheet" xs12 md6>
-                            <div class="mt-3">
-                                <v-subheader class="pl-0 subtitle my-2">Timesheet</v-subheader>
-                                <v-divider class="mb-2"/>
-                                <timesheet/>
-                            </div>
+                            
+                            <v-subheader class="pl-0 subtitle my-2">Timesheet</v-subheader>
+                            <v-divider class="mb-2"/>
+                            <timesheet/>
+                            
                         </v-flex>
                     </v-layout>
                 </v-layout>  
@@ -264,6 +264,13 @@ export default {
                 );
             }
         },
+        itemDisabled(i){
+            if(!this.status || this.status.key==0)
+                return i.key == 0;
+            else if (this.status.key==1)
+                return i.key == 0 || i.key == 1;
+            else return i.key != 1;
+        },
         load(){
             this.loading = true;
             this.$http.get(`/api/workitems/project/${this.$route.params.projId}/item/${this.$route.name}/${this.number}`)
@@ -319,7 +326,9 @@ export default {
             if(model.children)
             {
                 model.childrenIds = model.children.map(e=>e.descriptionId);
-                delete model.children
+                if(this.currentWiType.childrenCallback)
+                    this.currentWiType.childrenCallback(model.children, model);
+                delete model.children;
             }
             if(model.parent)
             {
@@ -351,6 +360,7 @@ export default {
                 status: statuses.object[smt]
             }).then(r=>{
                 this.currentWI.source.status = this.status.key;
+                this.$store.dispatch("timesheet/fetchTimesheet", this.currentWI.descriptionId);
             },
                 r=>{console.log(r.response)}
             );

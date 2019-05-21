@@ -26,8 +26,8 @@
                                     <v-icon dark rigth class="ml-2">arrow_forward</v-icon>
                                 </v-btn>
                         </v-toolbar>
-                        <v-card-title class="subheading">{{`${i + 1}) ${p.name}`}}</v-card-title>
-                        <v-card-text>
+                        <p class="text-xs-center mt-2 mb-2 subheading">{{cut(p.name)}}</p>
+                        <v-card-text class="pt-2">
                             <v-layout align-center column>
                                 <v-avatar size="100" class="mb-3" color="white">
                                     <v-icon v-if="!p.logo" size="80" light color="primary">work</v-icon>
@@ -68,6 +68,11 @@ export default {
         }),
         goToProj(projId){
             this.$router.push({name:'project', params:{projId:projId}})
+        },
+        cut(str){
+            if(str.length>20)
+                return str.substring(0, 18)+'...';
+            return str;
         }
     },
     computed:{

@@ -1,6 +1,6 @@
 const state = ()=>({
     dialog:false,
-    predefined:null,
+    predefined:{},
     additionalInfo:{}
 });
 
@@ -26,7 +26,7 @@ const mutations = {
         state.dialog = dialog;
     },
     predefined(state,payload){
-        state.predefined = payload;
+        state.predefined = payload || {};
         if(payload && payload.parent){
             state.additionalInfo.parentId = payload.parent.descriptionId;
         }

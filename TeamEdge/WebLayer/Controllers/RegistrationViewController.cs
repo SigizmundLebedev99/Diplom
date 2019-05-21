@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TeamEdge.DAL.Context;
 using TeamEdge.DAL.Models;
@@ -23,6 +19,12 @@ namespace TeamEdge.WebLayer.Controllers
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Возвращает представление для регистрации
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="inviteId"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> RegisterWithInvite(string code, int inviteId)
         {
@@ -35,11 +37,8 @@ namespace TeamEdge.WebLayer.Controllers
             if (user == null)
                 return View("Error");
             if (user.EmailConfirmed)
-                return View("AlreadyRegistred", new UserExistVM
-                {
-                    Name = user.FullName, Avatar = user.Avatar, Url = Url.Action("Index","Home")
-                });
-            return View(new RegisterWithInviteVM { Code = code, InviteId = inviteId});
+                return RedirectToAction("Index", "Home");
+            return Redirect($"/registrationwithinvite/{inviteId}/code/{code}");
         }
     }
 }
